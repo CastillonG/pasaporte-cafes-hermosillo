@@ -9,51 +9,70 @@
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   />
 
   <style>
-    html, body { height: 100%; margin: 0; }
-    /* Mapa centrado y responsivo */
-    #map { height: 100%; width: 100%; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background-color: #f4e4d6; /* fondo beige claro */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Marco café clarito naranjoso */
+    .marco {
+      width: 95%;
+      height: 90%;
+      background-color: #d8a47f; /* café claro naranjoso */
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+    }
   </style>
 </head>
 <body>
-  <div id="map"></div>
+
+  <div class="marco">
+    <div id="map"></div>
+  </div>
 
   <!-- Leaflet JS -->
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
 
   <script>
-    // Centro aproximado de Hermosillo, Sonora
     const hermosillo = [29.072967, -110.955919];
 
-    const map = L.map("map", {
-      zoomControl: true
-    }).setView(hermosillo, 13);
+    const map = L.map("map").setView(hermosillo, 13);
 
-    // OpenStreetMap tiles (gratis)
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Ejemplo: marcador (puedes borrar este si quieres)
-    // L.marker(hermosillo).addTo(map).bindPopup("Hermosillo").openPopup();
-
-    // BONUS: click para ver coordenadas y crear marcador (útil para “marcar lugares posteriormente”)
     map.on("click", (e) => {
       const { lat, lng } = e.latlng;
       L.marker([lat, lng]).addTo(map)
         .bindPopup(`Lat: ${lat.toFixed(6)}<br>Lng: ${lng.toFixed(6)}`)
         .openPopup();
-      console.log("Coordenadas:", lat, lng);
     });
   </script>
+
 </body>
 </html>

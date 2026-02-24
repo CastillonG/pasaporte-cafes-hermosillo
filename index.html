@@ -1,84 +1,68 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Mapa Hermosillo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa Hermosillo</title>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
-  <style>
-    /* Base: evita bugs de altura en móvil */
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #f4e4d6;
-    }
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #f4e4d6;
+}
 
-    /* Wrapper ocupa pantalla completa (dvh = mejor en iPhone) */
-    .wrap {
-      min-height: 100vh;
-      min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      box-sizing: border-box;
-    }
+.wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-    /* Marco café naranjoso */
-    .marco {
-      width: min(980px, 100%);
-      height: calc(100vh - 32px);
-      height: calc(100dvh - 32px);
-      background: #d8a47f;
-      padding: 16px;
-      border-radius: 18px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-      box-sizing: border-box;
-      display: flex;
-    }
+.marco {
+  width: 100%;
+  max-width: 1000px;
+  height: 90vh;
+  background: #d89a6a;
+  border-radius: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-    /* El mapa SÍ o SÍ con altura real */
-    #map {
-      flex: 1;
-      width: 100%;
-      height: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #fff; /* por si tarda en cargar tiles */
-    }
-  </style>
+#map {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+}
+</style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="marco">
-      <div id="map"></div>
-    </div>
+
+<div class="wrapper">
+  <div class="marco">
+    <div id="map"></div>
   </div>
+</div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <script>
-    const hermosillo = [29.072967, -110.955919];
+<script>
+document.addEventListener("DOMContentLoaded", function() {
 
-    const map = L.map("map", { zoomControl: true }).setView(hermosillo, 13);
+  const map = L.map('map').setView([29.072967, -110.955919], 13);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-    map.on("click", (e) => {
-      const { lat, lng } = e.latlng;
-      L.marker([lat, lng]).addTo(map)
-        .bindPopup(`Lat: ${lat.toFixed(6)}<br>Lng: ${lng.toFixed(6)}`)
-        .openPopup();
-    });
+});
+</script>
 
-    // Truco anti-bug: fuerza a Leaflet a recalcular tamaño después de cargar
-    setTimeout(() => map.invalidateSize(), 250);
-  </script>
 </body>
 </html>

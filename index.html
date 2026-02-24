@@ -1,149 +1,55 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Pasaporte del Café - Mapa</title>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script>
+const hermosillo = [29.072967, -110.955919];
 
-  <style>
-    :root{
-      /* Paleta base tipo cartulina */
-      --paper: #f4e4d6;
-      --ink: #9a5b3a;       /* café naranjoso */
-      --frame: #d8a47f;     /* marco café clarito */
-      --title: #7a3f25;     /* texto principal */
-      --white: #ffffff;
-    }
+const map = L.map("map").setView(hermosillo, 13);
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      background: var(--paper);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--title);
-    }
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
 
-    /* Fondo "pasaporte" con SVG repetido (sutil) */
-    body{
-      background-color: var(--paper);
-      background-image:
-        url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='1400' viewBox='0 0 900 1400'%3E%3Crect width='900' height='1400' fill='%23f4e4d6'/%3E%3Cg opacity='0.14' stroke='%239a5b3a' fill='none' stroke-width='6'%3E%3C!-- puntitos arriba --%3E%3Cpath d='M170 220c120-80 260-80 380 0' stroke-dasharray='2 26'/%3E%3C!-- montana simplificada --%3E%3Cpath d='M350 520l110-210 140 260H280z'/%3E%3Cpath d='M410 360l50-90 40 75'/%3E%3C!-- cactus --%3E%3Cpath d='M170 600c0-80 0-140 55-140s55 60 55 140'/%3E%3Cpath d='M140 560c0-55 0-95 35-95s35 40 35 95'/%3E%3Cpath d='M250 560c0-55 0-95 35-95s35 40 35 95'/%3E%3C!-- taza --%3E%3Cpath d='M610 590c0 60-40 100-100 100s-100-40-100-100'/%3E%3Cpath d='M410 590h200'/%3E%3Cpath d='M610 615c60 0 80 35 60 70s-60 40-90 10'/%3E%3C!-- sello circular --%3E%3Ccircle cx='575' cy='705' r='70'/%3E%3Cpath d='M535 705h80'/%3E%3C!-- texto pasaporte --%3E%3Ctext x='160' y='180' font-size='68' font-family='Arial' font-weight='700' fill='%239a5b3a' stroke='none'%3EPASAPORTE%3C/text%3E%3Ctext x='250' y='250' font-size='44' font-family='Arial' font-weight='600' fill='%239a5b3a' stroke='none'%3EDE CAF%C3%89S%3C/text%3E%3Ctext x='260' y='860' font-size='92' font-family='Arial' font-weight='800' fill='%239a5b3a' stroke='none'%3EDESIERTO%3C/text%3E%3C/g%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 900px 1400px;
-      background-attachment: fixed;
-    }
-
-    /* Layout principal */
-    .wrap{
-      min-height: 100vh;
-      min-height: 100dvh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 18px;
-      box-sizing: border-box;
-    }
-
-    /* Tarjeta/marco */
-    .card{
-      width: min(980px, 100%);
-      background: rgba(216, 164, 127, 0.92);
-      border-radius: 22px;
-      box-shadow: 0 18px 55px rgba(0,0,0,0.18);
-      padding: 18px;
-      box-sizing: border-box;
-      backdrop-filter: blur(2px);
-    }
-
-    /* Encabezado */
-    .header{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 10px 14px;
-      text-align: center;
-    }
-
-    .title{
-      font-size: 22px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-weight: 800;
-      color: var(--title);
-      background: rgba(244, 228, 214, 0.75);
-      padding: 10px 14px;
-      border-radius: 14px;
-      border: 2px solid rgba(122, 63, 37, 0.25);
-    }
-
-    /* Contenedor del mapa con borde de puntitos */
-    .map-shell{
-      height: calc(100dvh - 160px);
-      min-height: 520px;
-      max-height: 820px;
-      background: rgba(244, 228, 214, 0.85);
-      border-radius: 18px;
-      padding: 12px;
-      box-sizing: border-box;
-
-      /* borde punteado */
-      border: 3px dotted rgba(122, 63, 37, 0.65);
-    }
-
-    #map{
-      width: 100%;
-      height: 100%;
-      border-radius: 14px;
-      overflow: hidden;
-      background: #fff;
-    }
-
-    /* En pantallas muy pequeñas, reduce un poco el alto */
-    @media (max-width: 480px){
-      .title{ font-size: 16px; padding: 9px 12px; }
-      .map-shell{ min-height: 480px; }
-    }
-  </style>
-</head>
-
-<body>
-  <div class="wrap">
-    <div class="card">
-      <div class="header">
-        <div class="title">PASAPORTE DEL CAFÉ</div>
-      </div>
-
-      <div class="map-shell">
-        <div id="map"></div>
-      </div>
+/* --- ICONO PERSONALIZADO 📍☕ --- */
+const cafeIcon = L.divIcon({
+  html: `
+    <div style="
+      font-size:28px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transform: translateY(-10px);
+    ">
+      📍☕
     </div>
-  </div>
+  `,
+  className: "",
+  iconSize: [30, 30],
+  iconAnchor: [15, 30]
+});
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script>
-    // Hermosillo
-    const hermosillo = [29.072967, -110.955919];
+/* --- BUSCAR DIRECCIÓN AUTOMÁTICAMENTE --- */
+const direccion = "C. Benito Juárez 211, Issste Federal, 83157 Hermosillo, Sonora";
 
-    const map = L.map("map", { zoomControl: true }).setView(hermosillo, 13);
+fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}`)
+  .then(res => res.json())
+  .then(data => {
+    if (data.length > 0) {
+      const lat = parseFloat(data[0].lat);
+      const lon = parseFloat(data[0].lon);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Click para marcar lugares
-    map.on("click", (e) => {
-      const { lat, lng } = e.latlng;
-      L.marker([lat, lng]).addTo(map)
-        .bindPopup(`Lat: ${lat.toFixed(6)}<br>Lng: ${lng.toFixed(6)}`)
+      const marker = L.marker([lat, lon], { icon: cafeIcon }).addTo(map)
+        .bindPopup("<b>Pasaporte del Café</b><br>C. Benito Juárez 211")
         .openPopup();
-    });
 
-    // Fuerza a Leaflet a recalcular tamaño (ayuda en móvil)
-    setTimeout(() => map.invalidateSize(), 250);
-  </script>
-</body>
-</html>
+      map.setView([lat, lon], 17);
+    }
+  });
+
+map.on("click", (e) => {
+  const { lat, lng } = e.latlng;
+  L.marker([lat, lng]).addTo(map)
+    .bindPopup(`Lat: ${lat.toFixed(6)}<br>Lng: ${lng.toFixed(6)}`)
+    .openPopup();
+});
+</script>

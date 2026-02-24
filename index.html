@@ -69,24 +69,26 @@
 
   // Icono 📍☕
   const cafeIcon = L.divIcon({
-    html: '<div style="font-size:30px;">📍☕</div>',
+    html: '<div style="font-size:70px;">📍☕</div>',
     className: '',
-    iconSize: [30, 30],
-    iconAnchor: [15, 30]
+   iconSize: [80, 80],
+iconAnchor: [40, 80],
   });
 
 <script>
-  // Coordenadas del punto (ajustables)
-  // Si quieres precisión exacta, luego las afinamos con un click en el mapa.
-  const puntoCafe = [29.0875, -110.9657]; // approx. zona centro Hermosillo
+  // Coordenadas aproximadas de 211 Barra Café
+  const puntoCafe = [29.08752, -110.96573];
 
-  // Icono 📍☕
   const cafeIcon = L.divIcon({
     className: "",
     html: `
       <div style="
-        display:flex;align-items:center;justify-content:center;
-        font-size:34px;line-height:1;transform:translateY(-8px);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:34px;
+        line-height:1;
+        transform:translateY(-8px);
         filter: drop-shadow(0 6px 10px rgba(0,0,0,.25));
       ">📍☕</div>
     `,
@@ -95,25 +97,19 @@
     popupAnchor: [0, -36]
   });
 
-  // Marcador fijo
   L.marker(puntoCafe, { icon: cafeIcon })
     .addTo(map)
-    .bindPopup(`<b>Pasaporte del Café</b><br>C. Benito Juárez 211, Issste Federal`)
+    .bindPopup(`
+      <b>211 Barra Café</b><br>
+      C. Benito Juárez 211<br>
+      Issste Federal, Hermosillo
+    `)
     .openPopup();
 
-  // Enfocar el mapa ahí
-  map.setView(puntoCafe, 17);
-
-  // (Opcional) click para que tú saques coordenadas exactas
-  map.on("click", (e) => {
-    const { lat, lng } = e.latlng;
-    L.marker([lat, lng]).addTo(map)
-      .bindPopup(`Lat: ${lat.toFixed(6)}<br>Lng: ${lng.toFixed(6)}`)
-      .openPopup();
-    console.log("Coordenadas:", lat, lng);
-  });
+  map.setView(puntoCafe, 18);
 </script>
 
 </body>
 </html>
+
 

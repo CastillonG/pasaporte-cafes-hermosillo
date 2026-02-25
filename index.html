@@ -1,98 +1,120 @@
-}<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pasaporte del Café</title>
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
-<style>
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: #f4e4d6;
-  font-family: Arial, sans-serif;
-}
-
-.container {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.card {
-  width: 100%;
-  max-width: 1000px;
-  background: #d8a47f;
-  border-radius: 20px;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-h1 {
-  text-align: center;
-  margin: 0 0 15px 0;
-  color: #7a3f25;
-  letter-spacing: 2px;
-}
-
-#map {
-  width: 100%;
-  height: 70vh;
-  border: 3px dotted #7a3f25;
-  border-radius: 15px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-  <div class="card">
-    <h1>PASAPORTE DEL CAFÉ</h1>
-    <div id="map"></div>
-  </div>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-// Crear mapa
-const map = L.map('map').setView([29.072967, -110.955919], 13);
+  // Crear mapa
+  const map = L.map('map').setView([29.072967, -110.955919], 13);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-// Icono grande 📍☕
-const cafeIcon = L.divIcon({
-  className: '',
-  html: '<div style="font-size:70px; line-height:1; transform:translateY(-10px); filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));">📍☕</div>',
-  iconSize: [110, 110],
-  iconAnchor: [55, 110],
-  popupAnchor: [0, -95]
-});
+  // Icono grande 📍☕
+  const cafeIcon = L.divIcon({
+    className: '',
+    html: '<div style="font-size:70px; line-height:1; transform:translateY(-10px); filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));">📍☕</div>',
+    iconSize: [110, 110],
+    iconAnchor: [55, 110],
+    popupAnchor: [0, -95]
+  });
 
-// Coordenadas 211 Barra Café
-const puntoCafe = [29.105567, -110.952853];
+  // ✅ LISTA DE CAFÉS (aquí vas agregando)
+  const cafes = [
+    {
+      name: "211 Barra Café",
+      address: "C. Benito Juárez 211, Issste Federal, 83157 Hermosillo, Son.",
+      coords: [29.105567208771888, -110.95285255920402]
+    }
+  ];
 
-L.marker(puntoCafe, { icon: cafeIcon })
-  .addTo(map)
-  .bindPopup('<b>211 Barra Café</b><br>C. Benito Juárez 211, Issste Federal, 83157 Hermosillo, Son.')
-  .openPopup();
+  // Crear marcadores y guardarlos
+  const markersByName = new Map();
 
-map.setView(puntoCafe, 18);
+  cafes.forEach(c => {
+    const m = L.marker(c.coords, { icon: cafeIcon })
+      .addTo(map)
+      .bindPopup(`<b>${c.name}</b><br>${c.address}`);
+    markersByName.set(normalize(c.name), { cafe: c, marker: m });
+  });
 
-setTimeout(() => map.invalidateSize(), 250);
+  // Enfocar al primero al cargar
+  map.setView(cafes[0].coords, 18);
+  markersByName.get(normalize(cafes[0].name)).marker.openPopup();
+  setTimeout(() => map.invalidateSize(), 250);
+
+  // ---- BUSCADOR ----
+  const input = document.getElementById("searchInput");
+  const btn = document.getElementById("searchBtn");
+  const suggestions = document.getElementById("suggestions");
+
+  function normalize(s){
+    return (s || "")
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // quita acentos
+      .trim();
+  }
+
+  function showSuggestions(list){
+    suggestions.innerHTML = "";
+    if (!list.length){
+      suggestions.style.display = "none";
+      return;
+    }
+    list.slice(0, 6).forEach(item => {
+      const div = document.createElement("div");
+      div.className = "suggestion";
+      div.textContent = item.name;
+      div.onclick = () => {
+        input.value = item.name;
+        suggestions.style.display = "none";
+        goToCafe(item.name);
+      };
+      suggestions.appendChild(div);
+    });
+    suggestions.style.display = "block";
+  }
+
+  function goToCafe(query){
+    const q = normalize(query);
+
+    // match exacto por nombre
+    if (markersByName.has(q)){
+      const { cafe, marker } = markersByName.get(q);
+      map.setView(cafe.coords, 18);
+      marker.openPopup();
+      return;
+    }
+
+    // match parcial
+    const found = cafes.find(c => normalize(c.name).includes(q));
+    if (found){
+      const { marker } = markersByName.get(normalize(found.name));
+      map.setView(found.coords, 18);
+      marker.openPopup();
+      return;
+    }
+
+    alert("No encontré ese café. Revisa el nombre.");
+  }
+
+  input.addEventListener("input", () => {
+    const q = normalize(input.value);
+    if (!q) { suggestions.style.display = "none"; return; }
+    const matches = cafes.filter(c => normalize(c.name).includes(q));
+    showSuggestions(matches);
+  });
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      suggestions.style.display = "none";
+      goToCafe(input.value);
+    }
+  });
+
+  btn.addEventListener("click", () => {
+    suggestions.style.display = "none";
+    goToCafe(input.value);
+  });
+
+  // click fuera cierra sugerencias
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".searchbar")) suggestions.style.display = "none";
+  });
 </script>
-
-</body>
-</html>
-
-
-

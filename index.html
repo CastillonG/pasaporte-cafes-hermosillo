@@ -1,115 +1,49 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Pasaporte del Café</title>
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #f4e4d6;
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    .card {
-      width: 100%;
-      max-width: 1000px;
-      background: #d8a47f;
-      border-radius: 20px;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    h1 {
-      text-align: center;
-      margin: 0 0 15px 0;
-      color: #7a3f25;
-      letter-spacing: 2px;
-    }
-
-    #map {
-      width: 100%;
-      height: 70vh;
-      border: 3px dotted #7a3f25;
-      border-radius: 15px;
-    }
-  </style>
-</head>
-
-<body>
-
-<div class="container">
-  <div class="card">
-    <h1>PASAPORTE DEL CAFÉ</h1>
-    <div id="map"></div>
-  </div>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
+  // 1) Mapa base
   const map = L.map('map').setView([29.072967, -110.955919], 13);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  // Icono 📍☕
+  // 2) Icono gigante 📍☕ (sin template strings para evitar errores)
   const cafeIcon = L.divIcon({
-    html: '<div style="font-size:70px;">📍☕</div>',
     className: '',
-   iconSize: [80, 80],
-iconAnchor: [40, 80],
+    html:
+      '<div style="' +
+        'display:flex;' +
+        'align-items:center;' +
+        'justify-content:center;' +
+        'font-size:70px;' +               /* 👈 tamaño del emoji */
+        'line-height:1;' +
+        'transform:translateY(-10px);' +
+        'filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));' +
+      '">📍☕</div>',
+    iconSize: [110, 110],     // 👈 espacio del icono
+    iconAnchor: [55, 110],    // 👈 “punta” del marcador
+    popupAnchor: [0, -95]
   });
 
-<script>
-  // Coordenadas aproximadas de 211 Barra Café
+  // 3) Punto 211 Barra Café (coordenadas aprox)
   const puntoCafe = [29.08752, -110.96573];
-
-  const cafeIcon = L.divIcon({
-    className: "",
-    html: `
-      <div style="
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size:34px;
-        line-height:1;
-        transform:translateY(-8px);
-        filter: drop-shadow(0 6px 10px rgba(0,0,0,.25));
-      ">📍☕</div>
-    `,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -36]
-  });
 
   L.marker(puntoCafe, { icon: cafeIcon })
     .addTo(map)
-    .bindPopup(`
-      <b>211 Barra Café</b><br>
-      C. Benito Juárez 211<br>
-      Issste Federal, Hermosillo
-    `)
+    .bindPopup('<b>211 Barra Café</b><br>C. Benito Juárez 211, Issste Federal, 83157 Hermosillo, Son.')
     .openPopup();
 
   map.setView(puntoCafe, 18);
+
+  // 4) Click para agregar marcadores
+  map.on('click', (e) => {
+    const lat = e.latlng.lat;
+    const lng = e.latlng.lng;
+    L.marker([lat, lng]).addTo(map)
+      .bindPopup('Lat: ' + lat.toFixed(6) + '<br>Lng: ' + lng.toFixed(6))
+      .openPopup();
+  });
+
+  // 5) Anti-bug móvil
+  setTimeout(() => map.invalidateSize(), 250);
 </script>
-
-</body>
-</html>
-
-

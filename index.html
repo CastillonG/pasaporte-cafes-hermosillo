@@ -1,121 +1,264 @@
-<script>
-  // Crear mapa
-  const map = L.map('map').setView([29.072967, -110.955919], 13);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pasaporte del Café</title>
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
-  // Icono grande 📍☕
-  const cafeIcon = L.divIcon({
-    className: '',
-    html: '<div style="font-size:70px; line-height:1; transform:translateY(-10px); filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));">📍☕</div>',
-    iconSize: [110, 110],
-    iconAnchor: [55, 110],
-    popupAnchor: [0, -95]
-  });
-
-const cafes = [
-  {
-    name: "211 Barra Café",
-    address: "C. Benito Juárez 211, Issste Federal, 83157 Hermosillo, Son.",
-    coords: [29.105567208771888, -110.95285255920402]
-  },
-];
-
-  // Crear marcadores y guardarlos
-  const markersByName = new Map();
-
-  cafes.forEach(c => {
-    const m = L.marker(c.coords, { icon: cafeIcon })
-      .addTo(map)
-      .bindPopup(`<b>${c.name}</b><br>${c.address}`);
-    markersByName.set(normalize(c.name), { cafe: c, marker: m });
-  });
-
-  // Enfocar al primero al cargar
-  map.setView(cafes[0].coords, 18);
-  markersByName.get(normalize(cafes[0].name)).marker.openPopup();
-  setTimeout(() => map.invalidateSize(), 250);
-
-  // ---- BUSCADOR ----
-  const input = document.getElementById("searchInput");
-  const btn = document.getElementById("searchBtn");
-  const suggestions = document.getElementById("suggestions");
-
-  function normalize(s){
-    return (s || "")
-      .toLowerCase()
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // quita acentos
-      .trim();
-  }
-
-  function showSuggestions(list){
-    suggestions.innerHTML = "";
-    if (!list.length){
-      suggestions.style.display = "none";
-      return;
+  <style>
+    html, body{
+      margin:0;
+      padding:0;
+      height:100%;
+      background:#f4e4d6;
+      font-family: Arial, sans-serif;
     }
-    list.slice(0, 6).forEach(item => {
-      const div = document.createElement("div");
-      div.className = "suggestion";
-      div.textContent = item.name;
-      div.onclick = () => {
-        input.value = item.name;
-        suggestions.style.display = "none";
-        goToCafe(item.name);
-      };
-      suggestions.appendChild(div);
+
+    .container{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+      box-sizing:border-box;
+    }
+
+    .card{
+      width:100%;
+      max-width:1000px;
+      background:#d8a47f;
+      border-radius:20px;
+      padding:18px;
+      box-sizing:border-box;
+      box-shadow: 0 18px 55px rgba(0,0,0,0.18);
+    }
+
+    h1{
+      text-align:center;
+      margin:0 0 12px 0;
+      color:#7a3f25;
+      letter-spacing:2px;
+      font-size:20px;
+    }
+
+    /* BUSCADOR */
+    .searchbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin: 0 0 12px 0;
+      position: relative;
+    }
+
+    .searchbar input{
+      flex:1;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 2px solid rgba(122,63,37,.35);
+      outline: none;
+      font-size: 14px;
+      background: rgba(244,228,214,.9);
+      color: #7a3f25;
+      box-sizing: border-box;
+    }
+
+    .searchbar input:focus{
+      border-color: rgba(122,63,37,.7);
+    }
+
+    .searchbar button{
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 2px solid rgba(122,63,37,.35);
+      background: rgba(244,228,214,.9);
+      color: #7a3f25;
+      font-weight: 700;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    .suggestions{
+      position:absolute;
+      top: 48px;
+      left: 0;
+      right: 92px; /* espacio para el botón */
+      background: rgba(244,228,214,.98);
+      border: 2px solid rgba(122,63,37,.25);
+      border-radius: 12px;
+      overflow: hidden;
+      display:none;
+      z-index: 9999;
+    }
+
+    .suggestion{
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      color:#7a3f25;
+    }
+
+    .suggestion:hover{
+      background: rgba(216,164,127,.35);
+    }
+
+    #map{
+      width:100%;
+      height:70vh;
+      border:3px dotted #7a3f25;
+      border-radius:15px;
+      background:#fff;
+    }
+
+    @media (max-width: 480px){
+      .searchbar button{ padding:12px 10px; }
+      .suggestions{ right: 82px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>PASAPORTE DEL CAFÉ</h1>
+
+      <!-- ✅ BUSCADOR -->
+      <div class="searchbar">
+        <input id="searchInput" type="text" placeholder="Buscar café… (ej. Ágape)" autocomplete="off" />
+        <button id="searchBtn">Buscar</button>
+        <div id="suggestions" class="suggestions"></div>
+      </div>
+
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    // ---- Helpers ----
+    function normalize(s){
+      return (s || "")
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }
+
+    // ---- Map ----
+    const map = L.map('map').setView([29.072967, -110.955919], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const cafeIcon = L.divIcon({
+      className: '',
+      html: '<div style="font-size:70px; line-height:1; transform:translateY(-10px); filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));">📍☕</div>',
+      iconSize: [110, 110],
+      iconAnchor: [55, 110],
+      popupAnchor: [0, -95]
     });
-    suggestions.style.display = "block";
-  }
 
-  function goToCafe(query){
-    const q = normalize(query);
+    // ✅ CAFÉS
+    const cafes = [
+      {
+        name: "211 Barra Café",
+        address: "C. Benito Juárez 211, Issste Federal, 83157 Hermosillo, Son.",
+        coords: [29.105567208771888, -110.95285255920402]
+      },
+      {
+        name: "Ágape Café",
+        address: "Av. Saturnino Campoy 869-GG-Planta Baja, Alvaro Obregon, 83170 Hermosillo, Son.",
+        coords: [29.103832693992107, -111.00632903058111]
+      }
+    ];
 
-    // match exacto por nombre
-    if (markersByName.has(q)){
-      const { cafe, marker } = markersByName.get(q);
-      map.setView(cafe.coords, 18);
-      marker.openPopup();
-      return;
+    // Marcadores indexados
+    const markersByName = new Map();
+
+    cafes.forEach(c => {
+      const marker = L.marker(c.coords, { icon: cafeIcon })
+        .addTo(map)
+        .bindPopup('<b>' + c.name + '</b><br>' + c.address);
+      markersByName.set(normalize(c.name), { cafe: c, marker });
+    });
+
+    // Arranque (primero)
+    map.setView(cafes[0].coords, 15);
+    setTimeout(() => map.invalidateSize(), 250);
+
+    // ---- Search UI ----
+    const input = document.getElementById("searchInput");
+    const btn = document.getElementById("searchBtn");
+    const suggestions = document.getElementById("suggestions");
+
+    function showSuggestions(list){
+      suggestions.innerHTML = "";
+      if (!list.length){ suggestions.style.display = "none"; return; }
+
+      list.slice(0, 6).forEach(item => {
+        const div = document.createElement("div");
+        div.className = "suggestion";
+        div.textContent = item.name;
+        div.onclick = () => {
+          input.value = item.name;
+          suggestions.style.display = "none";
+          goToCafe(item.name);
+        };
+        suggestions.appendChild(div);
+      });
+
+      suggestions.style.display = "block";
     }
 
-    // match parcial
-    const found = cafes.find(c => normalize(c.name).includes(q));
-    if (found){
-      const { marker } = markersByName.get(normalize(found.name));
-      map.setView(found.coords, 18);
-      marker.openPopup();
-      return;
+    function goToCafe(query){
+      const q = normalize(query);
+      if (!q) return;
+
+      // exact match
+      if (markersByName.has(q)){
+        const obj = markersByName.get(q);
+        map.setView(obj.cafe.coords, 18);
+        obj.marker.openPopup();
+        return;
+      }
+
+      // partial match
+      const found = cafes.find(c => normalize(c.name).includes(q));
+      if (found){
+        const obj = markersByName.get(normalize(found.name));
+        map.setView(found.coords, 18);
+        obj.marker.openPopup();
+        return;
+      }
+
+      alert("No encontré ese café. Intenta con otro nombre.");
     }
 
-    alert("No encontré ese café. Revisa el nombre.");
-  }
+    input.addEventListener("input", () => {
+      const q = normalize(input.value);
+      if (!q){ suggestions.style.display = "none"; return; }
+      const matches = cafes.filter(c => normalize(c.name).includes(q));
+      showSuggestions(matches);
+    });
 
-  input.addEventListener("input", () => {
-    const q = normalize(input.value);
-    if (!q) { suggestions.style.display = "none"; return; }
-    const matches = cafes.filter(c => normalize(c.name).includes(q));
-    showSuggestions(matches);
-  });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter"){
+        suggestions.style.display = "none";
+        goToCafe(input.value);
+      }
+    });
 
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
+    btn.addEventListener("click", () => {
       suggestions.style.display = "none";
       goToCafe(input.value);
-    }
-  });
+    });
 
-  btn.addEventListener("click", () => {
-    suggestions.style.display = "none";
-    goToCafe(input.value);
-  });
-
-  // click fuera cierra sugerencias
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".searchbar")) suggestions.style.display = "none";
-  });
-</script>
-
-
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".searchbar")) suggestions.style.display = "none";
+    });
+  </script>
+</body>
+</html>

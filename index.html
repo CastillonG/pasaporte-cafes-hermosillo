@@ -268,73 +268,44 @@
     document.addEventListener("click", (e) => {
       if (!e.target.closest(".searchbar")) suggestions.style.display = "none";
     });
-// --- UBICACIÓN ACTUAL AUTOMÁTICA (sin botón) ---
+// --- UBICACIÓN ACTUAL AUTOMÁTICA (sin círculo azul) ---
 let userMarker = null;
-let userAccuracyCircle = null;
-let firstFix = true;
 
-// si el navegador NO soporta ubicación
-if (!navigator.geolocation) {
-  console.log("Geolocalización no soportada");
-} else {
-  // watchPosition = se actualiza mientras te mueves
-  navigator.geolocation.watchPosition(
+if (navigator.geolocation) {
+
+  navigator.geolocation.getCurrentPosition(
     (pos) => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
-      const acc = pos.coords.accuracy; // metros aprox
       const userCoords = [lat, lng];
 
-      // marcador azul
-      if (!userMarker) {
-        userMarker = L.circleMarker(userCoords, {
-          radius: 8,
-          color: "#2b7cff",
-          fillColor: "#2b7cff",
-          fillOpacity: 0.85
-        }).addTo(map).bindPopup("Tu ubicación 📍");
-      } else {
-        userMarker.setLatLng(userCoords);
-      }
+      // marcador simple azul
+      userMarker = L.circleMarker(userCoords, {
+        radius: 7,
+        color: "#2b7cff",
+        fillColor: "#2b7cff",
+        fillOpacity: 0.9
+      }).addTo(map)
+        .bindPopup("Tu ubicación 📍");
 
-      // círculo de precisión (opcional pero útil)
-      if (!userAccuracyCircle) {
-        userAccuracyCircle = L.circle(userCoords, {
-          radius: acc,
-          color: "#2b7cff",
-          fillColor: "#2b7cff",
-          fillOpacity: 0.12,
-          weight: 1
-        }).addTo(map);
-      } else {
-        userAccuracyCircle.setLatLng(userCoords);
-        userAccuracyCircle.setRadius(acc);
-      }
-
-      // centrar SOLO la primera vez (para no pelearte cuando explores el mapa)
-      if (firstFix) {
-        map.setView(userCoords, 16);
-        firstFix = false;
-      }
+      map.setView(userCoords, 16);
     },
     (err) => {
       console.log("Error ubicación:", err.message);
-      // Si el usuario niega permiso, no pasa nada: se queda en Hermosillo/cafés
     },
     {
       enableHighAccuracy: true,
-      maximumAge: 8000,
-      timeout: 15000
+      timeout: 15000,
+      maximumAge: 0
     }
   );
+
 }
     
   </script>
-
-
-  
 </body>
 </html>
+
 
 
 

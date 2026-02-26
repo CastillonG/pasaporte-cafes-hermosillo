@@ -202,6 +202,23 @@
       
     ];
 
+      const BrownIcon = L.divIcon({
+      className: '',
+      html: '<div style="font-size:70px; line-height:1; transform:translateY(-10px); filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));">📍🟫</div>',
+    iconSize: [80, 80], iconAnchor: [55, 110], popupAnchor: [0, -95]
+    });
+
+    // ✅ CAFÉS
+    const cafes = [
+      {
+        name: "Punto de venta Brownie ; Quick Meat Carnicería",
+        address: "Blvd. Luis Donaldo Colosio Murrieta 896, Casa Grande, 83320 Hermosillo, Son.",
+        coords: [29.08125749577352, -111.02787360322596]
+      }}
+      
+      
+    ];
+
     // Marcadores indexados
     const markersByName = new Map();
 
@@ -323,6 +340,7 @@ if (navigator.geolocation) {
   </script>
 </body>
 </html>
+
 
 
 

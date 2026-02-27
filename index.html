@@ -154,10 +154,12 @@
     }).addTo(map);
 
     const cafeIcon = L.divIcon({
-      className: '',
-      html: '<div style="font-size:70px; line-height:1; transform:translateY(-10px); filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));">📍☕</div>',
-    iconSize: [80, 80], iconAnchor: [55, 110], popupAnchor: [0, -95]
-    });
+  className: '',
+  html: '<div style="font-size:54px; line-height:1; filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));">📍☕</div>',
+  iconSize: [60, 60],
+  iconAnchor: [30, 55],
+  popupAnchor: [0, -50]
+});
 
     // ✅ CAFÉS
     const cafes = [
@@ -239,11 +241,7 @@
         address: "Esquina con, Avenida Doctor Noriega, Calle Gral. José María Yáñez 136A, 83000 Hermosillo, Son.",
         coords: [29.08013109741434, -110.95663581856776]
         },
-{
-        name: "Enclave Libros y Café",
-        address: "Esquina con, Avenida Doctor Noriega, Calle Gral. José María Yáñez 136A, 83000 Hermosillo, Son.",
-        coords: [29.08013109741434, -110.95663581856776]
-        },
+
       {
         name: "Griegos Cafe Grand Kino",
         address: "Blvd. Fco. Eusebio Kino 315, Country Club, 83010 Hermosillo, Son.",
@@ -277,62 +275,62 @@
       {
         name: "Órbita Anticafé",
         address: "C. Mina 37, Cerro de la campana, 83079 Hermosillo, Son.",
-        coord : [  29.074456236377205, -110.955275260897]
+        coords : [  29.074456236377205, -110.955275260897]
       },
       {
         name: "Perséfone Café",
         address: "Blvd. Valentín Gómez Farías 57-J, Periodista, 83156 Hermosillo, Son.",
-        coord : [29.104687168492585, -110.94943997438965]
+        coords : [29.104687168492585, -110.94943997438965]
       },
       {
         name: "Pura Vida - Cafeteria & Brunch",
         address: "Dr Hoeffer 19, El Centenario, 83260 Hermosillo, Son.",
-        coord : [29.076335405127846, -110.96007744372271]
+        coords : [29.076335405127846, -110.96007744372271]
       },
       {
         name: "Renacer Café",
         address: "Av. Tehuantepec 61, El Centenario, 83260 Hermosillo, Son.",
-        coord : [29.073682206807685, -110.95991508788428]
+        coords : [29.073682206807685, -110.95991508788428]
       },
       {
         name: "Social Café",
         address: "Blvd. Luis Donaldo Colosio Murrieta 914-Local 5, La Manga, 83249 Hermosillo, Son.",
-        coord : [29.08120813816138, -111.03031928973229]
+        coords : [29.08120813816138, -111.03031928973229]
       },
       {
         name: "Sonora Classic Rock Café",
         address: "C. Benito Juárez 431, Sacramento, 83144 Hermosillo, Son.",
-        coord : [29.11934240081588, -110.9527667865064]
+        coords : [29.11934240081588, -110.9527667865064]
       },
       {
         name: "Tertulia Café",
         address: "Blvd. Valentín Gómez Farías 102, Periodista, 83156 Hermosillo, Son.",
-        coord : [29.10875136552883, -110.94994971671878]
+        coords : [29.10875136552883, -110.94994971671878]
       },
       {
         name: "Tomomi Café",
         address: "C. Juan Aldama 13, San Benito, 83190 Hermosillo, Son.",
-        coord : [29.09045422627546, -110.96395791856759]
+        coords : [29.09045422627546, -110.96395791856759]
       },
       {
         name: "zanati coffee and tea house",
         address: "con, Calle mina, Oposura 153, Centro, 83000 Hermosillo, Son.",
-        coord : [29.07377082341835, -110.9553939425576]
+        coords : [29.07377082341835, -110.9553939425576]
       },
       {
         name: "Casazul coffee and bakery",
         address: "Av. Campeche 1875, 83343 Bahía de Kino, Son.",
-        coord : [28.861529813131476, -112.00814071692837]
+        coords : [28.861529813131476, -112.00814071692837]
       },
       {
         name: "Meri Meri Coffee Community",
         address: "Frente al malecón, a lado del cerro El Crestón, Blvd Manlio Fabio Beltrones, Crestón 717, 85506 San Carlos, Son.",
-        coord : [27.96281246757789, -111.02654323209421]
+        coords : [27.96281246757789, -111.02654323209421]
       },
       {
         name: "PALOMINA COFFEE SHOP",
         address: "64M6+XX, 83300 Los Pinitos, Son.",
-        coord : [29.235063735470405, -110.88740913020855]
+        coords : [29.235063735470405, -110.88740913020855]
       }
 
     ];
@@ -460,6 +458,7 @@ if (navigator.geolocation) {
   </script>
 </body>
 </html>
+
 
 
 

@@ -146,12 +146,16 @@
     }
 
     // ---- Map ----
-    const map = L.map('map').setView([29.072967, -110.955919], 13);
+  const map = L.map('map', {
+  minZoom: 12,  // no dejar alejar más que esto
+  maxZoom: 18   // no dejar acercar más que esto
+}).setView([29.072967, -110.955919], 13);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  minZoom: 12,
+  maxZoom: 18,
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
 
     const cafeIcon = L.divIcon({
   className: '',
@@ -458,6 +462,7 @@ if (navigator.geolocation) {
   </script>
 </body>
 </html>
+
 
 
 

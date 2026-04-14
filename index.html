@@ -3,483 +3,1005 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pasaporte del Café</title>
+  <title>Pasaporte del Café — Hermosillo</title>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 
   <style>
-    html, body{
-      margin:0;
-      padding:0;
-      height:100%;
-      background:#f4e4d6;
-      font-family: Arial, sans-serif;
+    :root {
+      --cream:    #f5ead8;
+      --warm:     #f0d9be;
+      --sand:     #d8b98a;
+      --espresso: #7a3f25;
+      --dark:     #3e1f0e;
+      --latte:    #d8a47f;
+      --foam:     #fdf6ed;
+      --green:    #4a7c59;
+      --stamp-gold: #c9a227;
     }
 
-    .container{
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:20px;
-      box-sizing:border-box;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    .card{
-      width:100%;
-      max-width:1000px;
-      background:#d8a47f;
-      border-radius:20px;
-      padding:18px;
-      box-sizing:border-box;
-      box-shadow: 0 18px 55px rgba(0,0,0,0.18);
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--espresso);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
-    h1{
-      text-align:center;
-      margin:0 0 12px 0;
-      color:#7a3f25;
-      letter-spacing:2px;
-      font-size:20px;
+    .topbar h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--cream);
+      font-size: 18px;
+      letter-spacing: 1.5px;
+      white-space: nowrap;
     }
 
-    /* BUSCADOR */
-    .searchbar{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      margin: 0 0 12px 0;
+    .nav-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .nav-tab {
+      padding: 7px 14px;
+      border-radius: 20px;
+      background: transparent;
+      border: 1.5px solid rgba(245,234,216,.3);
+      color: rgba(245,234,216,.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+
+    .nav-tab.active, .nav-tab:hover {
+      background: rgba(245,234,216,.15);
+      color: var(--cream);
+      border-color: rgba(245,234,216,.7);
+    }
+
+    .nav-tab.active {
+      background: rgba(245,234,216,.22);
+      border-color: var(--cream);
+    }
+
+    /* ── PAGES ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── MAP PAGE ── */
+    .map-page {
+      padding: 16px;
+    }
+
+    .searchbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
       position: relative;
     }
 
-    .searchbar input{
-      flex:1;
-      padding: 12px 14px;
+    .searchbar input {
+      flex: 1;
+      padding: 12px 16px;
       border-radius: 12px;
-      border: 2px solid rgba(122,63,37,.35);
+      border: 2px solid rgba(122,63,37,.25);
       outline: none;
       font-size: 14px;
-      background: rgba(244,228,214,.9);
-      color: #7a3f25;
-      box-sizing: border-box;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--foam);
+      color: var(--espresso);
     }
 
-    .searchbar input:focus{
-      border-color: rgba(122,63,37,.7);
-    }
+    .searchbar input:focus { border-color: var(--espresso); }
 
-    .searchbar button{
-      padding: 12px 14px;
+    .searchbar button {
+      padding: 12px 18px;
       border-radius: 12px;
-      border: 2px solid rgba(122,63,37,.35);
-      background: rgba(244,228,214,.9);
-      color: #7a3f25;
-      font-weight: 700;
+      border: none;
+      background: var(--espresso);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
       cursor: pointer;
-      box-sizing: border-box;
+      transition: background .2s;
     }
 
-    .suggestions{
-      position:absolute;
-      top: 48px;
+    .searchbar button:hover { background: var(--dark); }
+
+    .suggestions {
+      position: absolute;
+      top: 50px;
       left: 0;
-      right: 150px; /* espacio para el botón */
-      background: rgba(244,228,214,.98);
-      border: 2px solid rgba(122,63,37,.25);
+      right: 80px;
+      background: var(--foam);
+      border: 1.5px solid rgba(122,63,37,.2);
       border-radius: 12px;
       overflow: hidden;
-      display:none;
+      display: none;
       z-index: 9999;
+      box-shadow: 0 8px 24px rgba(62,31,14,.12);
     }
 
-    .suggestion{
-      padding: 10px 12px;
+    .suggestion {
+      padding: 11px 14px;
       cursor: pointer;
       font-size: 14px;
-      color:#7a3f25;
+      color: var(--espresso);
+      border-bottom: 1px solid rgba(122,63,37,.08);
+      transition: background .15s;
     }
 
-    .suggestion:hover{
-      background: rgba(216,164,127,.35);
+    .suggestion:last-child { border-bottom: none; }
+    .suggestion:hover { background: var(--warm); }
+
+    #map {
+      width: 100%;
+      height: 70vh;
+      border-radius: 16px;
+      border: 2px solid rgba(122,63,37,.25);
     }
 
-    #map{
-      width:100%;
-      height:70vh;
-      border:3px dotted #7a3f25;
-      border-radius:15px;
-      background:#fff;
+    /* ── PASSPORT PAGE ── */
+    .passport-page {
+      padding: 20px 16px;
+      max-width: 700px;
+      margin: 0 auto;
     }
-  
-    @media (max-width: 480px){
-      .searchbar button{ padding:12px 10px; }
-      .suggestions{ right: 82px; }
+
+    .passport-cover {
+      background: var(--espresso);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .passport-cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 20px,
+        rgba(255,255,255,.03) 20px,
+        rgba(255,255,255,.03) 40px
+      );
+    }
+
+    .passport-cover h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--cream);
+      font-size: 22px;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+      position: relative;
+    }
+
+    .passport-cover .subtitle {
+      color: var(--sand);
+      font-size: 13px;
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    .passport-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+      position: relative;
+    }
+
+    .stat-box {
+      background: rgba(245,234,216,.1);
+      border-radius: 12px;
+      padding: 14px 8px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--cream);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--sand);
+      margin-top: 4px;
+      letter-spacing: .5px;
+    }
+
+    .progress-bar-wrap {
+      margin: 16px 0 0;
+      position: relative;
+    }
+
+    .progress-bar-bg {
+      height: 8px;
+      background: rgba(245,234,216,.15);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--stamp-gold);
+      border-radius: 20px;
+      transition: width .6s cubic-bezier(.4,0,.2,1);
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: var(--sand);
+      margin-top: 6px;
+      text-align: right;
+      position: relative;
+    }
+
+    /* Stamps grid */
+    .stamps-section h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--espresso);
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .stamps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 10px;
+    }
+
+    .stamp-item {
+      background: var(--foam);
+      border: 2px dashed rgba(122,63,37,.2);
+      border-radius: 14px;
+      padding: 12px 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+    }
+
+    .stamp-item:hover { border-color: var(--espresso); transform: translateY(-1px); }
+
+    .stamp-item.stamped {
+      background: var(--espresso);
+      border: 2px solid var(--stamp-gold);
+      box-shadow: 0 4px 12px rgba(122,63,37,.3);
+    }
+
+    .stamp-item.stamped::after {
+      content: '✓';
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 18px;
+      height: 18px;
+      background: var(--stamp-gold);
+      border-radius: 50%;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      line-height: 18px;
+    }
+
+    .stamp-emoji {
+      font-size: 26px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .stamp-name {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--espresso);
+      line-height: 1.3;
+    }
+
+    .stamp-item.stamped .stamp-name {
+      color: var(--cream);
+    }
+
+    .stamp-date {
+      font-size: 9px;
+      color: var(--sand);
+      margin-top: 3px;
+    }
+
+    .stamp-item.stamped .stamp-date { color: var(--sand); }
+
+    /* ── REWARDS ── */
+    .rewards-section {
+      margin-top: 24px;
+    }
+
+    .rewards-section h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--espresso);
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .reward-card {
+      background: var(--foam);
+      border: 1.5px solid rgba(122,63,37,.15);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: transform .15s;
+    }
+
+    .reward-card:hover { transform: translateY(-1px); }
+
+    .reward-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .reward-info { flex: 1; }
+
+    .reward-title {
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 15px;
+    }
+
+    .reward-desc {
+      font-size: 13px;
+      color: var(--espresso);
+      opacity: .7;
+      margin-top: 2px;
+    }
+
+    .reward-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .reward-badge.locked {
+      background: rgba(122,63,37,.1);
+      color: var(--espresso);
+    }
+
+    .reward-badge.unlocked {
+      background: var(--stamp-gold);
+      color: white;
+    }
+
+    .reward-badge.claimed {
+      background: var(--green);
+      color: white;
+    }
+
+    /* ── CAFE DETAIL MODAL ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(62,31,14,.5);
+      z-index: 2000;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+
+    .overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .cafe-sheet {
+      background: var(--foam);
+      border-radius: 24px 24px 0 0;
+      padding: 24px 20px 32px;
+      width: 100%;
+      max-width: 700px;
+      max-height: 85vh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
+    }
+
+    .overlay.open .cafe-sheet {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: rgba(122,63,37,.2);
+      border-radius: 2px;
+      margin: 0 auto 18px;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .sheet-header h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--dark);
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .sheet-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(122,63,37,.1);
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--espresso);
+      transition: background .2s;
+    }
+
+    .sheet-close:hover { background: rgba(122,63,37,.2); }
+
+    .sheet-address {
+      font-size: 13px;
+      color: var(--espresso);
+      opacity: .7;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .sheet-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--espresso);
+      opacity: .5;
+      margin-bottom: 10px;
+    }
+
+    .menu-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .menu-tag {
+      background: var(--warm);
+      border: 1.5px solid rgba(122,63,37,.15);
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: var(--espresso);
+      font-weight: 500;
+    }
+
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(122,63,37,.08);
+      font-size: 13px;
+      color: var(--dark);
+    }
+
+    .hours-row .day { color: var(--espresso); opacity: .7; }
+
+    .hours-open { color: var(--green); font-weight: 600; }
+
+    .checkin-btn {
+      width: 100%;
+      margin-top: 24px;
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .5px;
+    }
+
+    .checkin-btn.unstamped {
+      background: var(--espresso);
+      color: var(--cream);
+    }
+
+    .checkin-btn.unstamped:hover {
+      background: var(--dark);
+      transform: translateY(-1px);
+    }
+
+    .checkin-btn.stamped {
+      background: var(--stamp-gold);
+      color: white;
+    }
+
+    .checkin-btn.visited {
+      background: rgba(122,63,37,.1);
+      color: var(--espresso);
+      cursor: default;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--espresso);
+      color: var(--cream);
+      padding: 14px 22px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 9999;
+      transition: transform .35s cubic-bezier(.4,0,.2,1);
+      white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(62,31,14,.25);
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .topbar h1 { font-size: 14px; }
+      .nav-tab { padding: 6px 10px; font-size: 12px; }
+      .stamps-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <div class="card">
-      <h1>PASAPORTE DEL CAFÉ</h1>
 
-      <!-- ✅ BUSCADOR -->
-      <div class="searchbar">
-        <input id="searchInput" type="text" placeholder="Escribe Café..." autocomplete="off" />
-       <button id="searchBtn">Buscar</button>
-        <div id="suggestions" class="suggestions"></div>
-      </div>
-
-      <div id="map"></div>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <h1>☕ PASAPORTE</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchPage('map')">Mapa</button>
+      <button class="nav-tab" onclick="switchPage('passport')">Mi Pasaporte</button>
     </div>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- MAP PAGE -->
+  <div class="page active map-page" id="page-map">
+    <div class="searchbar">
+      <input id="searchInput" type="text" placeholder="Buscar café…" autocomplete="off"/>
+      <button id="searchBtn">Buscar</button>
+      <div id="suggestions" class="suggestions"></div>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <!-- PASSPORT PAGE -->
+  <div class="page passport-page" id="page-passport">
+
+    <!-- Cover card -->
+    <div class="passport-cover">
+      <h2>PASAPORTE DEL CAFÉ</h2>
+      <div class="subtitle">HERMOSILLO, SONORA</div>
+      <div class="passport-stats">
+        <div class="stat-box">
+          <div class="stat-num" id="stat-visited">0</div>
+          <div class="stat-label">Visitados</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-total">33</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-pct">0%</div>
+          <div class="stat-label">Completado</div>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+        <div class="progress-label" id="progress-label">0 de 33 sellos</div>
+      </div>
+    </div>
+
+    <!-- Rewards -->
+    <div class="rewards-section">
+      <h3>Recompensas</h3>
+      <div id="rewards-list"></div>
+    </div>
+
+    <!-- Stamps -->
+    <div class="stamps-section" style="margin-top:24px;">
+      <h3>Mis Sellos</h3>
+      <div class="stamps-grid" id="stamps-grid"></div>
+    </div>
+
+  </div>
+
+  <!-- CAFE DETAIL SHEET -->
+  <div class="overlay" id="overlay" onclick="closeSheet(event)">
+    <div class="cafe-sheet" id="cafe-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <h2 id="sheet-name">—</h2>
+        <button class="sheet-close" onclick="closeOverlay()">✕</button>
+      </div>
+      <div class="sheet-address" id="sheet-address">📍 —</div>
+
+      <div class="sheet-section-title">Especialidades</div>
+      <div class="menu-tags" id="sheet-menu"></div>
+
+      <div class="sheet-section-title">Horarios</div>
+      <div id="sheet-hours"></div>
+
+      <button class="checkin-btn" id="checkin-btn" onclick="doCheckin()">
+        Registrar Visita ☕
+      </button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
   <script>
-    // ---- Helpers ----
-    function normalize(s){
-      return (s || "")
-        .toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .trim();
-    }
-
-    // ---- Map ----
-  const map = L.map('map', {
-  minZoom: 12,  // no dejar alejar más que esto
-  maxZoom: 18   // no dejar acercar más que esto
-}).setView([29.072967, -110.955919], 13);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  minZoom: 12,
-  maxZoom: 18,
-  attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
-
-    const cafeIcon = L.divIcon({
-  className: '',
-  html: '<div style="font-size:54px; line-height:1; filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));">📍☕</div>',
-  iconSize: [60, 60],
-  iconAnchor: [30, 55],
-  popupAnchor: [0, -50]
-});
-
-    // ✅ CAFÉS
+  window.addEventListener('load', function() {
+    // ──────────────────────────────────────────────
+    // DATA
+    // ──────────────────────────────────────────────
     const cafes = [
-      {
-        name: "211 Barra Café",
-        address: "C. Benito Juárez 211, Issste Federal, 83157 Hermosillo, Son.",
-        coords: [29.105567208771888, -110.95285255920402]
-      },
-      {
-        name: "Ágape Café",
-        address: "Av. Saturnino Campoy 869-GG-Planta Baja, Alvaro Obregon, 83170 Hermosillo, Son.",
-        coords: [29.103832693992107, -111.00632903058111]
-      },
-      {
-        name: "Aletto Café",
-        address: "Av. Dr. Ignacio Pesqueira 608-Local A, Las Quintas, 83240 Hermosillo, Son.",
-        coords: [29.084816791070214, -110.99171150663696]
-      }
-      ,
-      {
-        name: "Café Central",
-        address: "Blvd. Miguel Hidalgo 63, El Centenario, 83260 Hermosillo, Son.",
-        coords: [29.076014983347672, -110.96143485893003]
-      } ,
-      {
-        name: "Cafelita",
-        address: "Av. Tehuantepec 53, El Centenario, 83260 Hermosillo, Son.",
-        coords: [29.073757114487975, -110.95900695956284]
-      },
-      {
-        name: "ROOCÖ Café",
-        address: "Plaza navarrete, Local 22, Montebello, 83249 Hermosillo, Son.",
-        coords: [29.089559826438695, -110.9909571032256]
-      }
-      ,
-      {
-        name: "Flor del Desierto Café",
-        address: "Banús 4D, Banus, Insurgentes, 83106 Hermosillo, Son.",
-        coords: [29.144872896683243, -110.96126047596461]
-      },
-      {
-        name: "Clarity - Brew Bar",
-        address: "Av. San Luis Potosí 211-B, Col:, San Benito, 83190 Hermosillo, Son.",
-        coords: [29.089694327994355, -110.96556932991658]
-      },
-      {
-        name: "Colibrí Café",
-        address: "Segunda de Obregón 140, El Centenario, 83000 Hermosillo, Son.",
-        coords: [29.077396545553707, -110.95831623251213]
-      }
-      ,
-      {
-        name: "Culto al Perro Café",
-        address: "Local Perrón, C. Quintero Arce 49, Montebello, 83210 Hermosillo, Son.",
-        coords: [29.089406537137965, -111.00733081671916]
-      },
-      {
-        name: "Dante y Nova Café",
-        address: "Pbro. Pedro Villegas Ramírez 2, Col del Razo, 83070 Hermosillo, Son.",
-        coords: [29.076618035564465, -110.94763107623878]
-        },
-      {
-        name: "Dos Raíces Casa Tostadora de Café",
-        address: "Benito Quintana 20, Constitucion, 83150 Hermosillo, Son.",
-        coords: [29.100452320630676, -110.95029740137704]
-        },
-      {
-        name: "El Chapucero | Café",
-        address: "Blvd. Miguel Hidalgo 60, El Centenario, 83260 Hermosillo, Son.",
-        coords: [29.07526521180525, -110.96141590137788]
-        },
-      {
-        name: "El Idilio Café",
-        address: "Av Gaston Madrid 157-2, San Benito, 83190 Hermosillo, Son.",
-        coords: [29.088434029105446, -110.96333520322565]
-        },
-      {
-        name: "Enclave Libros y Café",
-        address: "Esquina con, Avenida Doctor Noriega, Calle Gral. José María Yáñez 136A, 83000 Hermosillo, Son.",
-        coords: [29.08013109741434, -110.95663581856776]
-        },
-
-      {
-        name: "Griegos Cafe Grand Kino",
-        address: "Blvd. Fco. Eusebio Kino 315, Country Club, 83010 Hermosillo, Son.",
-        coords: [29.09727979833694, -110.93829440322543]
-        },
-      {
-        name: "HORIZON COFFEE HOUSE",
-        address: "Plaza universidad, Bulevar Luis D. Colosio 158, El Centenario, 83260 Hermosillo, Son.",
-        coords: [29.07992034169461, -110.96314911534186]
-        },
-      {
-        name: "Josefina Cafe",
-        address: "Av Guillermo Prieto 22, Constitucion, 83150 Hermosillo, Son.",
-        coords: [29.100127068276983, -110.9501481608962]
-        },
-      {
-        name: "Maleducados",
-        address: "Felicitas Zermeño 41, Centro, 83010 Hermosillo, Son.",
-        coords: [29.093250853486147, -110.94829875904811]
-        },
-      {
-        name: "MASALA CAFÉ",
-        address: "Plaza guayacanes muro de ladrillos, Bulevar José María Morelos 389, Sacramento, 83146 Hermosillo, Son.",
-        coords: [29.12945670699164, -110.95133002456325]
-        },
-      {
-        name: "Café Modular",
-        address: "La Jolla Ote. 90, Lomas Altas, 83159 Hermosillo, Son.",
-        coords: [29.107736592408514, -110.93642667438965]
-        },
-      {
-        name: "Órbita Anticafé",
-        address: "C. Mina 37, Cerro de la campana, 83079 Hermosillo, Son.",
-        coords : [  29.074456236377205, -110.955275260897]
-      },
-      {
-        name: "Perséfone Café",
-        address: "Blvd. Valentín Gómez Farías 57-J, Periodista, 83156 Hermosillo, Son.",
-        coords : [29.104687168492585, -110.94943997438965]
-      },
-      {
-        name: "Pura Vida - Cafeteria & Brunch",
-        address: "Dr Hoeffer 19, El Centenario, 83260 Hermosillo, Son.",
-        coords : [29.076335405127846, -110.96007744372271]
-      },
-      {
-        name: "Renacer Café",
-        address: "Av. Tehuantepec 61, El Centenario, 83260 Hermosillo, Son.",
-        coords : [29.073682206807685, -110.95991508788428]
-      },
-      {
-        name: "Social Café",
-        address: "Blvd. Luis Donaldo Colosio Murrieta 914-Local 5, La Manga, 83249 Hermosillo, Son.",
-        coords : [29.08120813816138, -111.03031928973229]
-      },
-      {
-        name: "Sonora Classic Rock Café",
-        address: "C. Benito Juárez 431, Sacramento, 83144 Hermosillo, Son.",
-        coords : [29.11934240081588, -110.9527667865064]
-      },
-      {
-        name: "Tertulia Café",
-        address: "Blvd. Valentín Gómez Farías 102, Periodista, 83156 Hermosillo, Son.",
-        coords : [29.10875136552883, -110.94994971671878]
-      },
-      {
-        name: "Tomomi Café",
-        address: "C. Juan Aldama 13, San Benito, 83190 Hermosillo, Son.",
-        coords : [29.09045422627546, -110.96395791856759]
-      },
-      {
-        name: "zanati coffee and tea house",
-        address: "con, Calle mina, Oposura 153, Centro, 83000 Hermosillo, Son.",
-        coords : [29.07377082341835, -110.9553939425576]
-      },
-      {
-        name: "Casazul coffee and bakery",
-        address: "Av. Campeche 1875, 83343 Bahía de Kino, Son.",
-        coords : [28.861529813131476, -112.00814071692837]
-      },
-      {
-        name: "Meri Meri Coffee Community",
-        address: "Frente al malecón, a lado del cerro El Crestón, Blvd Manlio Fabio Beltrones, Crestón 717, 85506 San Carlos, Son.",
-        coords : [27.96281246757789, -111.02654323209421]
-      },
-      {
-        name: "PALOMINA COFFEE SHOP",
-        address: "64M6+XX, 83300 Los Pinitos, Son.",
-        coords : [29.235063735470405, -110.88740913020855]
-      }
-
+      { name:"211 Barra Café", address:"C. Benito Juárez 211, Issste Federal", coords:[29.105567,-110.952852], menu:["Espresso","Cappuccino","Té","Pasteles"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"10–18"} },
+      { name:"Ágape Café", address:"Av. Saturnino Campoy 869-GG, Álvaro Obregón", coords:[29.103832,-111.006329], menu:["Cold Brew","Latte","Sándwiches","Waffles"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { name:"Aletto Café", address:"Av. Dr. Ignacio Pesqueira 608-A, Las Quintas", coords:[29.084816,-110.991711], menu:["V60","Aeropress","Croissants","Matcha"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–20",dom:"10–17"} },
+      { name:"Café Central", address:"Blvd. Miguel Hidalgo 63, El Centenario", coords:[29.076014,-110.961434], menu:["Americano","Café de Olla","Pan de Dulce"], hours:{lun:"7–21",mar:"7–21",mie:"7–21",jue:"7–21",vie:"7–22",sab:"8–22",dom:"9–18"} },
+      { name:"Cafelita", address:"Av. Tehuantepec 53, El Centenario", coords:[29.073757,-110.959006], menu:["Espresso","Muffins","Licuados","Tés"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"9–17"} },
+      { name:"ROOCÖ Café", address:"Plaza Navarrete Local 22, Montebello", coords:[29.089559,-110.990957], menu:["Specialty Coffee","Tapioca","Matcha Latte"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
+      { name:"Flor del Desierto Café", address:"Banús 4D, Insurgentes", coords:[29.144872,-110.961260], menu:["Cold Brew","Frappé","Tamales","Pan"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–20",dom:"Cerrado"} },
+      { name:"Clarity - Brew Bar", address:"Av. San Luis Potosí 211-B, San Benito", coords:[29.089694,-110.965569], menu:["Pour Over","Chemex","Filtrado","Pasteles"], hours:{lun:"8–19",mar:"8–19",mie:"8–19",jue:"8–19",vie:"8–20",sab:"9–20",dom:"10–15"} },
+      { name:"Colibrí Café", address:"Segunda de Obregón 140, El Centenario", coords:[29.077396,-110.958316], menu:["Café Mexicano","Horchata","Burritos","Pan"], hours:{lun:"7–21",mar:"7–21",mie:"7–21",jue:"7–21",vie:"7–22",sab:"8–22",dom:"9–19"} },
+      { name:"Culto al Perro Café", address:"C. Quintero Arce 49, Montebello", coords:[29.089406,-111.007330], menu:["Espresso","Dog-Friendly","Galletas","Tés"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
+      { name:"Dante y Nova Café", address:"Pbro. Pedro Villegas Ramírez 2, Col del Razo", coords:[29.076618,-110.947631], menu:["Latte Art","Filtrados","Scones","Quiche"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"10–18"} },
+      { name:"Dos Raíces Casa Tostadora", address:"Benito Quintana 20, Constitución", coords:[29.100452,-110.950297], menu:["Single Origin","Café Verde","Tostados","Granos"], hours:{lun:"9–19",mar:"9–19",mie:"9–19",jue:"9–19",vie:"9–20",sab:"10–18",dom:"Cerrado"} },
+      { name:"El Chapucero | Café", address:"Blvd. Miguel Hidalgo 60, El Centenario", coords:[29.075265,-110.961415], menu:["Americano","Brownies","Sandwich","Granola"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { name:"El Idilio Café", address:"Av. Gastón Madrid 157-2, San Benito", coords:[29.088434,-110.963335], menu:["Latte","Avocado Toast","Smoothies","Matcha"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { name:"Enclave Libros y Café", address:"Calle José María Yáñez 136A, Centro", coords:[29.080131,-110.956635], menu:["Café","Libros","Charlas","Tés"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
+      { name:"Griegos Cafe Grand Kino", address:"Blvd. Fco. Eusebio Kino 315, Country Club", coords:[29.097279,-110.938294], menu:["Gyros","Espresso","Tzatziki","Croissants"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–18"} },
+      { name:"HORIZON COFFEE HOUSE", address:"Plaza Universidad, Blvd. Luis D. Colosio 158", coords:[29.079920,-110.963149], menu:["Pour Over","Batch Brew","Waffles","Granola"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–20"} },
+      { name:"Josefina Cafe", address:"Av. Guillermo Prieto 22, Constitución", coords:[29.100127,-110.950148], menu:["Café de la Abuela","Pan Casero","Atole","Tamales"], hours:{lun:"7–20",mar:"7–20",mie:"7–20",jue:"7–20",vie:"7–21",sab:"8–21",dom:"9–17"} },
+      { name:"Maleducados", address:"Felicitas Zermeño 41, Centro", coords:[29.093250,-110.948298], menu:["Espresso","Cocteles Café","Pan Artesanal"], hours:{lun:"9–22",mar:"9–22",mie:"9–22",jue:"9–22",vie:"9–24",sab:"10–24",dom:"11–20"} },
+      { name:"MASALA CAFÉ", address:"Blvd. José María Morelos 389, Sacramento", coords:[29.129456,-110.951330], menu:["Chai Latte","Curry","Especias","Pan Pita"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
+      { name:"Café Modular", address:"La Jolla Ote. 90, Lomas Altas", coords:[29.107736,-110.936426], menu:["Cold Brew","Kombucha","Avocado Toast","Bowl"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { name:"Órbita Anticafé", address:"C. Mina 37, Cerro de la Campana", coords:[29.074456,-110.955275], menu:["Tiempo Libre","Juegos","Café Incluido","Snacks"], hours:{lun:"10–22",mar:"10–22",mie:"10–22",jue:"10–22",vie:"10–24",sab:"11–24",dom:"11–21"} },
+      { name:"Perséfone Café", address:"Blvd. Valentín Gómez Farías 57-J, Periodista", coords:[29.104687,-110.949439], menu:["Filtrado","Espresso","Banana Bread","Brownies"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { name:"Pura Vida - Cafeteria & Brunch", address:"Dr. Hoeffer 19, El Centenario", coords:[29.076335,-110.960077], menu:["Brunch","Smoothie Bowl","Tostadas","Jugos"], hours:{lun:"8–16",mar:"8–16",mie:"8–16",jue:"8–16",vie:"8–17",sab:"9–17",dom:"9–15"} },
+      { name:"Renacer Café", address:"Av. Tehuantepec 61, El Centenario", coords:[29.073682,-110.959915], menu:["Americano","Frappés","Repostería","Atole"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"9–19"} },
+      { name:"Social Café", address:"Blvd. Luis Donaldo Colosio 914-L5, La Manga", coords:[29.081208,-111.030319], menu:["Cold Brew","Açaí Bowl","Tostadas","Matcha"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
+      { name:"Sonora Classic Rock Café", address:"C. Benito Juárez 431, Sacramento", coords:[29.119342,-110.952766], menu:["Americano","Hot Dog","Nachos","Cocteles"], hours:{lun:"Cerrado",mar:"14–23",mie:"14–23",jue:"14–23",vie:"14–01",sab:"14–01",dom:"14–21"} },
+      { name:"Tertulia Café", address:"Blvd. Valentín Gómez Farías 102, Periodista", coords:[29.108751,-110.949949], menu:["Filtrado","Charlas","Libros","Pan Artesanal"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
+      { name:"Tomomi Café", address:"C. Juan Aldama 13, San Benito", coords:[29.090454,-110.963957], menu:["Matcha","Mochi","Café Japonés","Onigiri"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
+      { name:"zanati coffee and tea house", address:"Oposura 153, Centro", coords:[29.073770,-110.955393], menu:["Té de Especialidad","Single Origin","Oolong","Pan"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
+      { name:"Casazul coffee and bakery", address:"Av. Campeche 1875, Bahía de Kino", coords:[28.861529,-112.008140], menu:["Pan Artesanal","Espresso","Pasteles","Jugos"], hours:{lun:"8–18",mar:"8–18",mie:"8–18",jue:"8–18",vie:"8–19",sab:"9–19",dom:"9–16"} },
+      { name:"Meri Meri Coffee Community", address:"Blvd. Manlio Fabio Beltrones 717, San Carlos", coords:[27.962812,-111.026543], menu:["Specialty Coffee","Malteadas","Pancakes","Tacos"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–20"} },
+      { name:"PALOMINA COFFEE SHOP", address:"Los Pinitos, Sonora", coords:[29.235063,-110.887409], menu:["Café de Rancho","Atole","Pan Sonorense","Burritos"], hours:{lun:"7–19",mar:"7–19",mie:"7–19",jue:"7–19",vie:"7–20",sab:"8–20",dom:"8–17"} }
     ];
 
-    
+    const REWARDS = [
+      { id:'r1', title:'Primera Taza', desc:'Visita tu primer café del pasaporte', icon:'☕', need:1 },
+      { id:'r2', title:'Explorador Novato', desc:'Visita 5 cafés diferentes', icon:'🗺️', need:5 },
+      { id:'r3', title:'Amante del Café', desc:'Visita 10 cafés diferentes', icon:'❤️', need:10 },
+      { id:'r4', title:'Pasaporte a Medias', desc:'Completa la mitad del pasaporte', icon:'📖', need:Math.ceil(cafes.length/2) },
+      { id:'r5', title:'Gran Explorador', desc:'Visita 25 cafés del pasaporte', icon:'🏆', need:25 },
+      { id:'r6', title:'Pasaporte Completo', desc:'¡Visita todos los cafés asociados!', icon:'⭐', need:cafes.length }
+    ];
 
-    // Marcadores indexados
+    // ──────────────────────────────────────────────
+    // STATE (localStorage)
+    // ──────────────────────────────────────────────
+    function loadVisited() {
+      try { return JSON.parse(localStorage.getItem('cafeVisited') || '{}'); }
+      catch { return {}; }
+    }
+
+    function saveVisited(v) {
+      localStorage.setItem('cafeVisited', JSON.stringify(v));
+    }
+
+    let visited = loadVisited();
+    let currentCafe = null;
+
+    // ──────────────────────────────────────────────
+    // HELPERS
+    // ──────────────────────────────────────────────
+    function normalize(s) {
+      return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+    }
+
+    function visitedCount() { return Object.keys(visited).length; }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ──────────────────────────────────────────────
+    // PAGE NAVIGATION
+    // ──────────────────────────────────────────────
+    function switchPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('page-' + id).classList.add('active');
+      event.target.classList.add('active');
+      if (id === 'passport') renderPassport();
+    }
+
+    // ──────────────────────────────────────────────
+    // MAP
+    // ──────────────────────────────────────────────
+    const map = L.map('map', { minZoom:12, maxZoom:18 }).setView([29.072967,-110.955919], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      minZoom:12, maxZoom:18,
+      attribution:'&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const cafeIcon = L.divIcon({
+      className:'',
+      html:'<div style="font-size:42px;line-height:1;filter:drop-shadow(0 4px 8px rgba(0,0,0,.22));">📍</div>',
+      iconSize:[40,40], iconAnchor:[20,38], popupAnchor:[0,-38]
+    });
+
+    const visitedIcon = L.divIcon({
+      className:'',
+      html:'<div style="font-size:42px;line-height:1;filter:drop-shadow(0 4px 8px rgba(0,0,0,.22));">✅</div>',
+      iconSize:[40,40], iconAnchor:[20,38], popupAnchor:[0,-38]
+    });
+
     const markersByName = new Map();
 
     cafes.forEach(c => {
-      const marker = L.marker(c.coords, { icon: cafeIcon })
+      const isVisited = !!visited[c.name];
+      const marker = L.marker(c.coords, { icon: isVisited ? visitedIcon : cafeIcon })
         .addTo(map)
-        .bindPopup('<b>' + c.name + '</b><br>' + c.address);
-      markersByName.set(normalize(c.name), { cafe: c, marker });
+        .bindPopup('<b>' + c.name + '</b><br><small>' + c.address + '</small><br><br><a href="#" onclick="openCafeSheet(\'' + encodeURIComponent(c.name) + '\');return false;" style="color:#7a3f25;font-weight:600;">Ver detalles →</a>');
+      markersByName.set(normalize(c.name), { cafe:c, marker });
     });
 
-    // Arranque (primero)
-    map.setView(cafes[0].coords, 15);
+    function refreshMarkers() {
+      cafes.forEach(c => {
+        const obj = markersByName.get(normalize(c.name));
+        if (!obj) return;
+        obj.marker.setIcon(visited[c.name] ? visitedIcon : cafeIcon);
+      });
+    }
+
     setTimeout(() => map.invalidateSize(), 250);
 
-    // ---- Search UI ----
-    const input = document.getElementById("searchInput");
-    const btn = document.getElementById("searchBtn");
-    const suggestions = document.getElementById("suggestions");
-
-    function showSuggestions(list){
-      suggestions.innerHTML = "";
-      if (!list.length){ suggestions.style.display = "none"; return; }
-
-      list.slice(0, 6).forEach(item => {
-        const div = document.createElement("div");
-        div.className = "suggestion";
-        div.textContent = item.name;
-        div.onclick = () => {
-          input.value = item.name;
-          suggestions.style.display = "none";
-          goToCafe(item.name);
-        };
-        suggestions.appendChild(div);
-      });
-
-      suggestions.style.display = "block";
+    // Geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const userCoords = [pos.coords.latitude, pos.coords.longitude];
+        L.circleMarker(userCoords, {
+          radius:7, color:'#2b7cff', fillColor:'#2b7cff', fillOpacity:.9
+        }).addTo(map).bindPopup('Tu ubicación 📍');
+        map.setView(userCoords, 15);
+      }, () => {}, { enableHighAccuracy:true, timeout:15000, maximumAge:0 });
     }
 
-    function goToCafe(query){
+    // ──────────────────────────────────────────────
+    // SEARCH
+    // ──────────────────────────────────────────────
+    const input = document.getElementById('searchInput');
+    const btn = document.getElementById('searchBtn');
+    const suggestions = document.getElementById('suggestions');
+
+    function showSuggestions(list) {
+      suggestions.innerHTML = '';
+      if (!list.length) { suggestions.style.display='none'; return; }
+      list.slice(0,6).forEach(c => {
+        const d = document.createElement('div');
+        d.className = 'suggestion';
+        d.textContent = c.name;
+        if (visited[c.name]) d.textContent += ' ✓';
+        d.onclick = () => { input.value=c.name; suggestions.style.display='none'; goToCafe(c.name); };
+        suggestions.appendChild(d);
+      });
+      suggestions.style.display = 'block';
+    }
+
+    function goToCafe(query) {
       const q = normalize(query);
       if (!q) return;
-
-      // exact match
-      if (markersByName.has(q)){
-        const obj = markersByName.get(q);
-        map.setView(obj.cafe.coords, 18);
-        obj.marker.openPopup();
-        return;
-      }
-
-      // partial match
-      const found = cafes.find(c => normalize(c.name).includes(q));
-      if (found){
-        const obj = markersByName.get(normalize(found.name));
-        map.setView(found.coords, 18);
-        obj.marker.openPopup();
-        return;
-      }
-
-      alert("No encontré ese café. Intenta con otro nombre.");
+      const obj = markersByName.get(q) || (() => {
+        const found = cafes.find(c => normalize(c.name).includes(q));
+        return found ? markersByName.get(normalize(found.name)) : null;
+      })();
+      if (obj) { map.setView(obj.cafe.coords, 17); obj.marker.openPopup(); }
+      else alert('No encontré ese café.');
     }
 
-    input.addEventListener("input", () => {
+    input.addEventListener('input', () => {
       const q = normalize(input.value);
-      if (!q){ suggestions.style.display = "none"; return; }
-      const matches = cafes.filter(c => normalize(c.name).includes(q));
-      showSuggestions(matches);
+      if (!q) { suggestions.style.display='none'; return; }
+      showSuggestions(cafes.filter(c => normalize(c.name).includes(q)));
     });
 
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter"){
-        suggestions.style.display = "none";
-        goToCafe(input.value);
+    input.addEventListener('keydown', e => {
+      if (e.key==='Enter') { suggestions.style.display='none'; goToCafe(input.value); }
+    });
+
+    btn.addEventListener('click', () => { suggestions.style.display='none'; goToCafe(input.value); });
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.searchbar')) suggestions.style.display='none';
+    });
+
+    // ──────────────────────────────────────────────
+    // CAFE DETAIL SHEET
+    // ──────────────────────────────────────────────
+    function openCafeSheet(encodedName) {
+      const name = decodeURIComponent(encodedName);
+      const cafe = cafes.find(c => c.name === name);
+      if (!cafe) return;
+      currentCafe = cafe;
+
+      document.getElementById('sheet-name').textContent = cafe.name;
+      document.getElementById('sheet-address').textContent = '📍 ' + cafe.address;
+
+      // Menu tags
+      const menuEl = document.getElementById('sheet-menu');
+      menuEl.innerHTML = cafe.menu.map(m => `<span class="menu-tag">${m}</span>`).join('');
+
+      // Hours
+      const dayNames = { lun:'Lun', mar:'Mar', mie:'Mié', jue:'Jue', vie:'Vie', sab:'Sáb', dom:'Dom' };
+      const hoursEl = document.getElementById('sheet-hours');
+      hoursEl.innerHTML = Object.entries(cafe.hours).map(([d,h]) =>
+        `<div class="hours-row"><span class="day">${dayNames[d]}</span><span class="${h==='Cerrado'?'':'hours-open'}">${h}</span></div>`
+      ).join('');
+
+      // Checkin button
+      const btn = document.getElementById('checkin-btn');
+      const v = visited[cafe.name];
+      if (v) {
+        btn.textContent = '✓ Visitado el ' + v;
+        btn.className = 'checkin-btn visited';
+      } else {
+        btn.textContent = 'Registrar Visita ☕';
+        btn.className = 'checkin-btn unstamped';
       }
-    });
 
-    btn.addEventListener("click", () => {
-      suggestions.style.display = "none";
-      goToCafe(input.value);
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".searchbar")) suggestions.style.display = "none";
-    });
-// --- UBICACIÓN ACTUAL AUTOMÁTICA (sin círculo azul) ---
-let userMarker = null;
-
-if (navigator.geolocation) {
-
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-      const userCoords = [lat, lng];
-
-      // marcador simple azul
-      userMarker = L.circleMarker(userCoords, {
-        radius: 7,
-        color: "#2b7cff",
-        fillColor: "#2b7cff",
-        fillOpacity: 0.9
-      }).addTo(map)
-        .bindPopup("Tu ubicación 📍");
-
-      map.setView(userCoords, 16);
-    },
-    (err) => {
-      console.log("Error ubicación:", err.message);
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0
+      document.getElementById('overlay').classList.add('open');
     }
-  );
 
-}
-    
+    // Make openCafeSheet global for popup links
+    window.openCafeSheet = openCafeSheet;
+
+    function closeOverlay() {
+      document.getElementById('overlay').classList.remove('open');
+    }
+
+    function closeSheet(e) {
+      if (e.target === document.getElementById('overlay')) closeOverlay();
+    }
+
+    function doCheckin() {
+      if (!currentCafe) return;
+      if (visited[currentCafe.name]) return;
+
+      const today = new Date().toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' });
+      visited[currentCafe.name] = today;
+      saveVisited(visited);
+      refreshMarkers();
+
+      const btn = document.getElementById('checkin-btn');
+      btn.textContent = '✓ Visitado el ' + today;
+      btn.className = 'checkin-btn visited';
+
+      const count = visitedCount();
+      showToast('¡Sello agregado! Llevas ' + count + ' de ' + cafes.length + ' cafés ☕');
+
+      // Check if any reward just unlocked
+      REWARDS.forEach(r => {
+        if (count === r.need) showToast('🏆 ¡Recompensa desbloqueada: ' + r.title + '!');
+      });
+    }
+
+    // ──────────────────────────────────────────────
+    // PASSPORT RENDER
+    // ──────────────────────────────────────────────
+    function renderPassport() {
+      const count = visitedCount();
+      const total = cafes.length;
+      const pct = Math.round(count / total * 100);
+
+      document.getElementById('stat-visited').textContent = count;
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-pct').textContent = pct + '%';
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-label').textContent = count + ' de ' + total + ' sellos';
+
+      // Rewards
+      const rewardsList = document.getElementById('rewards-list');
+      rewardsList.innerHTML = REWARDS.map(r => {
+        let badgeClass = 'locked', badgeText = r.need + ' cafés';
+        if (count >= r.need) { badgeClass = 'unlocked'; badgeText = '¡Desbloqueado!'; }
+        return `
+          <div class="reward-card">
+            <div class="reward-icon">${r.icon}</div>
+            <div class="reward-info">
+              <div class="reward-title">${r.title}</div>
+              <div class="reward-desc">${r.desc}</div>
+            </div>
+            <div class="reward-badge ${badgeClass}">${badgeText}</div>
+          </div>`;
+      }).join('');
+
+      // Stamps
+      const grid = document.getElementById('stamps-grid');
+      grid.innerHTML = cafes.map(c => {
+        const v = visited[c.name];
+        return `
+          <div class="stamp-item ${v ? 'stamped' : ''}" onclick="openCafeSheetFromPassport('${encodeURIComponent(c.name)}')">
+            <span class="stamp-emoji">${v ? '☕' : '○'}</span>
+            <div class="stamp-name">${c.name}</div>
+            ${v ? `<div class="stamp-date">${v}</div>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    function openCafeSheetFromPassport(encodedName) {
+      // Switch to map tab first, then open sheet
+      openCafeSheet(encodedName);
+    }
+    window.openCafeSheetFromPassport = openCafeSheetFromPassport;
+
+  }); // end window.addEventListener('load')
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

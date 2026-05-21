@@ -999,10 +999,9 @@
         if (snap.exists()) {
           visited = snap.data().visited || {};
         } else {
-          // Migrate from localStorage if any
-          const local = JSON.parse(localStorage.getItem('cafeVisited') || '{}');
-          visited = local;
-          await setDoc(ref, { visited, email: currentUser.email, name: currentUser.displayName });
+          // New user — always start at zero
+          visited = {};
+          await setDoc(ref, { visited: {}, email: currentUser.email, name: currentUser.displayName });
         }
         setSyncDot('synced');
         refreshMarkers();

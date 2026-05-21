@@ -899,37 +899,6 @@
     </div>
   </div>
 
-
-  <!-- VERIFY MODAL -->
-<div class="overlay" id="verify-overlay" onclick="closeVerify(event)">
-  <div class="cafe-sheet" id="verify-sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-header">
-      <h2>Verificar visita</h2>
-      <button class="sheet-close" onclick="closeVerifyOverlay()">✕</button>
-    </div>
-
-    <div id="verify-choose">
-      <p style="color:var(--espresso);font-size:14px;margin-bottom:20px;">¿Cómo quieres registrar tu visita?</p>
-      <button class="checkin-btn unstamped" style="margin-bottom:12px;" onclick="showCamera()">📷 Escanear con cámara</button>
-      <button class="checkin-btn" style="background:var(--warm);color:var(--espresso);" onclick="showCode()">🔑 Ingresar código</button>
-    </div>
-
-    <div id="verify-camera" style="display:none;">
-      <button onclick="backToChoose()" style="background:none;border:none;color:var(--espresso);font-size:14px;cursor:pointer;margin-bottom:16px;">← Volver</button>
-      <video id="camera-feed" style="width:100%;border-radius:12px;" autoplay playsinline></video>
-      <p style="font-size:12px;color:var(--espresso);opacity:.6;margin-top:8px;text-align:center;">Apunta la cámara a cualquier cosa para confirmar tu visita</p>
-      <button class="checkin-btn unstamped" style="margin-top:16px;" onclick="confirmFromCamera()">✓ Confirmar visita</button>
-    </div>
-
-    <div id="verify-code" style="display:none;">
-      <button onclick="backToChoose()" style="background:none;border:none;color:var(--espresso);font-size:14px;cursor:pointer;margin-bottom:16px;">← Volver</button>
-      <input id="code-input" type="text" placeholder="Ingresa el código del café" style="width:100%;padding:14px;border-radius:12px;border:2px solid rgba(122,63,37,.25);font-size:16px;font-family:'DM Sans',sans-serif;outline:none;background:var(--foam);color:var(--espresso);letter-spacing:2px;"/>
-      <button class="checkin-btn unstamped" style="margin-top:12px;" onclick="confirmFromCode()">✓ Confirmar</button>
-    </div>
-  </div>
-</div>
-
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
 
@@ -1374,80 +1343,9 @@
       if (e.target === document.getElementById('overlay')) closeOverlay();
     }
 
-  window.doCheckin = function() {
-  if (!currentCafe) return;
-  if (visited[currentCafe.name]) return;
-  document.getElementById('verify-choose').style.display = 'block';
-  document.getElementById('verify-camera').style.display = 'none';
-  document.getElementById('verify-code').style.display = 'none';
-  document.getElementById('code-input').value = '';
-  document.getElementById('verify-overlay').classList.add('open');
-};
-
-function closeVerifyOverlay() {
-  document.getElementById('verify-overlay').classList.remove('open');
-  stopCamera();
-}
-
-function closeVerify(e) {
-  if (e.target === document.getElementById('verify-overlay')) {
-    closeVerifyOverlay();
-  }
-}
-
-function backToChoose() {
-  stopCamera();
-  document.getElementById('verify-camera').style.display = 'none';
-  document.getElementById('verify-code').style.display = 'none';
-  document.getElementById('verify-choose').style.display = 'block';
-}
-
-function showCamera() {
-  document.getElementById('verify-choose').style.display = 'none';
-  document.getElementById('verify-camera').style.display = 'block';
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-    .then(stream => { document.getElementById('camera-feed').srcObject = stream; })
-    .catch(() => { showToast('No se pudo acceder a la cámara'); backToChoose(); });
-}
-
-function stopCamera() {
-  const video = document.getElementById('camera-feed');
-  if (video.srcObject) {
-    video.srcObject.getTracks().forEach(t => t.stop());
-    video.srcObject = null;
-  }
-}
-
-function showCode() {
-  document.getElementById('verify-choose').style.display = 'none';
-  document.getElementById('verify-code').style.display = 'block';
-  setTimeout(() => document.getElementById('code-input').focus(), 100);
-}
-
-function confirmFromCamera() {
-  stopCamera();
-  closeVerifyOverlay();
-  registrarVisita();
-}
-
-function confirmFromCode() {
-  const code = document.getElementById('code-input').value.trim().toLowerCase();
-  if (code === 'cafe26') {
-    closeVerifyOverlay();
-    registrarVisita();
-  } else {
-    showToast('Código incorrecto ❌');
-    document.getElementById('code-input').value = '';
-  }
-}
-
-function registrarVisita() {
-  const today = new Date().toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' });
-  visited[currentCafe.name] = today;
-  if (window.saveCheckin) window.saveCheckin(currentCafe.name, today);
-  refreshMarkers();
-  const btn = document.getElementById('checkin-btn');
-  btn.textContent = '✓ Visitado el '
+    window.doCheckin = function() {
+      if (!currentCafe) return;
+      if (visited[currentCafe.name]) return;
 
       const today = new Date().toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' });
       visited[currentCafe.name] = today;

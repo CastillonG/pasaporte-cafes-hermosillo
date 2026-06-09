@@ -1185,14 +1185,23 @@
     // STATE
     // ──────────────────────────────────────────────
     let visited = {};
-    // Auto-fill code from QR scan
+ // Auto-register from QR scan
 const _urlCode = new URLSearchParams(window.location.search).get('code');
-if (_urlCode) {
+if (_urlCode && _urlCode.toLowerCase() === 'cafe26') {
   window.addEventListener('load', () => {
     setTimeout(() => {
-      const input = document.getElementById('code-input');
-      if (input) input.value = _urlCode;
-    }, 500);
+      // Si viene ?code=cafe26&cafe=NombreCafe registra ese café
+      // Si no, muestra el modal de código ya lleno
+      const _cafeName = new URLSearchParams(window.location.search).get('cafe');
+      if (_cafeName) {
+        const cafe = cafes.find(c => c.name === decodeURIComponent(_cafeName));
+        if (cafe && !visited[cafe.name]) {
+          currentCafe = cafe;
+          registrarVisita();
+          showToast('✅ Visita registrada en ' + cafe.name);
+        }
+      }
+    }, 1500);
   });
 }
     let currentCafe = null;

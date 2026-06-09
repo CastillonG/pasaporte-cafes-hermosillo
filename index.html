@@ -909,33 +909,18 @@
         <button class="sheet-close" onclick="closeVerifyOverlay()">✕</button>
       </div>
 
-      <div id="verify-choose">
-        <p style="color:var(--espresso);font-size:14px;margin-bottom:20px;">¿Cómo quieres registrar tu visita?</p>
-        <button class="checkin-btn unstamped" style="margin-bottom:12px;" onclick="showCamera()">📷 Escanear con cámara</button>
-        <button class="checkin-btn" style="background:var(--warm);color:var(--espresso);margin-top:0;" onclick="showCode()">🔑 Ingresar código</button>
-      </div>
+  <div id="verify-code">
+  <input id="code-input"
+         type="text"
+         placeholder="Ingresa el código del café"
+         style="width:100%;padding:14px;border-radius:12px;border:2px solid rgba(122,63,37,.25);font-size:16px;text-align:center;"/>
 
-      <div id="verify-camera" style="display:none;">
-        <button onclick="backToChoose()" style="background:none;border:none;color:var(--espresso);font-size:14px;cursor:pointer;margin-bottom:16px;font-family:'DM Sans',sans-serif;">← Volver</button>
-        <div style="text-align:center;padding:16px 0 8px;">
-          <div style="font-size:56px;margin-bottom:12px;">📷</div>
-          <p style="font-size:14px;color:var(--espresso);margin-bottom:20px;line-height:1.5;">Toma una foto del código QR del café para registrar tu visita</p>
-          <label for="qr-file-input" style="display:inline-block;background:var(--espresso);color:var(--cream);padding:14px 28px;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;">
-            📸 Abrir cámara
-          </label>
-          <input id="qr-file-input" type="file" accept="image/*" capture="environment" style="display:none;" onchange="scanQRFromPhoto(this)"/>
-        </div>
-        <canvas id="qr-canvas" style="display:none;"></canvas>
-        <div id="qr-status" style="margin-top:16px;text-align:center;font-size:14px;color:var(--espresso);min-height:24px;"></div>
-      </div>
-
-      <div id="verify-code" style="display:none;">
-        <button onclick="backToChoose()" style="background:none;border:none;color:var(--espresso);font-size:14px;cursor:pointer;margin-bottom:16px;font-family:'DM Sans',sans-serif;">← Volver</button>
-        <input id="code-input" type="text" placeholder="Ingresa el código del café" style="width:100%;padding:14px;border-radius:12px;border:2px solid rgba(122,63,37,.25);font-size:16px;font-family:'DM Sans',sans-serif;outline:none;background:var(--foam);color:var(--espresso);letter-spacing:2px;text-align:center;"/>
-        <button class="checkin-btn unstamped" style="margin-top:12px;" onclick="confirmFromCode()">✓ Confirmar</button>
-      </div>
-    </div>
-  </div>
+  <button class="checkin-btn unstamped"
+          style="margin-top:12px;"
+          onclick="confirmFromCode()">
+    ✓ Confirmar
+  </button>
+</div>
 
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
@@ -1381,15 +1366,17 @@
       if (e.target === document.getElementById('overlay')) closeOverlay();
     }
 
-    window.doCheckin = function() {
-      if (!currentCafe) return;
-      if (visited[currentCafe.name]) return;
-      document.getElementById('verify-choose').style.display = 'block';
-      document.getElementById('verify-camera').style.display = 'none';
-      document.getElementById('verify-code').style.display = 'none';
-      if (document.getElementById('code-input')) document.getElementById('code-input').value = '';
-      document.getElementById('verify-overlay').classList.add('open');
-    };
+window.doCheckin = function() {
+  if (!currentCafe) return;
+  if (visited[currentCafe.name]) return;
+
+  document.getElementById('code-input').value = '';
+  document.getElementById('verify-overlay').classList.add('open');
+
+  setTimeout(() => {
+    document.getElementById('code-input').focus();
+  }, 100);
+};
 
     function closeVerifyOverlay() {
       document.getElementById('verify-overlay').classList.remove('open');
@@ -1400,93 +1387,16 @@
       if (e.target === document.getElementById('verify-overlay')) closeVerifyOverlay();
     }
 
-    function backToChoose() {
-      stopCamera();
-      document.getElementById('verify-camera').style.display = 'none';
-      document.getElementById('verify-code').style.display = 'none';
-      document.getElementById('verify-choose').style.display = 'block';
-    }
 
     let qrScanInterval = null;
 
-    function showCamera() {
-      document.getElementById('verify-choose').style.display = 'none';
-      document.getElementById('verify-camera').style.display = 'block';
-      document.getElementById('qr-status').textContent = '';
+    
     }
 
-    function scanQRFromPhoto(input) {
-      const file = input.files[0];
-      if (!file) return;
-
-      const statusEl = document.getElementById('qr-status');
-      statusEl.textContent = '🔍 Analizando QR…';
-      statusEl.style.color = 'var(--espresso)';
-
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-      img.onload = function() {
-        const canvas = document.getElementById('qr-canvas');
-        const ctx    = canvas.getContext('2d');
-        canvas.width  = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        URL.revokeObjectURL(url);
-
-        try {
-          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
-            inversionAttempts: 'attemptBoth'
-          });
-          if (code && code.data) {
-            const raw = code.data;
-            const isValid =
-              raw.toLowerCase().includes('code=cafe26') ||
-              raw.trim().toLowerCase() === 'cafe26';
-            if (isValid) {
-              statusEl.textContent = '✅ ¡QR válido!';
-              statusEl.style.color = 'var(--green)';
-              setTimeout(() => { closeVerifyOverlay(); registrarVisita(); }, 700);
-            } else {
-              statusEl.textContent = '❌ QR no válido, usa el del café';
-              statusEl.style.color = '#c0392b';
-              input.value = '';
-            }
-          } else {
-            statusEl.textContent = '❌ No se detectó ningún QR, intenta de nuevo';
-            statusEl.style.color = '#c0392b';
-            input.value = '';
-          }
-        } catch(e) {
-          statusEl.textContent = '❌ Error al leer la imagen';
-          statusEl.style.color = '#c0392b';
-          input.value = '';
-        }
-      };
-      img.src = url;
-    }
-
-    function stopCamera() {
-      if (qrScanInterval) { clearInterval(qrScanInterval); qrScanInterval = null; }
-      const input = document.getElementById('qr-file-input');
-      if (input) input.value = '';
-    }
-
-    function showCode() {
-      document.getElementById('verify-choose').style.display = 'none';
-      document.getElementById('verify-code').style.display = 'block';
-      setTimeout(() => document.getElementById('code-input').focus(), 100);
-    }
-
-    function confirmFromCode() {
-      const code = document.getElementById('code-input').value.trim().toLowerCase();
-      if (code === 'cafe26') {
-        closeVerifyOverlay();
-        registrarVisita();
-      } else {
-        showToast('Código incorrecto ❌');
-        document.getElementById('code-input').value = '';
-      }
+  
+function closeVerifyOverlay() {
+  document.getElementById('verify-overlay').classList.remove('open');
+}
     }
 
     function registrarVisita() {

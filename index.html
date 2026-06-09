@@ -1458,7 +1458,8 @@ function startQRScan() {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     try {
-      const code = window.jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' })console.log('frame scanned, code:', code);;
+     const code = window.jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
+console.log('frame scanned, code:', code);
       if (code && code.data) {
         const url = code.data;
         const params = new URLSearchParams(url.includes('?') ? url.split('?')[1] : '');

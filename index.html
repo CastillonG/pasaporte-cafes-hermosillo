@@ -1415,14 +1415,6 @@
       document.getElementById('qr-status').textContent = '📷 Apunta el QR dentro del recuadro…';
       document.getElementById('qr-status').style.color = 'var(--espresso)';
 
-      // Check if BarcodeDetector is supported
-      if (!('BarcodeDetector' in window)) {
-        document.getElementById('qr-status').textContent = '⚠️ Usa la opción de código en su lugar';
-        document.getElementById('qr-status').style.color = '#c0392b';
-        setTimeout(() => backToChoose(), 2000);
-        return;
-      }
-
       navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
       })
@@ -1430,7 +1422,13 @@
         const video = document.getElementById('camera-feed');
         video.srcObject = stream;
         video.play();
-        video.addEventListener('playing', () => startQRScan(), { once: true });
+        // Wait until video is truly playing before scanning
+        const waitReady = setInterval(() => {
+          if (video.readyState >= 2 && video.videoWidth > 0) {
+            clearInterval(waitReady);
+            startQRScan();
+          }
+        }, 200);
       })
       .catch(err => {
         console.error('Camera error:', err);
@@ -1440,42 +1438,44 @@
     }
 
     function startQRScan() {
-      const video    = document.getElementById('camera-feed');
-      const detector = new BarcodeDetector({ formats: ['qr_code'] });
+      const video  = document.getElementById('camera-feed');
+      const canvas = document.createElement('canvas');
+      const ctx    = canvas.getContext('2d');
 
-      function tick() {
-        if (!video.srcObject) return;
-        detector.detect(video)
-          .then(codes => {
-            if (codes.length > 0) {
-              const raw = codes[0].rawValue;
-              const isValid =
-                raw.toLowerCase().includes('code=cafe26') ||
-                raw.trim().toLowerCase() === 'cafe26';
-              if (isValid) {
-                if (qrScanInterval) { cancelAnimationFrame(qrScanInterval); qrScanInterval = null; }
-                document.getElementById('qr-status').textContent = '✅ ¡QR detectado!';
-                document.getElementById('qr-status').style.color = 'var(--green)';
-                setTimeout(() => { stopCamera(); closeVerifyOverlay(); registrarVisita(); }, 700);
-                return;
-              } else {
-                document.getElementById('qr-status').textContent = '❌ QR no válido';
-                document.getElementById('qr-status').style.color = '#c0392b';
-              }
-            }
-            qrScanInterval = requestAnimationFrame(tick);
-          })
-          .catch(() => {
-            qrScanInterval = requestAnimationFrame(tick);
+      if (qrScanInterval) { clearInterval(qrScanInterval); qrScanInterval = null; }
+
+      qrScanInterval = setInterval(() => {
+        if (!video.srcObject || video.videoWidth === 0) return;
+        canvas.width  = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        try {
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: 'attemptBoth'
           });
-      }
-
-      if (qrScanInterval) { cancelAnimationFrame(qrScanInterval); qrScanInterval = null; }
-      qrScanInterval = requestAnimationFrame(tick);
+          if (code && code.data) {
+            const raw = code.data;
+            const isValid =
+              raw.toLowerCase().includes('code=cafe26') ||
+              raw.trim().toLowerCase() === 'cafe26';
+            if (isValid) {
+              clearInterval(qrScanInterval);
+              qrScanInterval = null;
+              document.getElementById('qr-status').textContent = '✅ ¡QR detectado!';
+              document.getElementById('qr-status').style.color = 'var(--green)';
+              setTimeout(() => { stopCamera(); closeVerifyOverlay(); registrarVisita(); }, 700);
+            } else {
+              document.getElementById('qr-status').textContent = '❌ QR no válido';
+              document.getElementById('qr-status').style.color = '#c0392b';
+            }
+          }
+        } catch(e) {}
+      }, 250);
     }
 
     function stopCamera() {
-      if (qrScanInterval) { cancelAnimationFrame(qrScanInterval); qrScanInterval = null; }
+      if (qrScanInterval) { clearInterval(qrScanInterval); qrScanInterval = null; }
       const video = document.getElementById('camera-feed');
       if (video && video.srcObject) {
         video.srcObject.getTracks().forEach(t => t.stop());

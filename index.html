@@ -1378,26 +1378,31 @@ window.doCheckin = function() {
   }, 100);
 };
 
-    function closeVerifyOverlay() {
-      document.getElementById('verify-overlay').classList.remove('open');
-      stopCamera();
-    }
-
-    function closeVerify(e) {
-      if (e.target === document.getElementById('verify-overlay')) closeVerifyOverlay();
-    }
-
-
-    let qrScanInterval = null;
-
-    
-    }
-
   
-function closeVerifyOverlay() {
+
+  function closeVerifyOverlay() {
   document.getElementById('verify-overlay').classList.remove('open');
 }
-    }
+
+function closeVerify(e) {
+  if (e.target === document.getElementById('verify-overlay')) {
+    closeVerifyOverlay();
+  }
+}
+
+function confirmFromCode() {
+  const code = document.getElementById('code-input')
+    .value.trim()
+    .toLowerCase();
+
+  if (code === 'cafe26') {
+    closeVerifyOverlay();
+    registrarVisita();
+  } else {
+    showToast('Código incorrecto ❌');
+    document.getElementById('code-input').value = '';
+  }
+}
 
     function registrarVisita() {
       const today = new Date().toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' });

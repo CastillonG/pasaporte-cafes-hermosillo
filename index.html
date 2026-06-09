@@ -1458,7 +1458,7 @@ function startQRScan() {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     try {
-      const code = window.jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
+      const code = window.jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' })console.log('frame scanned, code:', code);;
       if (code && code.data) {
         const url = code.data;
         const params = new URLSearchParams(url.includes('?') ? url.split('?')[1] : '');
@@ -1478,7 +1478,7 @@ function startQRScan() {
           document.getElementById('qr-status').style.color = '#c0392b';
         }
       }
-    } catch(e) {}
+  } catch(e) { console.log('jsQR error:', e); }
   }, 300);
 }
 

@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
   <style>
     :root {
@@ -1416,13 +1415,20 @@
       document.getElementById('qr-status').textContent = '📷 Apunta el QR dentro del recuadro…';
       document.getElementById('qr-status').style.color = 'var(--espresso)';
 
+      // Check if BarcodeDetector is supported
+      if (!('BarcodeDetector' in window)) {
+        document.getElementById('qr-status').textContent = '⚠️ Usa la opción de código en su lugar';
+        document.getElementById('qr-status').style.color = '#c0392b';
+        setTimeout(() => backToChoose(), 2000);
+        return;
+      }
+
       navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
       })
       .then(stream => {
         const video = document.getElementById('camera-feed');
         video.srcObject = stream;
-        video.setAttribute('playsinline', true);
         video.play();
         video.addEventListener('playing', () => startQRScan(), { once: true });
       })
@@ -1434,23 +1440,15 @@
     }
 
     function startQRScan() {
-      const video  = document.getElementById('camera-feed');
-      const canvas = document.getElementById('qr-canvas');
-      const ctx    = canvas.getContext('2d');
+      const video    = document.getElementById('camera-feed');
+      const detector = new BarcodeDetector({ formats: ['qr_code'] });
 
       function tick() {
         if (!video.srcObject) return;
-        if (video.readyState === video.HAVE_ENOUGH_DATA && video.videoWidth > 0) {
-          canvas.width  = video.videoWidth;
-          canvas.height = video.videoHeight;
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          try {
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
-              inversionAttempts: 'attemptBoth'
-            });
-            if (code && code.data) {
-              const raw = code.data;
+        detector.detect(video)
+          .then(codes => {
+            if (codes.length > 0) {
+              const raw = codes[0].rawValue;
               const isValid =
                 raw.toLowerCase().includes('code=cafe26') ||
                 raw.trim().toLowerCase() === 'cafe26';
@@ -1465,9 +1463,11 @@
                 document.getElementById('qr-status').style.color = '#c0392b';
               }
             }
-          } catch(e) {}
-        }
-        qrScanInterval = requestAnimationFrame(tick);
+            qrScanInterval = requestAnimationFrame(tick);
+          })
+          .catch(() => {
+            qrScanInterval = requestAnimationFrame(tick);
+          });
       }
 
       if (qrScanInterval) { cancelAnimationFrame(qrScanInterval); qrScanInterval = null; }

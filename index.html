@@ -1,16 +1,30 @@
-// Reemplaza TODO el código relacionado con QR desde la línea donde defines
-// las funciones de verificación hasta el final
+// ============================================
+// SISTEMA QR COMPLETO Y CORREGIDO
+// ============================================
 
-// ──────────────────────────────────────────────
-// QR y VERIFICACIÓN CORREGIDOS
-// ──────────────────────────────────────────────
-
-// Variable para almacenar el stream de la cámara
 let currentStream = null;
 
-// Función para registrar visita (accesible globalmente)
+// Asegurar funciones globales necesarias
+window.refreshMarkers = window.refreshMarkers || function() {
+    if (typeof refreshMarkers === 'function') refreshMarkers();
+};
+
+window.closeOverlay = window.closeOverlay || function() {
+    const overlay = document.getElementById('overlay');
+    if (overlay) overlay.classList.remove('open');
+};
+
+// Función principal para registrar visita
 window.registrarVisita = function() {
-    if (!currentCafe) return;
+    if (!currentCafe) {
+        showToast('❌ Error: No hay café seleccionado');
+        return;
+    }
+    
+    if (visited[currentCafe.name]) {
+        showToast('⚠️ Ya has visitado este café');
+        return;
+    }
     
     const today = new Date().toLocaleDateString('es-MX', { 
         day: '2-digit', 
@@ -19,8 +33,12 @@ window.registrarVisita = function() {
     });
     
     visited[currentCafe.name] = today;
-    if (window.saveCheckin) window.saveCheckin(currentCafe.name, today);
-    refreshMarkers();
+    
+    if (window.saveCheckin) {
+        window.saveCheckin(currentCafe.name, today);
+    }
+    
+    if (typeof refreshMarkers === 'function') refreshMarkers();
     
     const btn = document.getElementById('checkin-btn');
     if (btn) {
@@ -28,48 +46,56 @@ window.registrarVisita = function() {
         btn.className = 'checkin-btn visited';
     }
     
-    const count = visitedCount();
+    const count = Object.keys(visited).length;
     showToast('✅ ¡Sello agregado! Llevas ' + count + ' de ' + cafes.length + ' ☕');
     
     // Verificar recompensas
-    REWARDS.forEach(r => {
-        if (count === r.need) {
-            setTimeout(() => showToast('🏆 ¡Recompensa desbloqueada: ' + r.title + '! 🎉'), 500);
-        }
-    });
+    if (typeof REWARDS !== 'undefined') {
+        REWARDS.forEach(r => {
+            if (count === r.need) {
+                setTimeout(() => showToast('🏆 ¡Recompensa desbloqueada: ' + r.title + '! 🎉'), 500);
+            }
+        });
+    }
     
     // Cerrar overlays
-    closeVerifyOverlay();
-    closeOverlay();
-    renderPassport();
+    if (typeof closeVerifyOverlay === 'function') closeVerifyOverlay();
+    if (typeof closeOverlay === 'function') closeOverlay();
+    
+    if (typeof renderPassport === 'function') renderPassport();
 };
 
-// Función para detener la cámara
+// Detener cámara
 function stopCamera() {
     if (currentStream) {
-        currentStream.getTracks().forEach(track => track.stop());
+        currentStream.getTracks().forEach(track => {
+            track.stop();
+        });
         currentStream = null;
     }
     const videoElement = document.getElementById('qr-video');
     if (videoElement) {
         videoElement.srcObject = null;
+        videoElement.remove();
     }
 }
 
-// Función mejorada para abrir cámara
+// Iniciar cámara en vivo
 window.startCamera = async function() {
     const statusEl = document.getElementById('qr-status');
+    if (!statusEl) return;
+    
     statusEl.textContent = '📷 Solicitando acceso a la cámara...';
+    statusEl.style.color = 'var(--espresso)';
     
     try {
-        // Detener cualquier stream existente
         stopCamera();
         
-        // Crear elemento de video si no existe
         let videoElement = document.getElementById('qr-video');
         if (!videoElement) {
             videoElement = document.createElement('video');
             videoElement.id = 'qr-video';
+            videoElement.setAttribute('playsinline', '');
             videoElement.style.width = '100%';
             videoElement.style.maxHeight = '400px';
             videoElement.style.objectFit = 'cover';
@@ -78,49 +104,56 @@ window.startCamera = async function() {
             
             const cameraContainer = document.getElementById('verify-camera');
             if (cameraContainer) {
-                // Insertar después del botón de volver
                 const backButton = cameraContainer.querySelector('button');
                 if (backButton && backButton.nextSibling) {
-                    cameraContainer.insertBefore(videoElement, backButton.nextSibling.nextSibling);
+                    cameraContainer.insertBefore(videoElement, backButton.nextSibling);
                 } else {
                     cameraContainer.appendChild(videoElement);
                 }
             }
         }
         
-        // Iniciar stream de cámara trasera si es posible
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { exact: "environment" } }
-        }).catch(() => {
-            // Si no hay cámara trasera, usar cualquier cámara
-            return navigator.mediaDevices.getUserMedia({ video: true });
-        });
+        // Intentar cámara trasera primero
+        let stream;
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { exact: "environment" } }
+            });
+        } catch (e) {
+            console.log('Cámara trasera no disponible, usando frontal');
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        }
         
         currentStream = stream;
         videoElement.srcObject = stream;
         await videoElement.play();
         
-        statusEl.textContent = '🔍 Escaneando... enfoca el código QR';
+        statusEl.innerHTML = '🔍 Escaneando... enfoca el código QR';
         statusEl.style.color = 'var(--espresso)';
         
-        // Empezar a escanear
         startQRScanning(videoElement, statusEl);
         
     } catch (err) {
-        console.error('Error al acceder a la cámara:', err);
-        statusEl.textContent = '❌ No se pudo acceder a la cámara. Usa la opción de código manual.';
+        console.error('Error de cámara:', err);
+        statusEl.innerHTML = '❌ No se pudo acceder a la cámara.<br>Usa la opción de código manual o carga una foto.';
         statusEl.style.color = '#c0392b';
     }
 };
 
-// Función para escanear QR continuamente
+// Escaneo continuo de QR
 function startQRScanning(videoElement, statusEl) {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     let scanning = true;
+    let lastScan = 0;
     
     function scanFrame() {
         if (!scanning) return;
+        if (!videoElement.videoWidth || !videoElement.videoHeight) {
+            requestAnimationFrame(scanFrame);
+            return;
+        }
+        
         if (videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
             canvas.width = videoElement.videoWidth;
             canvas.height = videoElement.videoHeight;
@@ -132,27 +165,22 @@ function startQRScanning(videoElement, statusEl) {
                     inversionAttempts: "attemptBoth",
                 });
                 
-                if (code && code.data) {
+                if (code && code.data && (Date.now() - lastScan) > 1000) {
+                    lastScan = Date.now();
                     const qrData = code.data.trim().toLowerCase();
                     console.log('QR detectado:', qrData);
                     
-                    // Buscar si el QR corresponde a algún café
                     let foundCafe = null;
                     
-                    // Verificar si el QR contiene el nombre de un café
+                    // Buscar coincidencia con nombres de café
                     for (let cafe of cafes) {
-                        const cafeNormalizado = cafe.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                        if (qrData.includes(cafeNormalizado) || 
-                            qrData.includes(cafe.name.toLowerCase()) ||
-                            (qrData === 'cafe26' && currentCafe)) { // Código de respaldo
+                        const cafeNombre = cafe.name.toLowerCase();
+                        if (qrData === cafeNombre || 
+                            qrData.includes(cafeNombre) ||
+                            (qrData === 'cafe26' && currentCafe)) {
                             foundCafe = currentCafe || cafe;
                             break;
                         }
-                    }
-                    
-                    // Si el QR es el código genérico y hay un café seleccionado
-                    if (!foundCafe && qrData === 'cafe26' && currentCafe) {
-                        foundCafe = currentCafe;
                     }
                     
                     if (foundCafe) {
@@ -162,13 +190,12 @@ function startQRScanning(videoElement, statusEl) {
                         stopCamera();
                         setTimeout(() => {
                             currentCafe = foundCafe;
-                            registrarVisita();
+                            window.registrarVisita();
                         }, 500);
                         return;
                     } else {
-                        statusEl.innerHTML = '⚠️ QR no reconocido.<br>Debe ser el código proporcionado por el café';
+                        statusEl.innerHTML = '⚠️ QR no reconocido.<br>Solicita el código oficial al café';
                         statusEl.style.color = '#c0392b';
-                        // No detener el escaneo, solo mostrar error
                         setTimeout(() => {
                             if (statusEl && scanning) {
                                 statusEl.innerHTML = '🔍 Escaneando... enfoca el código QR';
@@ -187,12 +214,10 @@ function startQRScanning(videoElement, statusEl) {
         }
     }
     
-    // Guardar referencia para poder detener
-    window.currentScanFrame = scanFrame;
     scanFrame();
 }
 
-// Función para escanear desde foto (mantener como respaldo)
+// Escanear desde foto
 window.scanQRFromPhoto = function(input) {
     const file = input.files[0];
     if (!file) return;
@@ -221,10 +246,11 @@ window.scanQRFromPhoto = function(input) {
             if (code && code.data) {
                 const qrData = code.data.trim().toLowerCase();
                 
-                // Buscar café correspondiente
                 let foundCafe = null;
                 for (let cafe of cafes) {
-                    if (qrData.includes(cafe.name.toLowerCase()) || qrData === 'cafe26') {
+                    if (qrData === cafe.name.toLowerCase() || 
+                        qrData.includes(cafe.name.toLowerCase()) || 
+                        qrData === 'cafe26') {
                         foundCafe = cafe;
                         break;
                     }
@@ -235,7 +261,7 @@ window.scanQRFromPhoto = function(input) {
                     statusEl.style.color = 'var(--green)';
                     setTimeout(() => {
                         if (foundCafe) currentCafe = foundCafe;
-                        registrarVisita();
+                        window.registrarVisita();
                         input.value = '';
                     }, 700);
                 } else {
@@ -249,29 +275,31 @@ window.scanQRFromPhoto = function(input) {
                 input.value = '';
             }
         } catch(e) {
-            statusEl.innerHTML = '❌ Error al leer la imagen: ' + e.message;
+            statusEl.innerHTML = '❌ Error al leer la imagen';
             statusEl.style.color = '#c0392b';
             input.value = '';
         }
     };
+    
     img.onerror = function() {
         statusEl.innerHTML = '❌ Error al cargar la imagen';
         statusEl.style.color = '#c0392b';
         input.value = '';
     };
+    
     img.src = url;
 };
 
-// Funciones UI mejoradas
-function showCamera() {
+// Funciones de UI
+window.showCamera = function() {
     stopCamera();
     document.getElementById('verify-choose').style.display = 'none';
     document.getElementById('verify-camera').style.display = 'block';
     document.getElementById('verify-code').style.display = 'none';
+    
     const statusEl = document.getElementById('qr-status');
     if (statusEl) statusEl.innerHTML = '📷 Haz clic en "Abrir cámara" para comenzar';
     
-    // Asegurar que existe el botón de cámara
     let cameraBtn = document.getElementById('start-camera-btn');
     if (!cameraBtn) {
         const cameraDiv = document.getElementById('verify-camera');
@@ -283,9 +311,8 @@ function showCamera() {
         cameraBtn.className = 'checkin-btn unstamped';
         cameraBtn.style.marginTop = '16px';
         cameraBtn.innerHTML = '📷 Abrir cámara en vivo';
-        cameraBtn.onclick = () => startCamera();
+        cameraBtn.onclick = () => window.startCamera();
         
-        // Insertar después del texto
         const p = cameraDiv.querySelector('p');
         if (p && p.nextSibling) {
             cameraDiv.insertBefore(cameraBtn, p.nextSibling);
@@ -293,10 +320,9 @@ function showCamera() {
             cameraDiv.appendChild(cameraBtn);
         }
     }
-}
+};
 
-// Sobrescribir la función showCode original
-function showCode() {
+window.showCode = function() {
     stopCamera();
     document.getElementById('verify-choose').style.display = 'none';
     document.getElementById('verify-camera').style.display = 'none';
@@ -305,9 +331,8 @@ function showCode() {
         const codeInput = document.getElementById('code-input');
         if (codeInput) codeInput.focus();
     }, 100);
-}
+};
 
-// Sobrescribir funciones existentes para asegurar compatibilidad
 window.closeVerifyOverlay = function() {
     stopCamera();
     document.getElementById('verify-overlay').classList.remove('open');
@@ -323,8 +348,8 @@ window.backToChoose = function() {
 window.confirmFromCode = function() {
     const code = document.getElementById('code-input').value.trim().toLowerCase();
     if (code === 'cafe26') {
-        registrarVisita();
-        closeVerifyOverlay();
+        window.registrarVisita();
+        window.closeVerifyOverlay();
     } else {
         showToast('❌ Código incorrecto. Intenta de nuevo o escanea el QR');
         document.getElementById('code-input').value = '';
@@ -332,23 +357,25 @@ window.confirmFromCode = function() {
     }
 };
 
-// Asegurar que el overlay de verificación tenga el HTML correcto
-function initVerifyOverlay() {
+// Inicializar
+function initQRSystem() {
     const verifyOverlay = document.getElementById('verify-overlay');
     if (verifyOverlay && !verifyOverlay.hasAttribute('data-initialized')) {
         verifyOverlay.setAttribute('data-initialized', 'true');
         
-        // Asegurar que existe el canvas
         if (!document.getElementById('qr-canvas')) {
             const canvas = document.createElement('canvas');
             canvas.id = 'qr-canvas';
             canvas.style.display = 'none';
-            verifyOverlay.querySelector('.cafe-sheet').appendChild(canvas);
+            const sheet = verifyOverlay.querySelector('.cafe-sheet');
+            if (sheet) sheet.appendChild(canvas);
         }
     }
 }
 
-// Llamar a esta función cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    initVerifyOverlay();
-});
+// Iniciar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initQRSystem);
+} else {
+    initQRSystem();
+}

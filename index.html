@@ -1185,6 +1185,16 @@
     // STATE
     // ──────────────────────────────────────────────
     let visited = {};
+    // Auto-fill code from QR scan
+const _urlCode = new URLSearchParams(window.location.search).get('code');
+if (_urlCode) {
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const input = document.getElementById('code-input');
+      if (input) input.value = _urlCode;
+    }, 500);
+  });
+}
     let currentCafe = null;
     let mapInitialized = false;
     let markersByName = new Map();

@@ -916,17 +916,16 @@
 
       <div id="verify-camera" style="display:none;">
         <button onclick="backToChoose()" style="background:none;border:none;color:var(--espresso);font-size:14px;cursor:pointer;margin-bottom:16px;font-family:'DM Sans',sans-serif;">← Volver</button>
-        <div style="position:relative;">
-          <video id="camera-feed" style="width:100%;border-radius:12px;background:#000;" autoplay playsinline></video>
-          <canvas id="qr-canvas" style="display:none;"></canvas>
-          <!-- scan frame overlay -->
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
-            <div style="width:180px;height:180px;border:3px solid var(--stamp-gold);border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,.35);"></div>
-          </div>
+        <div style="text-align:center;padding:16px 0 8px;">
+          <div style="font-size:56px;margin-bottom:12px;">📷</div>
+          <p style="font-size:14px;color:var(--espresso);margin-bottom:20px;line-height:1.5;">Toma una foto del código QR del café para registrar tu visita</p>
+          <label for="qr-file-input" style="display:inline-block;background:var(--espresso);color:var(--cream);padding:14px 28px;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;">
+            📸 Abrir cámara
+          </label>
+          <input id="qr-file-input" type="file" accept="image/*" capture="environment" style="display:none;" onchange="scanQRFromPhoto(this)"/>
         </div>
-        <div id="qr-status" style="margin-top:14px;text-align:center;font-size:14px;color:var(--espresso);min-height:24px;">
-          📷 Apunta el QR dentro del recuadro…
-        </div>
+        <canvas id="qr-canvas" style="display:none;"></canvas>
+        <div id="qr-status" style="margin-top:16px;text-align:center;font-size:14px;color:var(--espresso);min-height:24px;"></div>
       </div>
 
       <div id="verify-code" style="display:none;">
@@ -1412,43 +1411,27 @@
     function showCamera() {
       document.getElementById('verify-choose').style.display = 'none';
       document.getElementById('verify-camera').style.display = 'block';
-      document.getElementById('qr-status').textContent = '📷 Apunta el QR dentro del recuadro…';
-      document.getElementById('qr-status').style.color = 'var(--espresso)';
-
-      navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
-      })
-      .then(stream => {
-        const video = document.getElementById('camera-feed');
-        video.srcObject = stream;
-        video.play();
-        // Wait until video is truly playing before scanning
-        const waitReady = setInterval(() => {
-          if (video.readyState >= 2 && video.videoWidth > 0) {
-            clearInterval(waitReady);
-            startQRScan();
-          }
-        }, 200);
-      })
-      .catch(err => {
-        console.error('Camera error:', err);
-        showToast('No se pudo acceder a la cámara');
-        backToChoose();
-      });
+      document.getElementById('qr-status').textContent = '';
     }
 
-    function startQRScan() {
-      const video  = document.getElementById('camera-feed');
-      const canvas = document.createElement('canvas');
-      const ctx    = canvas.getContext('2d');
+    function scanQRFromPhoto(input) {
+      const file = input.files[0];
+      if (!file) return;
 
-      if (qrScanInterval) { clearInterval(qrScanInterval); qrScanInterval = null; }
+      const statusEl = document.getElementById('qr-status');
+      statusEl.textContent = '🔍 Analizando QR…';
+      statusEl.style.color = 'var(--espresso)';
 
-      qrScanInterval = setInterval(() => {
-        if (!video.srcObject || video.videoWidth === 0) return;
-        canvas.width  = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = function() {
+        const canvas = document.getElementById('qr-canvas');
+        const ctx    = canvas.getContext('2d');
+        canvas.width  = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+
         try {
           const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
@@ -1460,27 +1443,32 @@
               raw.toLowerCase().includes('code=cafe26') ||
               raw.trim().toLowerCase() === 'cafe26';
             if (isValid) {
-              clearInterval(qrScanInterval);
-              qrScanInterval = null;
-              document.getElementById('qr-status').textContent = '✅ ¡QR detectado!';
-              document.getElementById('qr-status').style.color = 'var(--green)';
-              setTimeout(() => { stopCamera(); closeVerifyOverlay(); registrarVisita(); }, 700);
+              statusEl.textContent = '✅ ¡QR válido!';
+              statusEl.style.color = 'var(--green)';
+              setTimeout(() => { closeVerifyOverlay(); registrarVisita(); }, 700);
             } else {
-              document.getElementById('qr-status').textContent = '❌ QR no válido';
-              document.getElementById('qr-status').style.color = '#c0392b';
+              statusEl.textContent = '❌ QR no válido, usa el del café';
+              statusEl.style.color = '#c0392b';
+              input.value = '';
             }
+          } else {
+            statusEl.textContent = '❌ No se detectó ningún QR, intenta de nuevo';
+            statusEl.style.color = '#c0392b';
+            input.value = '';
           }
-        } catch(e) {}
-      }, 250);
+        } catch(e) {
+          statusEl.textContent = '❌ Error al leer la imagen';
+          statusEl.style.color = '#c0392b';
+          input.value = '';
+        }
+      };
+      img.src = url;
     }
 
     function stopCamera() {
       if (qrScanInterval) { clearInterval(qrScanInterval); qrScanInterval = null; }
-      const video = document.getElementById('camera-feed');
-      if (video && video.srcObject) {
-        video.srcObject.getTracks().forEach(t => t.stop());
-        video.srcObject = null;
-      }
+      const input = document.getElementById('qr-file-input');
+      if (input) input.value = '';
     }
 
     function showCode() {

@@ -782,6 +782,205 @@
 
     .config-notice.show { display: block; }
 
+    /* ── PROFILE SETUP SCREEN ── */
+    .profile-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(62,31,14,.72);
+      backdrop-filter: blur(3px);
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .profile-screen.show { display: flex; }
+
+    .profile-card {
+      background: var(--foam);
+      border-radius: 24px;
+      padding: 30px 26px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 50px rgba(62,31,14,.4);
+      text-align: center;
+    }
+
+    .profile-icon { font-size: 44px; margin-bottom: 8px; }
+
+    .profile-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--dark);
+      font-size: 20px;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .profile-subtitle {
+      font-size: 13px;
+      color: var(--espresso);
+      opacity: .7;
+      margin-bottom: 24px;
+    }
+
+    .profile-field { text-align: left; margin-bottom: 16px; }
+
+    .profile-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--espresso);
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .profile-field select,
+    .profile-field input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 2px solid rgba(122,63,37,.2);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--dark);
+      background: white;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .profile-field select:focus,
+    .profile-field input:focus { border-color: var(--espresso); }
+
+    .profile-submit-btn {
+      width: 100%;
+      margin-top: 6px;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      background: var(--espresso);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .5px;
+    }
+
+    .profile-submit-btn:hover { background: var(--dark); transform: translateY(-1px); }
+
+    /* ── PASSPORT ID CARD ── */
+    .passport-id-card {
+      background: linear-gradient(135deg, var(--foam), var(--warm));
+      border: 2px solid var(--espresso);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .passport-id-card::before {
+      content: '☕';
+      position: absolute;
+      top: -18px;
+      right: -14px;
+      font-size: 90px;
+      opacity: .06;
+      transform: rotate(-12deg);
+    }
+
+    .id-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      border-bottom: 1.5px dashed rgba(122,63,37,.3);
+      position: relative;
+    }
+
+    .id-card-country {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: 1px;
+    }
+
+    .id-card-type {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--espresso);
+      letter-spacing: 1px;
+      background: rgba(122,63,37,.1);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .id-card-body {
+      display: flex;
+      gap: 16px;
+      position: relative;
+    }
+
+    .id-photo {
+      flex-shrink: 0;
+      width: 76px;
+      height: 92px;
+      background: #d9d1c2;
+      border: 2px solid rgba(122,63,37,.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .id-photo svg { width: 100%; height: 100%; }
+
+    .id-fields {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .id-field { display: flex; flex-direction: column; gap: 1px; }
+
+    .id-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--espresso);
+      opacity: .55;
+    }
+
+    .id-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark);
+      overflow-wrap: break-word;
+    }
+
+    .id-card-mrz {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1.5px dashed rgba(122,63,37,.3);
+      font-family: monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: rgba(122,63,37,.4);
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+    }
+
     @media (max-width: 480px) {
       .topbar h1 { font-size: 14px; }
       .nav-tab { padding: 6px 10px; font-size: 12px; }
@@ -815,6 +1014,38 @@
         <div class="spinner"></div>
         <span>Iniciando sesión…</span>
       </div>
+    </div>
+  </div>
+
+  <!-- ══ PROFILE SETUP SCREEN (obligatorio la primera vez) ══ -->
+  <div class="profile-screen" id="profile-screen">
+    <div class="profile-card">
+      <div class="profile-icon">🛂</div>
+      <h1 class="profile-title">COMPLETA TU PASAPORTE</h1>
+      <div class="profile-subtitle">Cuéntanos un poco de ti antes de empezar</div>
+
+      <div class="profile-field">
+        <label for="profile-gender">Género</label>
+        <select id="profile-gender">
+          <option value="" disabled selected>Selecciona…</option>
+          <option value="Femenino">Femenino</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Otro">Otro</option>
+          <option value="Prefiero no decir">Prefiero no decir</option>
+        </select>
+      </div>
+
+      <div class="profile-field">
+        <label for="profile-age">Edad</label>
+        <input id="profile-age" type="number" min="1" max="120" placeholder="Ej. 27"/>
+      </div>
+
+      <div class="profile-field">
+        <label for="profile-funfact">Fun fact tuyo</label>
+        <input id="profile-funfact" type="text" maxlength="80" placeholder="Ej. Le pongo canela a todo"/>
+      </div>
+
+      <button class="profile-submit-btn" onclick="submitProfile()">Guardar y continuar ☕</button>
     </div>
   </div>
 
@@ -867,6 +1098,43 @@
 
   <!-- PASSPORT PAGE -->
   <div class="page passport-page" id="page-passport">
+
+    <!-- PASSPORT ID CARD -->
+    <div class="passport-id-card">
+      <div class="id-card-header">
+        <span class="id-card-country">PASAPORTE · HERMOSILLO</span>
+        <span class="id-card-type">CAFÉ ID</span>
+      </div>
+      <div class="id-card-body">
+        <div class="id-photo">
+          <svg viewBox="0 0 76 92" xmlns="http://www.w3.org/2000/svg">
+            <rect width="76" height="92" fill="#d9d1c2"/>
+            <circle cx="38" cy="34" r="16" fill="#9b8a72"/>
+            <path d="M4 92 C4 66 20 56 38 56 C56 56 72 66 72 92 Z" fill="#9b8a72"/>
+          </svg>
+        </div>
+        <div class="id-fields">
+          <div class="id-field">
+            <span class="id-label">Nombre</span>
+            <span class="id-value" id="id-name">—</span>
+          </div>
+          <div class="id-field">
+            <span class="id-label">Género</span>
+            <span class="id-value" id="id-gender">—</span>
+          </div>
+          <div class="id-field">
+            <span class="id-label">Edad</span>
+            <span class="id-value" id="id-age">—</span>
+          </div>
+          <div class="id-field">
+            <span class="id-label">Fun Fact</span>
+            <span class="id-value" id="id-funfact">—</span>
+          </div>
+        </div>
+      </div>
+      <div class="id-card-mrz" id="id-mrz">P&lt;HMO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+    </div>
+
     <div class="passport-cover">
       <h2>PASAPORTE DEL CAFÉ</h2>
       <div class="subtitle">HERMOSILLO, SONORA</div>
@@ -1040,13 +1308,16 @@
         const snap = await getDoc(ref);
         if (snap.exists()) {
           visited = snap.data().visited || {};
+          profile = snap.data().profile || null;
         } else {
           // New user — always start at zero
           visited = {};
-          await setDoc(ref, { visited: {}, email: currentUser.email, name: currentUser.displayName });
+          profile = null;
+          await setDoc(ref, { visited: {}, profile: null, email: currentUser.email, name: currentUser.displayName });
         }
         setSyncDot('synced');
         refreshMarkers();
+        if (window.checkProfileScreen) window.checkProfileScreen();
       } catch (e) {
         console.error(e);
         setSyncDot('');
@@ -1060,6 +1331,7 @@
       unsubscribeSnapshot = onSnapshot(ref, snap => {
         if (snap.exists()) {
           visited = snap.data().visited || {};
+          profile = snap.data().profile || null;
           refreshMarkers();
           const activePage = document.querySelector('.nav-tab.active');
           if (activePage && activePage.textContent === 'Mi Pasaporte') renderPassport();
@@ -1088,17 +1360,43 @@
       }
     };
 
+    // ── Firestore: save profile ──
+    window.saveProfile = async function(profileData) {
+      setSyncDot('syncing');
+      try {
+        if (CONFIGURED && currentUser) {
+          const ref = doc(db, 'users', currentUser.uid);
+          await updateDoc(ref, { profile: profileData });
+        } else {
+          localStorage.setItem('cafeProfile', JSON.stringify(profileData));
+        }
+        setSyncDot('synced');
+      } catch (e) {
+        try {
+          const ref = doc(db, 'users', currentUser.uid);
+          await setDoc(ref, { visited, profile: profileData, email: currentUser.email, name: currentUser.displayName }, { merge: true });
+          setSyncDot('synced');
+        } catch (e2) { console.error(e2); setSyncDot(''); }
+      }
+    };
+
     // Firestore keys can't have slashes — replace with unicode lookalike
     function safeFbKey(str) { return str.replace(/\//g, '∕'); }
 
     // ── Fallback: no Firebase ──
     function setupUIWithLocalStorage() {
       visited = JSON.parse(localStorage.getItem('cafeVisited') || '{}');
+      profile = JSON.parse(localStorage.getItem('cafeProfile') || 'null');
       window.saveCheckin = function(cafeName) {
         localStorage.setItem('cafeVisited', JSON.stringify(visited));
       };
+      window.saveProfile = function(profileData) {
+        profile = profileData;
+        localStorage.setItem('cafeProfile', JSON.stringify(profileData));
+      };
       updateUserUI({ displayName:'Invitado', email:'Sin cuenta', photoURL: null });
       initMap();
+      if (window.checkProfileScreen) window.checkProfileScreen();
     }
 
     // ── Update topbar user UI ──
@@ -1116,9 +1414,11 @@
         nameShort.textContent = 'Usuario';
         ddName.textContent = '—';
         ddEmail.textContent = '—';
+        window.currentDisplayName = 'Usuario';
         return;
       }
 
+      window.currentDisplayName = user.displayName || 'Usuario';
       const first = (user.displayName || 'Usuario').split(' ')[0];
       nameShort.textContent = first;
       ddName.textContent    = user.displayName || 'Usuario';
@@ -1197,6 +1497,7 @@
     // STATE
     // ──────────────────────────────────────────────
     let visited = {};
+    let profile = null;
     let currentCafe = null;
     let mapInitialized = false;
     let markersByName = new Map();
@@ -1221,6 +1522,50 @@
       if (btn) btn.classList.add('active');
       if (id === 'passport') renderPassport();
       if (id === 'map' && mapInstance) setTimeout(() => mapInstance.invalidateSize(), 100);
+    }
+
+    // ──────────────────────────────────────────────
+    // PROFILE (cuestionario obligatorio)
+    // ──────────────────────────────────────────────
+    function checkProfileScreen() {
+      const complete = profile && profile.gender && profile.age && profile.funFact;
+      if (!complete) {
+        document.getElementById('profile-screen').classList.add('show');
+      } else {
+        document.getElementById('profile-screen').classList.remove('show');
+        updatePassportIdCard();
+      }
+    }
+    window.checkProfileScreen = checkProfileScreen;
+
+    function submitProfile() {
+      const gender  = document.getElementById('profile-gender').value;
+      const age     = document.getElementById('profile-age').value;
+      const funFact = document.getElementById('profile-funfact').value.trim();
+
+      if (!gender || !age || !funFact) {
+        showToast('Completa todos los campos ✏️');
+        return;
+      }
+
+      profile = { gender, age, funFact };
+      if (window.saveProfile) window.saveProfile(profile);
+      document.getElementById('profile-screen').classList.remove('show');
+      updatePassportIdCard();
+      showToast('¡Perfil guardado! 🛂');
+    }
+    window.submitProfile = submitProfile;
+
+    function updatePassportIdCard() {
+      const name = window.currentDisplayName || 'Invitado';
+      document.getElementById('id-name').textContent    = name;
+      document.getElementById('id-gender').textContent  = profile ? profile.gender  : '—';
+      document.getElementById('id-age').textContent     = profile ? profile.age     : '—';
+      document.getElementById('id-funfact').textContent = profile ? profile.funFact : '—';
+
+      const mrzName = normalize(name).toUpperCase().replace(/[^A-Z]/g, '<');
+      const mrz = ('P<HMO' + mrzName).padEnd(30, '<').slice(0, 30);
+      document.getElementById('id-mrz').textContent = mrz;
     }
 
     // ──────────────────────────────────────────────
@@ -1445,6 +1790,8 @@ function confirmFromCode() {
     // PASSPORT
     // ──────────────────────────────────────────────
     function renderPassport() {
+      updatePassportIdCard();
+
       const count = visitedCount();
       const total = cafes.length;
       const pct   = Math.round(count / total * 100);

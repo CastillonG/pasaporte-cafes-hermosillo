@@ -677,6 +677,24 @@
       margin-bottom: 20px;
     }
 
+    .sheet-gmaps-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--espresso);
+      text-decoration: none;
+      margin-bottom: 20px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: var(--warm);
+      border: 1.5px solid rgba(122,63,37,.15);
+      transition: background .2s;
+    }
+
+    .sheet-gmaps-link:hover { background: var(--sand); }
+
     .sheet-section-title {
       font-size: 11px;
       font-weight: 600;
@@ -892,6 +910,7 @@
         <button class="sheet-close" onclick="closeOverlay()">✕</button>
       </div>
       <div class="sheet-address" id="sheet-address">📍 —</div>
+      <a class="sheet-gmaps-link" id="sheet-gmaps-link" href="#" target="_blank" rel="noopener">🔎 Buscar en Google</a>
       <div class="sheet-section-title">Especialidades</div>
       <div class="menu-tags" id="sheet-menu"></div>
       <div class="sheet-section-title">Horarios</div>
@@ -1335,6 +1354,9 @@
 
       document.getElementById('sheet-name').textContent = cafe.name;
       document.getElementById('sheet-address').textContent = '📍 ' + cafe.address;
+
+      const gmapsQuery = encodeURIComponent(cafe.name + ', ' + cafe.address + ', Hermosillo, Sonora');
+      document.getElementById('sheet-gmaps-link').href = 'https://www.google.com/search?q=' + gmapsQuery;
 
       document.getElementById('sheet-menu').innerHTML =
         cafe.menu.map(m => `<span class="menu-tag">${m}</span>`).join('');

@@ -1588,10 +1588,12 @@
         ddName.textContent = '—';
         ddEmail.textContent = '—';
         window.currentDisplayName = 'Usuario';
+        window.currentUserEmail = '';
         return;
       }
 
       window.currentDisplayName = user.displayName || 'Usuario';
+      window.currentUserEmail = (user.email || '').trim().toLowerCase();
       const first = (user.displayName || 'Usuario').split(' ')[0];
       nameShort.textContent = first;
       ddName.textContent    = user.displayName || 'Usuario';
@@ -1710,13 +1712,30 @@
       setTimeout(() => t.classList.remove('show'), 3500);
     }
 
-    function avatarSvg(id, compact = false) {
+    const FOUNDER_EMAIL = 'angelcastillongg@gmail.com';
+
+    function avatarSvg(id, compact = false, allowFounderCrown = false) {
       const glasses = id.includes('glasses');
       const cap = id.includes('cap');
       const coffee = id.includes('coffee');
+      const isFounder = allowFounderCrown && window.currentUserEmail === FOUNDER_EMAIL;
+
+      const founderCrown = isFounder ? `
+        <g transform="translate(20 0)">
+          <path d="M4 25 L1 7 L14 16 L25 2 L36 16 L49 7 L46 25 Z"
+                fill="#d6a928" stroke="#7a3f25" stroke-width="2" stroke-linejoin="round"/>
+          <rect x="4" y="23" width="42" height="9" rx="3"
+                fill="#c9a227" stroke="#7a3f25" stroke-width="2"/>
+          <ellipse cx="25" cy="18" rx="7" ry="9"
+                   fill="#7a3f25" transform="rotate(18 25 18)"/>
+          <path d="M22 11 Q29 18 24 26"
+                fill="none" stroke="#f5ead8" stroke-width="1.7" stroke-linecap="round"/>
+        </g>` : '';
+
       return `
         <svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <rect width="90" height="110" rx="8" fill="#d9d1c2"/>
+          ${founderCrown}
           ${cap ? '<path d="M24 27 Q45 7 67 27 L64 35 H27 Z" fill="#71695e"/><path d="M61 30 Q77 30 80 36 Q68 39 59 36 Z" fill="#71695e"/>' : ''}
           <circle cx="43" cy="43" r="19" fill="#9b8a72"/>
           ${glasses ? '<g fill="none" stroke="#4b443c" stroke-width="3"><circle cx="35" cy="42" r="7"/><circle cx="51" cy="42" r="7"/><path d="M42 42h2"/></g>' : ''}
@@ -1727,7 +1746,7 @@
 
     function renderPassportCharacter() {
       const target = document.getElementById('passport-character');
-      if (target) target.innerHTML = avatarSvg(selectedAvatar, true);
+      if (target) target.innerHTML = avatarSvg(selectedAvatar, true, true);
     }
 
     function getVisitDate(value) {

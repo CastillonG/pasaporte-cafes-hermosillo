@@ -1,3 +1,129 @@
+ChatGPT
+
+
+
+
+
+
+
+
+Pegado text(3).txt
+Documento
+Ahora en vez de que este un apartado de recompensas va a ser uno de medallas, que abajo de tu pasaporte salga una opcion un boton que diga mdedallas y te habra una ventanita donde salgan tus mdeallas, deja un logo de medalla como place holder y las medallas que hay hasta el momento son, medalla por completar los cafes del 2026, se llama Experto cafecer 2026, otro por registrar  5 cafes la misma semana, que se llame subidón de café, Otro por asistir al festival del cafe y que se llame asi Festival del Cafe 2026, (todos estos estaran escondidos osea no saldra nada a menos que los desbloquees) y ademas una opcion picandole a tu personaje del pasaporte donde abriendolo te de entre opviones de personajes que pudes elegir, que solo sean opciones del monito gris pero con lentes, con gorra, con una taza de cafe a lado y asi
+
+Bien, el archivo con la integración de QR sigue ahí. Voy a hacer las ediciones para agregar el sistema de medallas y el selector de personaje.
+
+1. Estilos CSS para medallas y selector de avatar:
+
+
+Agregar estilos CSS para el botón de medallas, tarjetas de medallas y selector de personaje
+Agregar estilos CSS para el botón de medallas, tarjetas de medallas y selector de personaje
+2. Actualizo la foto del pasaporte para que sea clicable y dinámica, y elimino la sección de recompensas por el botón de medallas:
+
+
+2 archivos editados
+2 archivos editados
+3. Agrego los modales de medallas y selector de personaje:
+
+
+Agregar los overlays de medallas y selector de personaje
+Agregar los overlays de medallas y selector de personaje
+4. Ahora la lógica en Firebase (módulo) para persistir medallas y avatar:
+
+
+2 archivos editados
+2 archivos editados
+Ahora agrego las funciones para guardar medallas y avatar en Firestore:
+
+
+Agregar funciones saveMedal y saveAvatar para Firestore
+Agregar funciones saveMedal y saveAvatar para Firestore
+Ahora actualizo el modo invitado (sin Firebase) para que también maneje medallas y avatar:
+
+
+Cargar medallas y avatar desde localStorage en modo invitado
+Cargar medallas y avatar desde localStorage en modo invitado
+5. Ahora la lógica principal (medallas, avatares, fechas por semana) en el script clásico:
+
+
+Estructuró sistema de medallas desbloqueables y personalizador de avatares
+Estructuró sistema de medallas desbloqueables y personalizador de avatares
+Ahora agrego toda la lógica de medallas y personajes, justo después de las funciones de perfil:
+
+
+Agregar lógica de fechas de visita, medallas y selector de avatar
+Agregar lógica de fechas de visita, medallas y selector de avatar
+Ahora actualizo registrarVisita() para guardar fecha con timestamp y detectar medallas nuevas, y actualizo las referencias a visited[...] que mostraban la fecha como texto plano:
+
+
+Actualizar registrarVisita para guardar timestamp y detectar medallas nuevas
+Actualizar registrarVisita para guardar timestamp y detectar medallas nuevas
+Ahora actualizo las dos referencias donde se mostraba visited[cafe.name] como texto plano: la ficha de café y la grilla de sellos del pasaporte.
+
+
+Esquematizó sistema de medallas desbloqueables y personalizaciones de avatar
+Esquematizó sistema de medallas desbloqueables y personalizaciones de avatar
+Verifico que no queden referencias rotas a "recompensas" y que todo esté bien enlazado:
+
+
+Buscar referencias rotas y confirmar el cableado de medallas/avatares
+Buscar referencias rotas y confirmar el cableado de medallas/avatares
+Encontré un remanente en renderPassport() que aún referencia el viejo REWARDS — lo elimino:
+
+
+Ejecutó un comando, archivo editado
+Ejecutó un comando, archivo editado
+Ahora limpio el CSS viejo de .rewards-section / .reward-card que ya no se usa (opcional pero mejor dejarlo limpio):
+
+
+Confirmar que ya no quedan referencias a REWARDS en el JS
+Confirmar que ya no quedan referencias a REWARDS en el JS
+Bien, esas son solo reglas de CSS sin usar (inofensivas, quedan como estilos huérfanos). Ahora hago una verificación final de sintaxis con Node para asegurarme de que no rompí nada en el JS:
+
+
+Ejecutó 4 comand
+
+Te puse la instrucxcion, abajo lo que se debe epmezar a hacer y el texto el doc el codigo, haz todo y edita el doc porfa
+
+
+Ha pensado durante 2m 28s
+Listo. Edité el código completo tomando como base el archivo que compartiste. 
+
+
+Cambios realizados:
+
+Reemplacé Recompensas por el botón Medallas, debajo del pasaporte.
+
+La ventana solo muestra medallas desbloqueadas; las demás permanecen completamente ocultas.
+
+Agregué:
+
+Experto Cafetero 2026: completar todos los cafés.
+
+Subidón de Café: registrar 5 cafés distintos en la misma semana.
+
+Festival del Café 2026: preparada para desbloquearse mediante QR o evento.
+
+Las visitas ahora guardan fecha y hora, necesarias para calcular la medalla semanal.
+
+El personaje gris del pasaporte ahora es seleccionable.
+
+Agregué seis variantes: clásico, lentes, gorra, taza de café y combinaciones.
+
+Medallas y personaje se guardan en Firebase o en localStorage.
+
+Corregí la estructura del modal de verificación, que tenía etiquetas sin cerrar.
+
+Verifiqué la sintaxis de ambos bloques JavaScript con Node.
+
+Para desbloquear la medalla del festival desde el futuro QR o botón del evento, el código ya incluye:
+
+unlockFestivalMedal2026();
+Archivos
+Pasaporte_del_Cafe_medallas.html
+
+Pasaporte_del_Cafe_medallas.txt
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -559,47 +685,131 @@
 
     .stamp-date { font-size: 9px; color: var(--sand); margin-top: 3px; }
 
-    /* ── REWARDS ── */
-    .rewards-section { margin-top: 24px; }
+    /* ── MEDALS & AVATAR ── */
+    .passport-actions { margin-top: 18px; }
 
-    .rewards-section h3 {
-      font-family: 'Playfair Display', serif;
-      color: var(--espresso);
-      font-size: 18px;
-      margin-bottom: 14px;
-    }
-
-    .reward-card {
+    .medals-btn {
+      width: 100%;
+      border: 2px solid var(--espresso);
       background: var(--foam);
-      border: 1.5px solid rgba(122,63,37,.15);
+      color: var(--espresso);
       border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 10px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
-      gap: 14px;
-      transition: transform .15s;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
     }
 
-    .reward-card:hover { transform: translateY(-1px); }
+    .medals-btn:hover { background: var(--warm); transform: translateY(-1px); }
+    .medals-btn-icon { font-size: 23px; }
 
-    .reward-icon { font-size: 32px; flex-shrink: 0; }
-    .reward-info { flex: 1; }
+    .id-photo {
+      cursor: pointer;
+      position: relative;
+      transition: transform .2s, box-shadow .2s;
+    }
 
-    .reward-title { font-weight: 600; color: var(--dark); font-size: 15px; }
+    .id-photo:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(62,31,14,.18);
+    }
 
-    .reward-desc { font-size: 13px; color: var(--espresso); opacity: .7; margin-top: 2px; }
+    .id-photo::after {
+      content: 'Editar';
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: 4px;
+      padding: 2px 3px;
+      border-radius: 5px;
+      background: rgba(62,31,14,.72);
+      color: white;
+      text-align: center;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .4px;
+    }
 
-    .reward-badge {
+    .modal-sheet { max-height: 88vh; }
+
+    .medals-empty {
+      text-align: center;
+      padding: 34px 18px;
+      color: var(--espresso);
+      opacity: .72;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .medals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .medal-card {
+      background: linear-gradient(145deg, var(--foam), var(--warm));
+      border: 1.5px solid rgba(122,63,37,.18);
+      border-radius: 18px;
+      padding: 18px 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(62,31,14,.08);
+    }
+
+    .medal-placeholder {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #f7df7b, var(--stamp-gold));
+      border: 5px solid #b58a18;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,.35), 0 5px 10px rgba(62,31,14,.18);
+    }
+
+    .medal-title {
+      color: var(--dark);
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .medal-desc { color: var(--espresso); opacity: .72; font-size: 12px; margin-top: 5px; line-height: 1.4; }
+    .medal-date { color: var(--green); font-size: 11px; font-weight: 700; margin-top: 9px; }
+
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .avatar-option {
+      border: 2px solid rgba(122,63,37,.16);
+      background: white;
+      border-radius: 16px;
+      padding: 12px 8px 10px;
+      cursor: pointer;
+      transition: all .2s;
+      text-align: center;
+      color: var(--espresso);
+      font-family: 'DM Sans', sans-serif;
       font-size: 12px;
       font-weight: 600;
-      padding: 5px 10px;
-      border-radius: 20px;
-      white-space: nowrap;
     }
 
-    .reward-badge.locked { background: rgba(122,63,37,.1); color: var(--espresso); }
-    .reward-badge.unlocked { background: var(--stamp-gold); color: white; }
+    .avatar-option:hover { border-color: var(--espresso); transform: translateY(-2px); }
+    .avatar-option.selected { border-color: var(--stamp-gold); background: #fff9df; box-shadow: 0 0 0 3px rgba(201,162,39,.16); }
+    .avatar-preview { height: 105px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
+    .avatar-preview svg { width: 86px; height: 104px; }
 
     /* ── CAFE DETAIL MODAL ── */
     .overlay {
@@ -1106,13 +1316,7 @@
         <span class="id-card-type">CAFÉ ID</span>
       </div>
       <div class="id-card-body">
-        <div class="id-photo">
-          <svg viewBox="0 0 76 92" xmlns="http://www.w3.org/2000/svg">
-            <rect width="76" height="92" fill="#d9d1c2"/>
-            <circle cx="38" cy="34" r="16" fill="#9b8a72"/>
-            <path d="M4 92 C4 66 20 56 38 56 C56 56 72 66 72 92 Z" fill="#9b8a72"/>
-          </svg>
-        </div>
+        <div class="id-photo" id="passport-character" onclick="openAvatarModal()" role="button" aria-label="Cambiar personaje" tabindex="0"></div>
         <div class="id-fields">
           <div class="id-field">
             <span class="id-label">Nombre</span>
@@ -1159,9 +1363,11 @@
         <div class="progress-label" id="progress-label">0 de 33 sellos</div>
       </div>
     </div>
-    <div class="rewards-section">
-      <h3>Recompensas</h3>
-      <div id="rewards-list"></div>
+    <div class="passport-actions">
+      <button class="medals-btn" onclick="openMedalsModal()">
+        <span class="medals-btn-icon">🏅</span>
+        <span>Medallas</span>
+      </button>
     </div>
     <div class="stamps-section" style="margin-top:24px;">
       <h3>Mis Sellos</h3>
@@ -1226,7 +1432,36 @@
           onclick="confirmFromCode()">
     ✓ Confirmar
   </button>
-</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEDALS MODAL -->
+  <div class="overlay" id="medals-overlay" onclick="closeMedalsModal(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <h2>Mis Medallas</h2>
+        <button class="sheet-close" onclick="closeMedalsModal()">✕</button>
+      </div>
+      <div id="medals-list"></div>
+    </div>
+  </div>
+
+  <!-- AVATAR SELECTOR MODAL -->
+  <div class="overlay" id="avatar-overlay" onclick="closeAvatarModal(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div>
+          <h2>Elige tu personaje</h2>
+          <div class="sheet-address" style="margin:5px 0 0;">Toca una opción para usarla en tu pasaporte.</div>
+        </div>
+        <button class="sheet-close" onclick="closeAvatarModal()">✕</button>
+      </div>
+      <div class="avatar-grid" id="avatar-grid"></div>
+    </div>
+  </div>
 
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
@@ -1293,8 +1528,10 @@
       closeDropdown();
       if (unsubscribeSnapshot) unsubscribeSnapshot();
       if (CONFIGURED && auth) await fbSignOut(auth);
-      else { localStorage.removeItem('cafeVisited'); }
+      else { localStorage.removeItem('cafeVisited'); localStorage.removeItem('cafeMedals'); localStorage.removeItem('cafeAvatar'); }
       visited = {};
+      medals = {};
+      selectedAvatar = 'classic';
       currentUser = null;
       updateUserUI(null);
       refreshMarkers();
@@ -1328,11 +1565,15 @@
         if (snap.exists()) {
           visited = snap.data().visited || {};
           profile = snap.data().profile || null;
+          medals = snap.data().medals || {};
+          selectedAvatar = snap.data().selectedAvatar || 'classic';
         } else {
           // New user — always start at zero
           visited = {};
           profile = null;
-          await setDoc(ref, { visited: {}, profile: null, email: currentUser.email, name: currentUser.displayName });
+          medals = {};
+          selectedAvatar = 'classic';
+          await setDoc(ref, { visited: {}, profile: null, medals: {}, selectedAvatar: 'classic', email: currentUser.email, name: currentUser.displayName });
         }
         setSyncDot('synced');
         refreshMarkers();
@@ -1351,6 +1592,9 @@
         if (snap.exists()) {
           visited = snap.data().visited || {};
           profile = snap.data().profile || null;
+          medals = snap.data().medals || {};
+          selectedAvatar = snap.data().selectedAvatar || 'classic';
+          renderPassportCharacter();
           refreshMarkers();
           const activePage = document.querySelector('.nav-tab.active');
           if (activePage && activePage.textContent === 'Mi Pasaporte') renderPassport();
@@ -1399,6 +1643,35 @@
       }
     };
 
+    // ── Firestore: save medals ──
+    window.saveMedals = async function() {
+      setSyncDot('syncing');
+      try {
+        if (CONFIGURED && currentUser) {
+          const ref = doc(db, 'users', currentUser.uid);
+          await setDoc(ref, { medals }, { merge: true });
+        } else {
+          localStorage.setItem('cafeMedals', JSON.stringify(medals));
+        }
+        setSyncDot('synced');
+      } catch (e) { console.error(e); setSyncDot(''); }
+    };
+
+    // ── Firestore: save selected avatar ──
+    window.saveAvatar = async function(avatarId) {
+      selectedAvatar = avatarId;
+      setSyncDot('syncing');
+      try {
+        if (CONFIGURED && currentUser) {
+          const ref = doc(db, 'users', currentUser.uid);
+          await setDoc(ref, { selectedAvatar: avatarId }, { merge: true });
+        } else {
+          localStorage.setItem('cafeAvatar', avatarId);
+        }
+        setSyncDot('synced');
+      } catch (e) { console.error(e); setSyncDot(''); }
+    };
+
     // Firestore keys can't have slashes — replace with unicode lookalike
     function safeFbKey(str) { return str.replace(/\//g, '∕'); }
 
@@ -1406,12 +1679,19 @@
     function setupUIWithLocalStorage() {
       visited = JSON.parse(localStorage.getItem('cafeVisited') || '{}');
       profile = JSON.parse(localStorage.getItem('cafeProfile') || 'null');
+      medals = JSON.parse(localStorage.getItem('cafeMedals') || '{}');
+      selectedAvatar = localStorage.getItem('cafeAvatar') || 'classic';
       window.saveCheckin = function(cafeName) {
         localStorage.setItem('cafeVisited', JSON.stringify(visited));
       };
       window.saveProfile = function(profileData) {
         profile = profileData;
         localStorage.setItem('cafeProfile', JSON.stringify(profileData));
+      };
+      window.saveMedals = function() { localStorage.setItem('cafeMedals', JSON.stringify(medals)); };
+      window.saveAvatar = function(avatarId) {
+        selectedAvatar = avatarId;
+        localStorage.setItem('cafeAvatar', avatarId);
       };
       updateUserUI({ displayName:'Invitado', email:'Sin cuenta', photoURL: null });
       initMap();
@@ -1503,13 +1783,34 @@
       { name:"PALOMINA COFFEE SHOP", address:"Los Pinitos, Sonora", coords:[29.235063,-110.887409], menu:["Café de Rancho","Atole","Pan Sonorense","Burritos"], hours:{lun:"7–19",mar:"7–19",mie:"7–19",jue:"7–19",vie:"7–20",sab:"8–20",dom:"8–17"} }
     ];
 
-    const REWARDS = [
-      { id:'r1', title:'Primera Taza',       desc:'Visita tu primer café del pasaporte',       icon:'☕', need:1 },
-      { id:'r2', title:'Explorador Novato',  desc:'Visita 5 cafés diferentes',                 icon:'🗺️', need:5 },
-      { id:'r3', title:'Amante del Café',    desc:'Visita 10 cafés diferentes',                icon:'❤️', need:10 },
-      { id:'r4', title:'Pasaporte a Medias', desc:'Completa la mitad del pasaporte',           icon:'📖', need:Math.ceil(cafes.length/2) },
-      { id:'r5', title:'Gran Explorador',    desc:'Visita 25 cafés del pasaporte',             icon:'🏆', need:25 },
-      { id:'r6', title:'Pasaporte Completo', desc:'¡Visita todos los cafés asociados!',        icon:'⭐', need:cafes.length }
+    const MEDALS = [
+      {
+        id: 'expert_2026',
+        title: 'Experto Cafetero 2026',
+        desc: 'Completaste todos los cafés del pasaporte 2026.',
+        icon: '☕'
+      },
+      {
+        id: 'coffee_rush',
+        title: 'Subidón de Café',
+        desc: 'Registraste 5 cafés diferentes durante la misma semana.',
+        icon: '⚡'
+      },
+      {
+        id: 'festival_2026',
+        title: 'Festival del Café 2026',
+        desc: 'Asististe al Festival del Café 2026.',
+        icon: '🎪'
+      }
+    ];
+
+    const AVATARS = [
+      { id:'classic', name:'Clásico' },
+      { id:'glasses', name:'Con lentes' },
+      { id:'cap', name:'Con gorra' },
+      { id:'coffee', name:'Con cafecito' },
+      { id:'glasses_coffee', name:'Lentes y café' },
+      { id:'cap_coffee', name:'Gorra y café' }
     ];
 
     // ──────────────────────────────────────────────
@@ -1517,6 +1818,8 @@
     // ──────────────────────────────────────────────
     let visited = {};
     let profile = null;
+    let medals = {};
+    let selectedAvatar = 'classic';
     let currentCafe = null;
     let mapInitialized = false;
     let markersByName = new Map();
@@ -1532,6 +1835,137 @@
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 3500);
     }
+
+    function avatarSvg(id, compact = false) {
+      const glasses = id.includes('glasses');
+      const cap = id.includes('cap');
+      const coffee = id.includes('coffee');
+      return `
+        <svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="90" height="110" rx="8" fill="#d9d1c2"/>
+          ${cap ? '<path d="M24 27 Q45 7 67 27 L64 35 H27 Z" fill="#71695e"/><path d="M61 30 Q77 30 80 36 Q68 39 59 36 Z" fill="#71695e"/>' : ''}
+          <circle cx="43" cy="43" r="19" fill="#9b8a72"/>
+          ${glasses ? '<g fill="none" stroke="#4b443c" stroke-width="3"><circle cx="35" cy="42" r="7"/><circle cx="51" cy="42" r="7"/><path d="M42 42h2"/></g>' : ''}
+          <path d="M8 110 C8 78 24 65 43 65 C62 65 78 78 78 110 Z" fill="#9b8a72"/>
+          ${coffee ? '<g transform="translate(61 68)"><rect x="0" y="8" width="22" height="18" rx="4" fill="#f5ead8" stroke="#7a3f25" stroke-width="2"/><path d="M22 12 Q31 12 28 20 Q26 24 22 22" fill="none" stroke="#7a3f25" stroke-width="2"/><path d="M6 5 Q4 1 7 -2 M13 5 Q11 1 14 -2" fill="none" stroke="#7a3f25" stroke-width="1.5"/></g>' : ''}
+        </svg>`;
+    }
+
+    function renderPassportCharacter() {
+      const target = document.getElementById('passport-character');
+      if (target) target.innerHTML = avatarSvg(selectedAvatar, true);
+    }
+
+    function getVisitDate(value) {
+      if (!value) return null;
+      if (typeof value === 'object' && value.timestamp) {
+        const d = new Date(value.timestamp);
+        return Number.isNaN(d.getTime()) ? null : d;
+      }
+      if (typeof value === 'string') {
+        const iso = new Date(value);
+        return Number.isNaN(iso.getTime()) ? null : iso;
+      }
+      return null;
+    }
+
+    function getVisitLabel(value) {
+      if (!value) return '';
+      if (typeof value === 'object' && value.label) return value.label;
+      if (typeof value === 'string') return value;
+      const d = getVisitDate(value);
+      return d ? d.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' }) : '';
+    }
+
+    function getWeekKey(date) {
+      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const day = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - day);
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      return `${d.getUTCFullYear()}-W${String(week).padStart(2,'0')}`;
+    }
+
+    function unlockMedal(id, silent = false) {
+      if (medals[id]) return false;
+      const now = new Date();
+      medals[id] = {
+        timestamp: now.toISOString(),
+        label: now.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' })
+      };
+      if (window.saveMedals) window.saveMedals();
+      const medal = MEDALS.find(m => m.id === id);
+      if (!silent && medal) setTimeout(() => showToast('🏅 Nueva medalla: ' + medal.title), 700);
+      return true;
+    }
+
+    function evaluateMedals() {
+      if (visitedCount() >= cafes.length) unlockMedal('expert_2026');
+      const weeks = {};
+      Object.values(visited).forEach(v => {
+        const d = getVisitDate(v);
+        if (!d) return;
+        const key = getWeekKey(d);
+        weeks[key] = (weeks[key] || 0) + 1;
+      });
+      if (Object.values(weeks).some(n => n >= 5)) unlockMedal('coffee_rush');
+    }
+
+    // Se puede llamar desde el futuro QR/botón del evento: unlockFestivalMedal2026()
+    window.unlockFestivalMedal2026 = function() { unlockMedal('festival_2026'); };
+
+    function openMedalsModal() {
+      const unlocked = MEDALS.filter(m => medals[m.id]);
+      const list = document.getElementById('medals-list');
+      list.innerHTML = unlocked.length ? `<div class="medals-grid">${unlocked.map(m => `
+        <div class="medal-card">
+          <div class="medal-placeholder">${m.icon}</div>
+          <div class="medal-title">${m.title}</div>
+          <div class="medal-desc">${m.desc}</div>
+          <div class="medal-date">Desbloqueada · ${medals[m.id].label || ''}</div>
+        </div>`).join('')}</div>` : `
+        <div class="medals-empty">
+          <div style="font-size:42px;margin-bottom:8px;">🏅</div>
+          Aún no has desbloqueado medallas.<br>Continúa visitando cafés para descubrirlas.
+        </div>`;
+      document.getElementById('medals-overlay').classList.add('open');
+    }
+    window.openMedalsModal = openMedalsModal;
+
+    function closeMedalsModal(e) {
+      if (!e || e.target === document.getElementById('medals-overlay')) document.getElementById('medals-overlay').classList.remove('open');
+    }
+    window.closeMedalsModal = closeMedalsModal;
+
+    function renderAvatarGrid() {
+      document.getElementById('avatar-grid').innerHTML = AVATARS.map(a => `
+        <button class="avatar-option ${selectedAvatar === a.id ? 'selected' : ''}" onclick="selectAvatar('${a.id}')">
+          <div class="avatar-preview">${avatarSvg(a.id)}</div>
+          ${a.name}
+        </button>`).join('');
+    }
+
+    function openAvatarModal() {
+      renderAvatarGrid();
+      document.getElementById('avatar-overlay').classList.add('open');
+    }
+    window.openAvatarModal = openAvatarModal;
+
+    function closeAvatarModal(e) {
+      if (!e || e.target === document.getElementById('avatar-overlay')) document.getElementById('avatar-overlay').classList.remove('open');
+    }
+    window.closeAvatarModal = closeAvatarModal;
+
+    function selectAvatar(id) {
+      if (!AVATARS.some(a => a.id === id)) return;
+      selectedAvatar = id;
+      if (window.saveAvatar) window.saveAvatar(id);
+      renderPassportCharacter();
+      renderAvatarGrid();
+      showToast('Personaje actualizado ✓');
+      setTimeout(() => closeAvatarModal(), 350);
+    }
+    window.selectAvatar = selectAvatar;
 
     // ──────────────────────────────────────────────
     // PAGE NAVIGATION
@@ -1578,6 +2012,7 @@
     window.submitProfile = submitProfile;
 
     function updatePassportIdCard() {
+      renderPassportCharacter();
       const name = window.currentDisplayName || 'Invitado';
       document.getElementById('id-name').textContent    = name;
       document.getElementById('id-gender').textContent  = profile ? profile.gender  : '—';
@@ -1736,7 +2171,7 @@
       const btn = document.getElementById('checkin-btn');
       const v = visited[cafe.name];
       if (v) {
-        btn.textContent = '✓ Visitado el ' + v;
+        btn.textContent = '✓ Visitado el ' + getVisitLabel(v);
         btn.className = 'checkin-btn visited';
       } else {
         btn.textContent = 'Registrar Visita ☕';
@@ -1886,18 +2321,21 @@ function confirmFromCode() {
 }
 
     function registrarVisita() {
-      const today = new Date().toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' });
-      visited[currentCafe.name] = today;
-      if (window.saveCheckin) window.saveCheckin(currentCafe.name, today);
+      if (!currentCafe || visited[currentCafe.name]) return;
+      const now = new Date();
+      const visitData = {
+        timestamp: now.toISOString(),
+        label: now.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' })
+      };
+      visited[currentCafe.name] = visitData;
+      if (window.saveCheckin) window.saveCheckin(currentCafe.name, visitData);
       refreshMarkers();
       const btn = document.getElementById('checkin-btn');
-      btn.textContent = '✓ Visitado el ' + today;
+      btn.textContent = '✓ Visitado el ' + visitData.label;
       btn.className = 'checkin-btn visited';
       const count = visitedCount();
       showToast('¡Sello agregado! Llevas ' + count + ' de ' + cafes.length + ' ☕');
-      REWARDS.forEach(r => {
-        if (count === r.need) setTimeout(() => showToast('🏆 Recompensa: ' + r.title + '!'), 3600);
-      });
+      evaluateMedals();
     }
 
     // ──────────────────────────────────────────────
@@ -1916,18 +2354,7 @@ function confirmFromCode() {
       document.getElementById('progress-fill').style.width = pct + '%';
       document.getElementById('progress-label').textContent = count + ' de ' + total + ' sellos';
 
-      document.getElementById('rewards-list').innerHTML = REWARDS.map(r => {
-        const unlocked = count >= r.need;
-        return `
-          <div class="reward-card">
-            <div class="reward-icon">${r.icon}</div>
-            <div class="reward-info">
-              <div class="reward-title">${r.title}</div>
-              <div class="reward-desc">${r.desc}</div>
-            </div>
-            <div class="reward-badge ${unlocked ? 'unlocked' : 'locked'}">${unlocked ? '¡Desbloqueado!' : r.need + ' cafés'}</div>
-          </div>`;
-      }).join('');
+      evaluateMedals();
 
       document.getElementById('stamps-grid').innerHTML = cafes.map(c => {
         const v = visited[c.name];
@@ -1935,7 +2362,7 @@ function confirmFromCode() {
           <div class="stamp-item ${v ? 'stamped' : ''}" onclick="openCafeSheet('${encodeURIComponent(c.name)}')">
             <span class="stamp-emoji">${v ? '☕' : '○'}</span>
             <div class="stamp-name">${c.name}</div>
-            ${v ? `<div class="stamp-date">${v}</div>` : ''}
+            ${v ? `<div class="stamp-date">${getVisitLabel(v)}</div>` : ''}
           </div>`;
       }).join('');
     }
@@ -1949,3 +2376,4 @@ function confirmFromCode() {
   </script>
 </body>
 </html>
+

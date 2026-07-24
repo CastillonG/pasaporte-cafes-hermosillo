@@ -989,6 +989,12 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76' height='76' viewBox='0 0 76 76'%3E%3Cg fill='none' stroke='%234a7c59' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M38 62V25c0-8 12-8 12 0v8c0 5 8 5 8 0v-5'/%3E%3Cpath d='M38 45h-7c-6 0-6-9-6-14v-4'/%3E%3Cpath d='M31 62h14'/%3E%3C/g%3E%3C/svg%3E");
     }
 
+    .passport-id-card.bg-cups::before {
+  opacity: .065;
+  background-size: 72px 72px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%237a3f25' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 24h26v17c0 7-5 12-12 12h-2c-7 0-12-5-12-12z'/%3E%3Cpath d='M41 29h5c7 0 7 11 0 11h-5'/%3E%3Cpath d='M20 18c-3-4 3-6 0-10M28 18c-3-4 3-6 0-10M36 18c-3-4 3-6 0-10'/%3E%3Cpath d='M12 54h35'/%3E%3C/g%3E%3C/svg%3E");
+}
+
     .passport-bg-btn {
       position: absolute;
       top: 12px;
@@ -1055,6 +1061,12 @@
       background-size: 50px 50px;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cg fill='none' stroke='%234a7c59' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M25 42V17c0-5 8-5 8 0v5c0 4 6 4 6 0v-3'/%3E%3Cpath d='M25 31h-5c-4 0-4-6-4-9v-3'/%3E%3Cpath d='M20 42h10'/%3E%3C/g%3E%3C/svg%3E");
     }
+
+    .background-preview.cups::after {
+  opacity: .09;
+  background-size: 50px 50px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cg fill='none' stroke='%237a3f25' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 17h20v13c0 5-4 9-9 9h-2c-5 0-9-4-9-9z'/%3E%3Cpath d='M30 21h4c5 0 5 8 0 8h-4'/%3E%3Cpath d='M14 13c-2-3 2-4 0-7M20 13c-2-3 2-4 0-7M26 13c-2-3 2-4 0-7'/%3E%3Cpath d='M8 40h28'/%3E%3C/g%3E%3C/svg%3E");
+}
 
     .id-card-header {
       display: flex;
@@ -1804,11 +1816,12 @@
       }
     ];
 
-    const PASSPORT_BACKGROUNDS = [
-      { id:'empty', name:'Vacío', preview:'' },
-      { id:'coffee', name:'Granos de café', preview:'coffee' },
-      { id:'cactus', name:'Cactus', preview:'cactus' }
-    ];
+  const PASSPORT_BACKGROUNDS = [
+  { id:'empty', name:'Vacío', preview:'' },
+  { id:'coffee', name:'Granos de café', preview:'coffee' },
+  { id:'cups', name:'Tazas de café', preview:'cups' },
+  { id:'cactus', name:'Cactus', preview:'cactus' }
+];
 
     const AVATARS = [
       { id:'classic', name:'Clásico' },
@@ -1881,13 +1894,28 @@
     }
 
 
-    function renderPassportBackground() {
-      const card = document.getElementById('passport-id-card');
-      if (!card) return;
-      card.classList.remove('bg-coffee', 'bg-cactus');
-      if (selectedPassportBackground === 'coffee') card.classList.add('bg-coffee');
-      if (selectedPassportBackground === 'cactus') card.classList.add('bg-cactus');
-    }
+ function renderPassportBackground() {
+  const card = document.getElementById('passport-id-card');
+  if (!card) return;
+
+  card.classList.remove(
+    'bg-coffee',
+    'bg-cups',
+    'bg-cactus'
+  );
+
+  if (selectedPassportBackground === 'coffee') {
+    card.classList.add('bg-coffee');
+  }
+
+  if (selectedPassportBackground === 'cups') {
+    card.classList.add('bg-cups');
+  }
+
+  if (selectedPassportBackground === 'cactus') {
+    card.classList.add('bg-cactus');
+  }
+}
 
     function renderBackgroundGrid() {
       const grid = document.getElementById('background-grid');

@@ -1,223 +1,15 @@
-
-Claude ha terminado la respuesta
-
-<!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Pasaporte del Café — Hermosillo</title> <link rel="preconnect" href="https://fonts.googleapis.com"> <link href="https://fonts.googleapis.com/css
-
-pasted
-
-Ayudame como ejemplo a cambiar que  en la 211 barra de cafe cuando lo abra ya sea en mi pasaporte como en el mapa haya un link que te lleve a la busqueda del cafe en google
-
-
-Prepare working directory
-Prepare working directory
-Voy a agregar un enlace a la búsqueda de Google (con el nombre y la dirección del café) dentro de la ficha de detalle, así aplica automáticamente a los 33 cafés — incluyendo "211 Barra Café" como pediste de ejemplo. Primero necesito el archivo en el sandbox para editarlo.
-
-
-Se crearon 2 archivos, ejecutó 2 comandos
-Se crearon 2 archivos, ejecutó 2 comandos
-Bien, quedó insertado correctamente. Aquí está el resumen de lo que cambié:
-
-Agregué un botón/enlace 🔎 Buscar en Google justo debajo de la dirección en la ficha de detalle del café (funciona igual desde el mapa o desde "Mi Pasaporte", porque ambos usan la misma función openCafeSheet).
-Cuando abres cualquier café —incluyendo "211 Barra Café"— el enlace se arma dinámicamente con cafe.name + address + "Hermosillo, Sonora" y abre https://www.google.com/search?q=... en una pestaña nueva.
-Le puse un estilo tipo "pill" (.sheet-gmaps-link) para que combine con el resto de la ficha.
-Como usa el nombre y dirección de cada café automáticamente, ya funciona para los 33 cafés del pasaporte, no solo para ese uno.
-
-
-Presented file
-Presented file
-Si prefieres que el link vaya directo a Google Maps en lugar de una búsqueda normal de Google, dime y cambio la URL a https://www.google.com/maps/search/?api=1&query=....
-
-
-Pasaporte
-Código · HTML 
-ahora dame eso pero para todos los cafes
-
-
-Reconoció que la solución ya funciona genéricamente para todos los cafés
-Reconoció que la solución ya funciona genéricamente para todos los cafés
-Buenas noticias: ya está aplicado a los 33 cafés, no solo a "211 Barra Café" 🎉
-
-El enlace 🔎 Buscar en Google no está hardcodeado para un café en particular — lo armé usando cafe.name y cafe.address, que son datos que ya vienen de cada objeto dentro del arreglo cafes. Como openCafeSheet() es la misma función que se dispara sin importar qué café abras (desde el mapa o desde "Mi Pasaporte"), el link se genera dinámicamente cada vez con los datos del café que estás viendo.
-
-Por ejemplo, si abres "Tomomi Café" el link apuntará a una búsqueda de "Tomomi Café, C. Juan Aldama 13, San Benito, Hermosillo, Sonora", y si abres "PALOMINA COFFEE SHOP" apuntará a su propia dirección — sin que tengas que tocar nada más.
-
-Puedes probarlo directo en el archivo que te compartí arriba: abre cualquier café en el mapa o en tu pasaporte y vas a ver el botón de búsqueda con su información correspondiente.
-
-ahora generame una cuestion de perfil que si o si cuando empieces tu cuenta te haga un cuestionario para tu perfil donde pongas tu genero, tu edad y fun fact tuyo para que salga en tu pasaporte y cuando entres a tu pasaporte veas arriba en grande una simulación de un pasaporte donde salga esa info y  la sombra de un monito generico
-
-
-Architected mandatory profile questionnaire con pasaporte visual personalizado
-Architected mandatory profile questionnaire con pasaporte visual personalizado
-Voy a agregar:
-
-Un cuestionario obligatorio de perfil (género, edad, fun fact) que aparece justo después de iniciar sesión, la primera vez.
-Una tarjeta tipo "pasaporte" arriba de "Mi Pasaporte" con esa info y la silueta de un monito genérico.
-Voy por partes con ediciones directas al archivo.
-
-
-2 archivos editados
-2 archivos editados
-Ahora agrego el markup del cuestionario obligatorio (después del auth-screen):
-
-
-Agregar HTML de la pantalla de cuestionario de perfil obligatorio
-Agregar HTML de la pantalla de cuestionario de perfil obligatorio
-Ahora agrego la tarjeta de pasaporte con la silueta del monito, arriba de la sección de pasaporte:
-
-
-Orchestrated profile questionnaire integration con passport visualization y datos de usuario
-Orchestrated profile questionnaire integration con passport visualization y datos de usuario
-Ahora actualizo la lógica de Firebase para guardar/cargar el perfil junto con las visitas:
-
-
-2 archivos editados
-2 archivos editados
-Ahora agrego la función para guardar el perfil en Firestore:
-
-
-Agregar función saveProfile para guardar el perfil en Firestore
-Agregar función saveProfile para guardar el perfil en Firestore
-Ahora actualizo el fallback sin Firebase y el guardado del nombre de usuario:
-
-
-Cargar perfil desde localStorage en el modo invitado sin Firebase
-Cargar perfil desde localStorage en el modo invitado sin Firebase
-Ahora guardo el nombre del usuario en una variable global accesible desde el script clásico:
-
-
-Exponer el nombre del usuario actual como variable global para la tarjeta de pasaporte
-Exponer el nombre del usuario actual como variable global para la tarjeta de pasaporte
-Ahora agrego la variable de perfil y las funciones en el script principal:
-
-
-2 archivos editados
-2 archivos editados
-Ahora hago que renderPassport() también actualice la tarjeta cada vez que se entra a "Mi Pasaporte":
-
-
-Archivo editado, ejecutó un comando
-Archivo editado, ejecutó un comando
-Todo quedó enlazado correctamente. Guardo el archivo final:
-
-
-Presented file
-Presented file
-Resumen de lo que agregué:
-
-Cuestionario obligatorio de perfil
-
-Aparece automáticamente justo después de iniciar sesión con Google (o al entrar como invitado si Firebase no está configurado), pero solo la primera vez — si ya llenaste tu perfil, no vuelve a salir.
-No tiene botón de cerrar ni se puede saltar: pide género, edad y un fun fact, y valida que los tres campos estén llenos antes de dejarte continuar.
-Se guarda en Firestore junto con tus sellos (users/{uid}.profile), o en localStorage si estás en modo invitado.
-Tarjeta de pasaporte arriba de "Mi Pasaporte"
-
-Diseño tipo cédula/pasaporte con borde doble, marca de agua de un ☕ y una franja punteada estilo "zona de lectura mecánica" (MRZ) abajo, con tu nombre codificado como en un pasaporte real.
-Incluye una silueta genérica de "monito" (un busto gris estilo placeholder, no tu foto real de Google) como si fuera la foto del pasaporte.
-Muestra tu nombre, género, edad y fun fact, y se actualiza cada vez que entras a esa pestaña o cuando llenas/editas el cuestionario.
-Si quieres que después se pueda editar el perfil (por ejemplo desde el menú del usuario) en vez de quedar fijo para siempre, dime y le agrego esa opción.
-
-
-Pasaporte
-Código · HTML 
-con que programa se vasa para el registro de ggogle? me recuerdas
-
-
-Identificó servicio de autenticación para registro Google
-Identificó servicio de autenticación para registro Google
-Se basa en Firebase Authentication de Google, usando el proveedor de Google Sign-In (GoogleAuthProvider).
-
-En tu código eso está en el proyecto de Firebase pasaporte-del-cafe-d5df9, y así es como funciona:
-
-Firebase Auth maneja el login con Google (el botón "Continuar con Google" que abre el popup).
-Firestore (la base de datos de Firebase) guarda tu progreso: visited (sellos) y ahora también profile (género, edad, fun fact), todo bajo el documento users/{uid}.
-Si algún día quieres ver o administrar esos datos directamente, es desde la consola de Firebase: https://console.firebase.google.com → tu proyecto pasaporte-del-cafe-d5df9 → Authentication (para ver usuarios) y Firestore Database (para ver los datos guardados).
-
-
-<!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Pasaporte del Café — Hermosillo</title> <link rel="preconnect" href="https://fonts.googleapis.com"> <link href="https://fonts.googleapis
-
-pasted
-
-ayudame a integrar qr al codigo
-
-
-Architected QR scanner integration con cámara y validación automática
-Architected QR scanner integration con cámara y validación automática
-Voy a integrar el lector de QR usando la librería jsQR que ya estaba cargada en el <head> pero no se usaba. Voy a agregar un botón "Escanear QR" dentro del modal de verificación que abre la cámara y detecta el código automáticamente (sigue aceptando el código manual como respaldo).
-
-
-Agregar la interfaz de escaneo QR dentro del modal de verificación
-Agregar la interfaz de escaneo QR dentro del modal de verificación
-El sandbox se reinició, así que voy a recrear el archivo con tu versión actual (la que me compartiste) y luego aplicar los cambios del QR.
-
-
-Ejecutó un comando, archivo creado
-Ejecutó un comando, archivo creado
-Ahora sí, agrego la interfaz del escáner QR dentro del modal de verificación:
-
-
-Agregar la interfaz de escaneo QR dentro del modal de verificación
-Agregar la interfaz de escaneo QR dentro del modal de verificación
-Ahora agrego la lógica JS para manejar la cámara y el escaneo con jsQR:
-
-
-Consideró resetear la visibilidad del escáner QR
-Consideró resetear la visibilidad del escáner QR
-Ahora me aseguro de que al abrir el modal de verificación, el escáner quede reseteado (oculto) por si quedó abierto de una vez anterior:
-
-
-Resetear el estado del escáner QR cada vez que se abre el modal de verificación
-Resetear el estado del escáner QR cada vez que se abre el modal de verificación
-Verifico que todo quedó enlazado correctamente:
-
-
-Verificar que la integración del QR quedó completa y enlazada
-Verificar que la integración del QR quedó completa y enlazada
-Todo quedó bien conectado. Guardo el archivo:
-
-
-Presented file
-Presented file
-Resumen de lo que integré:
-
-Escáner de QR (jsQR)
-
-El script jsQR ya estaba cargado en tu <head> pero no se usaba — ahora sí.
-Agregué un botón "📷 Escanear código QR" arriba en el modal de verificar visita, junto con el campo de código manual que ya tenías (queda como respaldo, por si alguien no tiene cámara o no da permiso).
-Al presionarlo, pide acceso a la cámara trasera (facingMode: 'environment'), muestra el video en vivo y analiza los fotogramas con jsQR en tiempo real usando un <canvas> oculto.
-Cuando detecta un QR válido (que contenga el texto cafe26, el mismo código que ya usabas para el modo manual), automáticamente cierra el modal y registra la visita — igual que si lo hubieras tecleado.
-Si detecta un QR con texto distinto, avisa "Código QR no válido ❌" y sigue escaneando.
-La cámara se apaga automáticamente al cancelar el escaneo, cerrar el modal, o registrar la visita — para no dejarla encendida de fondo.
-Importante para que funcione:
-
-La cámara solo funciona en HTTPS (o en localhost). Si lo subes a GitHub Pages ya cumple esto automáticamente.
-Como el código válido sigue siendo "cafe26" para todos los cafés, solo necesitas generar un QR con ese texto (por ejemplo en qr-code-generator.com) e imprimirlo para pegarlo en cada café.
-¿Quieres que en vez de un código único global, cada café tenga su propio código QR distinto (por ejemplo que el QR incluya el nombre del café y así valide que escaneaste el café correcto)?
-
-
-Pasaporte
-Código · HTML 
-
-
-
-
-
-
-Claude es IA y puede cometer errores. Por favor, verifica las respuestas.
-
-
-Pasaporte · HTML
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pasaporte del Café — Hermosillo</title>
- 
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
- 
+
   <style>
     :root {
       --cream:    #f5ead8;
@@ -230,16 +22,16 @@ Pasaporte · HTML
       --green:    #4a7c59;
       --stamp-gold: #c9a227;
     }
- 
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
     body {
       background: var(--cream);
       font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
     }
- 
+
     /* ── AUTH SCREEN ── */
     .auth-screen {
       position: fixed;
@@ -253,19 +45,19 @@ Pasaporte · HTML
       padding: 24px;
       transition: opacity .4s ease, transform .4s ease;
     }
- 
+
     .auth-screen.hidden {
       opacity: 0;
       pointer-events: none;
       transform: translateY(-20px);
     }
- 
+
     .auth-logo {
       font-size: 64px;
       margin-bottom: 16px;
       filter: drop-shadow(0 8px 16px rgba(0,0,0,.3));
     }
- 
+
     .auth-title {
       font-family: 'Playfair Display', serif;
       color: var(--cream);
@@ -274,7 +66,7 @@ Pasaporte · HTML
       text-align: center;
       margin-bottom: 6px;
     }
- 
+
     .auth-subtitle {
       color: var(--sand);
       font-size: 14px;
@@ -282,7 +74,7 @@ Pasaporte · HTML
       text-align: center;
       margin-bottom: 48px;
     }
- 
+
     .auth-card {
       background: rgba(245,234,216,.08);
       border: 1px solid rgba(245,234,216,.15);
@@ -292,14 +84,14 @@ Pasaporte · HTML
       max-width: 360px;
       text-align: center;
     }
- 
+
     .auth-card p {
       color: rgba(245,234,216,.7);
       font-size: 14px;
       line-height: 1.6;
       margin-bottom: 28px;
     }
- 
+
     .google-btn {
       display: flex;
       align-items: center;
@@ -318,20 +110,20 @@ Pasaporte · HTML
       transition: all .2s;
       box-shadow: 0 4px 16px rgba(0,0,0,.25);
     }
- 
+
     .google-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(0,0,0,.3);
     }
- 
+
     .google-btn:active { transform: translateY(0); }
- 
+
     .google-btn svg {
       width: 20px;
       height: 20px;
       flex-shrink: 0;
     }
- 
+
     .auth-loading {
       display: none;
       flex-direction: column;
@@ -340,9 +132,9 @@ Pasaporte · HTML
       color: var(--sand);
       font-size: 14px;
     }
- 
+
     .auth-loading.show { display: flex; }
- 
+
     .spinner {
       width: 28px;
       height: 28px;
@@ -351,9 +143,9 @@ Pasaporte · HTML
       border-radius: 50%;
       animation: spin .8s linear infinite;
     }
- 
+
     @keyframes spin { to { transform: rotate(360deg); } }
- 
+
     /* ── TOP BAR ── */
     .topbar {
       background: var(--espresso);
@@ -366,14 +158,14 @@ Pasaporte · HTML
       top: 0;
       z-index: 1000;
     }
- 
+
     .topbar-left {
       display: flex;
       align-items: center;
       gap: 10px;
       min-width: 0;
     }
- 
+
     .topbar h1 {
       font-family: 'Playfair Display', serif;
       color: var(--cream);
@@ -381,12 +173,12 @@ Pasaporte · HTML
       letter-spacing: 1.5px;
       white-space: nowrap;
     }
- 
+
     .nav-tabs {
       display: flex;
       gap: 4px;
     }
- 
+
     .nav-tab {
       padding: 7px 14px;
       border-radius: 20px;
@@ -400,18 +192,18 @@ Pasaporte · HTML
       transition: all .2s;
       white-space: nowrap;
     }
- 
+
     .nav-tab.active, .nav-tab:hover {
       background: rgba(245,234,216,.15);
       color: var(--cream);
       border-color: rgba(245,234,216,.7);
     }
- 
+
     .nav-tab.active {
       background: rgba(245,234,216,.22);
       border-color: var(--cream);
     }
- 
+
     /* User avatar button */
     .user-btn {
       display: flex;
@@ -430,9 +222,9 @@ Pasaporte · HTML
       white-space: nowrap;
       flex-shrink: 0;
     }
- 
+
     .user-btn:hover { background: rgba(245,234,216,.2); }
- 
+
     .user-avatar {
       width: 26px;
       height: 26px;
@@ -440,7 +232,7 @@ Pasaporte · HTML
       object-fit: cover;
       border: 1.5px solid rgba(245,234,216,.4);
     }
- 
+
     .user-avatar-placeholder {
       width: 26px;
       height: 26px;
@@ -454,7 +246,7 @@ Pasaporte · HTML
       color: var(--espresso);
       flex-shrink: 0;
     }
- 
+
     /* Sync indicator */
     .sync-dot {
       width: 7px;
@@ -464,15 +256,15 @@ Pasaporte · HTML
       display: inline-block;
       margin-left: 2px;
     }
- 
+
     .sync-dot.synced { background: var(--green); }
     .sync-dot.syncing { animation: pulse 1s ease infinite; }
- 
+
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: .3; }
     }
- 
+
     /* ── USER DROPDOWN ── */
     .user-dropdown {
       position: fixed;
@@ -490,32 +282,32 @@ Pasaporte · HTML
       transform: translateY(-8px);
       transition: all .2s;
     }
- 
+
     .user-dropdown.open {
       opacity: 1;
       pointer-events: all;
       transform: translateY(0);
     }
- 
+
     .dropdown-header {
       padding: 10px 12px 12px;
       border-bottom: 1px solid rgba(122,63,37,.1);
       margin-bottom: 6px;
     }
- 
+
     .dropdown-name {
       font-weight: 600;
       color: var(--dark);
       font-size: 14px;
     }
- 
+
     .dropdown-email {
       font-size: 12px;
       color: var(--espresso);
       opacity: .6;
       margin-top: 2px;
     }
- 
+
     .dropdown-item {
       display: flex;
       align-items: center;
@@ -527,19 +319,19 @@ Pasaporte · HTML
       color: var(--dark);
       transition: background .15s;
     }
- 
+
     .dropdown-item:hover { background: var(--warm); }
- 
+
     .dropdown-item.danger { color: #c0392b; }
     .dropdown-item.danger:hover { background: #fdecea; }
- 
+
     /* ── PAGES ── */
     .page { display: none; }
     .page.active { display: block; }
- 
+
     /* ── MAP PAGE ── */
     .map-page { padding: 16px; }
- 
+
     .searchbar {
       display: flex;
       gap: 8px;
@@ -547,7 +339,7 @@ Pasaporte · HTML
       margin-bottom: 12px;
       position: relative;
     }
- 
+
     .searchbar input {
       flex: 1;
       padding: 12px 16px;
@@ -559,9 +351,9 @@ Pasaporte · HTML
       background: var(--foam);
       color: var(--espresso);
     }
- 
+
     .searchbar input:focus { border-color: var(--espresso); }
- 
+
     .searchbar button {
       padding: 12px 18px;
       border-radius: 12px;
@@ -574,9 +366,9 @@ Pasaporte · HTML
       cursor: pointer;
       transition: background .2s;
     }
- 
+
     .searchbar button:hover { background: var(--dark); }
- 
+
     .suggestions {
       position: absolute;
       top: 50px;
@@ -590,7 +382,7 @@ Pasaporte · HTML
       z-index: 9999;
       box-shadow: 0 8px 24px rgba(62,31,14,.12);
     }
- 
+
     .suggestion {
       padding: 11px 14px;
       cursor: pointer;
@@ -599,24 +391,24 @@ Pasaporte · HTML
       border-bottom: 1px solid rgba(122,63,37,.08);
       transition: background .15s;
     }
- 
+
     .suggestion:last-child { border-bottom: none; }
     .suggestion:hover { background: var(--warm); }
- 
+
     #map {
       width: 100%;
       height: 70vh;
       border-radius: 16px;
       border: 2px solid rgba(122,63,37,.25);
     }
- 
+
     /* ── PASSPORT PAGE ── */
     .passport-page {
       padding: 20px 16px;
       max-width: 700px;
       margin: 0 auto;
     }
- 
+
     .passport-cover {
       background: var(--espresso);
       border-radius: 20px;
@@ -626,7 +418,7 @@ Pasaporte · HTML
       position: relative;
       overflow: hidden;
     }
- 
+
     .passport-cover::before {
       content: '';
       position: absolute;
@@ -636,7 +428,7 @@ Pasaporte · HTML
         rgba(255,255,255,.03) 20px, rgba(255,255,255,.03) 40px
       );
     }
- 
+
     .passport-cover h2 {
       font-family: 'Playfair Display', serif;
       color: var(--cream);
@@ -645,14 +437,14 @@ Pasaporte · HTML
       margin-bottom: 4px;
       position: relative;
     }
- 
+
     .passport-cover .subtitle {
       color: var(--sand);
       font-size: 13px;
       letter-spacing: 1px;
       position: relative;
     }
- 
+
     .passport-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -660,44 +452,44 @@ Pasaporte · HTML
       margin-top: 20px;
       position: relative;
     }
- 
+
     .stat-box {
       background: rgba(245,234,216,.1);
       border-radius: 12px;
       padding: 14px 8px;
       text-align: center;
     }
- 
+
     .stat-num {
       font-family: 'Playfair Display', serif;
       font-size: 28px;
       color: var(--cream);
       line-height: 1;
     }
- 
+
     .stat-label {
       font-size: 11px;
       color: var(--sand);
       margin-top: 4px;
       letter-spacing: .5px;
     }
- 
+
     .progress-bar-wrap { margin: 16px 0 0; position: relative; }
- 
+
     .progress-bar-bg {
       height: 8px;
       background: rgba(245,234,216,.15);
       border-radius: 20px;
       overflow: hidden;
     }
- 
+
     .progress-bar-fill {
       height: 100%;
       background: var(--stamp-gold);
       border-radius: 20px;
       transition: width .6s cubic-bezier(.4,0,.2,1);
     }
- 
+
     .progress-label {
       font-size: 12px;
       color: var(--sand);
@@ -705,20 +497,20 @@ Pasaporte · HTML
       text-align: right;
       position: relative;
     }
- 
+
     .stamps-section h3 {
       font-family: 'Playfair Display', serif;
       color: var(--espresso);
       font-size: 18px;
       margin-bottom: 14px;
     }
- 
+
     .stamps-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
       gap: 10px;
     }
- 
+
     .stamp-item {
       background: var(--foam);
       border: 2px dashed rgba(122,63,37,.2);
@@ -729,15 +521,15 @@ Pasaporte · HTML
       transition: all .2s;
       position: relative;
     }
- 
+
     .stamp-item:hover { border-color: var(--espresso); transform: translateY(-1px); }
- 
+
     .stamp-item.stamped {
       background: var(--espresso);
       border: 2px solid var(--stamp-gold);
       box-shadow: 0 4px 12px rgba(122,63,37,.3);
     }
- 
+
     .stamp-item.stamped::after {
       content: '✓';
       position: absolute;
@@ -753,30 +545,30 @@ Pasaporte · HTML
       font-weight: 700;
       line-height: 18px;
     }
- 
+
     .stamp-emoji { font-size: 26px; display: block; margin-bottom: 5px; }
- 
+
     .stamp-name {
       font-size: 10px;
       font-weight: 600;
       color: var(--espresso);
       line-height: 1.3;
     }
- 
+
     .stamp-item.stamped .stamp-name { color: var(--cream); }
- 
+
     .stamp-date { font-size: 9px; color: var(--sand); margin-top: 3px; }
- 
+
     /* ── REWARDS ── */
     .rewards-section { margin-top: 24px; }
- 
+
     .rewards-section h3 {
       font-family: 'Playfair Display', serif;
       color: var(--espresso);
       font-size: 18px;
       margin-bottom: 14px;
     }
- 
+
     .reward-card {
       background: var(--foam);
       border: 1.5px solid rgba(122,63,37,.15);
@@ -788,16 +580,16 @@ Pasaporte · HTML
       gap: 14px;
       transition: transform .15s;
     }
- 
+
     .reward-card:hover { transform: translateY(-1px); }
- 
+
     .reward-icon { font-size: 32px; flex-shrink: 0; }
     .reward-info { flex: 1; }
- 
+
     .reward-title { font-weight: 600; color: var(--dark); font-size: 15px; }
- 
+
     .reward-desc { font-size: 13px; color: var(--espresso); opacity: .7; margin-top: 2px; }
- 
+
     .reward-badge {
       font-size: 12px;
       font-weight: 600;
@@ -805,10 +597,10 @@ Pasaporte · HTML
       border-radius: 20px;
       white-space: nowrap;
     }
- 
+
     .reward-badge.locked { background: rgba(122,63,37,.1); color: var(--espresso); }
     .reward-badge.unlocked { background: var(--stamp-gold); color: white; }
- 
+
     /* ── CAFE DETAIL MODAL ── */
     .overlay {
       position: fixed;
@@ -822,9 +614,9 @@ Pasaporte · HTML
       pointer-events: none;
       transition: opacity .25s;
     }
- 
+
     .overlay.open { opacity: 1; pointer-events: all; }
- 
+
     .cafe-sheet {
       background: var(--foam);
       border-radius: 24px 24px 0 0;
@@ -836,16 +628,16 @@ Pasaporte · HTML
       transform: translateY(100%);
       transition: transform .3s cubic-bezier(.4,0,.2,1);
     }
- 
+
     .overlay.open .cafe-sheet { transform: translateY(0); }
- 
+
     .sheet-handle {
       width: 40px; height: 4px;
       background: rgba(122,63,37,.2);
       border-radius: 2px;
       margin: 0 auto 18px;
     }
- 
+
     .sheet-header {
       display: flex;
       align-items: flex-start;
@@ -853,14 +645,14 @@ Pasaporte · HTML
       gap: 12px;
       margin-bottom: 16px;
     }
- 
+
     .sheet-header h2 {
       font-family: 'Playfair Display', serif;
       color: var(--dark);
       font-size: 22px;
       line-height: 1.2;
     }
- 
+
     .sheet-close {
       width: 32px; height: 32px;
       border-radius: 50%;
@@ -875,16 +667,16 @@ Pasaporte · HTML
       color: var(--espresso);
       transition: background .2s;
     }
- 
+
     .sheet-close:hover { background: rgba(122,63,37,.2); }
- 
+
     .sheet-address {
       font-size: 13px;
       color: var(--espresso);
       opacity: .7;
       margin-bottom: 20px;
     }
- 
+
     .sheet-gmaps-link {
       display: inline-flex;
       align-items: center;
@@ -900,9 +692,9 @@ Pasaporte · HTML
       border: 1.5px solid rgba(122,63,37,.15);
       transition: background .2s;
     }
- 
+
     .sheet-gmaps-link:hover { background: var(--sand); }
- 
+
     .sheet-section-title {
       font-size: 11px;
       font-weight: 600;
@@ -912,9 +704,9 @@ Pasaporte · HTML
       opacity: .5;
       margin-bottom: 10px;
     }
- 
+
     .menu-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
- 
+
     .menu-tag {
       background: var(--warm);
       border: 1.5px solid rgba(122,63,37,.15);
@@ -924,7 +716,7 @@ Pasaporte · HTML
       color: var(--espresso);
       font-weight: 500;
     }
- 
+
     .hours-row {
       display: flex;
       justify-content: space-between;
@@ -933,10 +725,10 @@ Pasaporte · HTML
       font-size: 13px;
       color: var(--dark);
     }
- 
+
     .hours-row .day { color: var(--espresso); opacity: .7; }
     .hours-open { color: var(--green); font-weight: 600; }
- 
+
     .checkin-btn {
       width: 100%;
       margin-top: 24px;
@@ -950,12 +742,12 @@ Pasaporte · HTML
       transition: all .2s;
       letter-spacing: .5px;
     }
- 
+
     .checkin-btn.unstamped { background: var(--espresso); color: var(--cream); }
     .checkin-btn.unstamped:hover { background: var(--dark); transform: translateY(-1px); }
     .checkin-btn.stamped { background: var(--stamp-gold); color: white; }
     .checkin-btn.visited { background: rgba(122,63,37,.1); color: var(--espresso); cursor: default; }
- 
+
     /* ── TOAST ── */
     .toast {
       position: fixed;
@@ -973,9 +765,9 @@ Pasaporte · HTML
       white-space: nowrap;
       box-shadow: 0 8px 24px rgba(62,31,14,.25);
     }
- 
+
     .toast.show { transform: translateX(-50%) translateY(0); }
- 
+
     /* ── CONFIG NOTICE ── */
     .config-notice {
       background: #fff3cd;
@@ -987,9 +779,9 @@ Pasaporte · HTML
       color: #856404;
       display: none;
     }
- 
+
     .config-notice.show { display: block; }
- 
+
     /* ── PROFILE SETUP SCREEN ── */
     .profile-screen {
       position: fixed;
@@ -1002,9 +794,9 @@ Pasaporte · HTML
       justify-content: center;
       padding: 20px;
     }
- 
+
     .profile-screen.show { display: flex; }
- 
+
     .profile-card {
       background: var(--foam);
       border-radius: 24px;
@@ -1014,9 +806,9 @@ Pasaporte · HTML
       box-shadow: 0 20px 50px rgba(62,31,14,.4);
       text-align: center;
     }
- 
+
     .profile-icon { font-size: 44px; margin-bottom: 8px; }
- 
+
     .profile-title {
       font-family: 'Playfair Display', serif;
       color: var(--dark);
@@ -1024,16 +816,16 @@ Pasaporte · HTML
       letter-spacing: 1px;
       margin-bottom: 4px;
     }
- 
+
     .profile-subtitle {
       font-size: 13px;
       color: var(--espresso);
       opacity: .7;
       margin-bottom: 24px;
     }
- 
+
     .profile-field { text-align: left; margin-bottom: 16px; }
- 
+
     .profile-field label {
       display: block;
       font-size: 12px;
@@ -1043,7 +835,7 @@ Pasaporte · HTML
       text-transform: uppercase;
       margin-bottom: 6px;
     }
- 
+
     .profile-field select,
     .profile-field input {
       width: 100%;
@@ -1057,10 +849,10 @@ Pasaporte · HTML
       outline: none;
       transition: border-color .2s;
     }
- 
+
     .profile-field select:focus,
     .profile-field input:focus { border-color: var(--espresso); }
- 
+
     .profile-submit-btn {
       width: 100%;
       margin-top: 6px;
@@ -1076,9 +868,9 @@ Pasaporte · HTML
       transition: all .2s;
       letter-spacing: .5px;
     }
- 
+
     .profile-submit-btn:hover { background: var(--dark); transform: translateY(-1px); }
- 
+
     /* ── PASSPORT ID CARD ── */
     .passport-id-card {
       background: linear-gradient(135deg, var(--foam), var(--warm));
@@ -1089,7 +881,7 @@ Pasaporte · HTML
       position: relative;
       overflow: hidden;
     }
- 
+
     .passport-id-card::before {
       content: '☕';
       position: absolute;
@@ -1099,7 +891,7 @@ Pasaporte · HTML
       opacity: .06;
       transform: rotate(-12deg);
     }
- 
+
     .id-card-header {
       display: flex;
       justify-content: space-between;
@@ -1109,7 +901,7 @@ Pasaporte · HTML
       border-bottom: 1.5px dashed rgba(122,63,37,.3);
       position: relative;
     }
- 
+
     .id-card-country {
       font-family: 'Playfair Display', serif;
       font-size: 13px;
@@ -1117,7 +909,7 @@ Pasaporte · HTML
       color: var(--dark);
       letter-spacing: 1px;
     }
- 
+
     .id-card-type {
       font-size: 10px;
       font-weight: 700;
@@ -1127,13 +919,13 @@ Pasaporte · HTML
       padding: 4px 8px;
       border-radius: 6px;
     }
- 
+
     .id-card-body {
       display: flex;
       gap: 16px;
       position: relative;
     }
- 
+
     .id-photo {
       flex-shrink: 0;
       width: 76px;
@@ -1146,9 +938,9 @@ Pasaporte · HTML
       justify-content: center;
       overflow: hidden;
     }
- 
+
     .id-photo svg { width: 100%; height: 100%; }
- 
+
     .id-fields {
       flex: 1;
       display: flex;
@@ -1157,9 +949,9 @@ Pasaporte · HTML
       justify-content: center;
       min-width: 0;
     }
- 
+
     .id-field { display: flex; flex-direction: column; gap: 1px; }
- 
+
     .id-label {
       font-size: 9px;
       font-weight: 700;
@@ -1168,14 +960,14 @@ Pasaporte · HTML
       color: var(--espresso);
       opacity: .55;
     }
- 
+
     .id-value {
       font-size: 14px;
       font-weight: 600;
       color: var(--dark);
       overflow-wrap: break-word;
     }
- 
+
     .id-card-mrz {
       margin-top: 14px;
       padding-top: 10px;
@@ -1188,7 +980,7 @@ Pasaporte · HTML
       overflow: hidden;
       position: relative;
     }
- 
+
     @media (max-width: 480px) {
       .topbar h1 { font-size: 14px; }
       .nav-tab { padding: 6px 10px; font-size: 12px; }
@@ -1198,16 +990,16 @@ Pasaporte · HTML
   </style>
 </head>
 <body>
- 
+
   <!-- ══ AUTH SCREEN ══ -->
   <div class="auth-screen" id="auth-screen">
     <div class="auth-logo">☕</div>
     <h1 class="auth-title">PASAPORTE DEL CAFÉ</h1>
     <div class="auth-subtitle">HERMOSILLO, SONORA</div>
- 
+
     <div class="auth-card">
       <p>Inicia sesión con tu cuenta de Google para guardar tu progreso y acceder desde cualquier dispositivo.</p>
- 
+
       <button class="google-btn" id="google-login-btn" onclick="signInWithGoogle()">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -1217,21 +1009,21 @@ Pasaporte · HTML
         </svg>
         Continuar con Google
       </button>
- 
+
       <div class="auth-loading" id="auth-loading">
         <div class="spinner"></div>
         <span>Iniciando sesión…</span>
       </div>
     </div>
   </div>
- 
+
   <!-- ══ PROFILE SETUP SCREEN (obligatorio la primera vez) ══ -->
   <div class="profile-screen" id="profile-screen">
     <div class="profile-card">
       <div class="profile-icon">🛂</div>
       <h1 class="profile-title">COMPLETA TU PASAPORTE</h1>
       <div class="profile-subtitle">Cuéntanos un poco de ti antes de empezar</div>
- 
+
       <div class="profile-field">
         <label for="profile-gender">Género</label>
         <select id="profile-gender">
@@ -1242,27 +1034,27 @@ Pasaporte · HTML
           <option value="Prefiero no decir">Prefiero no decir</option>
         </select>
       </div>
- 
+
       <div class="profile-field">
         <label for="profile-age">Edad</label>
         <input id="profile-age" type="number" min="1" max="120" placeholder="Ej. 27"/>
       </div>
- 
+
       <div class="profile-field">
         <label for="profile-funfact">Fun fact tuyo</label>
         <input id="profile-funfact" type="text" maxlength="80" placeholder="Ej. Le pongo canela a todo"/>
       </div>
- 
+
       <button class="profile-submit-btn" onclick="submitProfile()">Guardar y continuar ☕</button>
     </div>
   </div>
- 
+
   <!-- CONFIG NOTICE (shown when Firebase not configured) -->
   <div class="config-notice" id="config-notice">
     ⚙️ <strong>Configuración requerida:</strong> Agrega tus credenciales de Firebase en el código (sección FIREBASE CONFIG) para activar el login con Google.
     <a href="https://console.firebase.google.com" target="_blank" style="color:#856404;font-weight:600;">→ Crear proyecto Firebase</a>
   </div>
- 
+
   <!-- TOP BAR -->
   <div class="topbar">
     <div class="topbar-left">
@@ -1279,7 +1071,7 @@ Pasaporte · HTML
       <span class="sync-dot synced" id="sync-dot" title="Progreso guardado"></span>
     </button>
   </div>
- 
+
   <!-- USER DROPDOWN -->
   <div class="user-dropdown" id="user-dropdown">
     <div class="dropdown-header">
@@ -1293,7 +1085,7 @@ Pasaporte · HTML
       <span>↩️</span> Cerrar sesión
     </div>
   </div>
- 
+
   <!-- MAP PAGE -->
   <div class="page active map-page" id="page-map">
     <div class="searchbar">
@@ -1303,10 +1095,10 @@ Pasaporte · HTML
     </div>
     <div id="map"></div>
   </div>
- 
+
   <!-- PASSPORT PAGE -->
   <div class="page passport-page" id="page-passport">
- 
+
     <!-- PASSPORT ID CARD -->
     <div class="passport-id-card">
       <div class="id-card-header">
@@ -1342,7 +1134,7 @@ Pasaporte · HTML
       </div>
       <div class="id-card-mrz" id="id-mrz">P&lt;HMO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
     </div>
- 
+
     <div class="passport-cover">
       <h2>PASAPORTE DEL CAFÉ</h2>
       <div class="subtitle">HERMOSILLO, SONORA</div>
@@ -1376,7 +1168,7 @@ Pasaporte · HTML
       <div class="stamps-grid" id="stamps-grid"></div>
     </div>
   </div>
- 
+
   <!-- CAFE DETAIL SHEET -->
   <div class="overlay" id="overlay" onclick="closeSheet(event)">
     <div class="cafe-sheet" id="cafe-sheet">
@@ -1394,7 +1186,7 @@ Pasaporte · HTML
       <button class="checkin-btn" id="checkin-btn" onclick="doCheckin()">Registrar Visita ☕</button>
     </div>
   </div>
- 
+
   <!-- VERIFY MODAL -->
   <div class="overlay" id="verify-overlay" onclick="closeVerify(event)">
     <div class="cafe-sheet" id="verify-sheet">
@@ -1403,10 +1195,10 @@ Pasaporte · HTML
         <h2>Verificar visita</h2>
         <button class="sheet-close" onclick="closeVerifyOverlay()">✕</button>
       </div>
- 
+
   <div id="verify-code">
   <button class="checkin-btn unstamped" style="margin-bottom:14px;" onclick="startQrScan()">📷 Escanear código QR</button>
- 
+
   <div id="qr-scanner-wrap" style="display:none;margin-bottom:14px;">
     <video id="qr-video" playsinline muted style="width:100%;border-radius:12px;background:#000;display:block;"></video>
     <canvas id="qr-canvas" style="display:none;"></canvas>
@@ -1419,26 +1211,26 @@ Pasaporte · HTML
       Cancelar escaneo
     </button>
   </div>
- 
+
   <div style="text-align:center;font-size:12px;color:var(--espresso);opacity:.5;margin:10px 0;">
     — o ingresa el código manualmente —
   </div>
- 
+
   <input id="code-input"
          type="text"
          placeholder="Ingresa el código del café"
          style="width:100%;padding:14px;border-radius:12px;border:2px solid rgba(122,63,37,.25);font-size:16px;text-align:center;"/>
- 
+
   <button class="checkin-btn unstamped"
           style="margin-top:12px;"
           onclick="confirmFromCode()">
     ✓ Confirmar
   </button>
 </div>
- 
+
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
- 
+
   <!-- Firebase SDK -->
   <script type="module">
     // ══════════════════════════════════════════════════
@@ -1458,17 +1250,17 @@ Pasaporte · HTML
       measurementId:     "G-3LHQFKQY7H"
     };
     // ══════════════════════════════════════════════════
- 
+
     const CONFIGURED = !FIREBASE_CONFIG.apiKey.startsWith("TU_");
- 
+
     import { initializeApp }                      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot }
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
- 
+
     let app, auth, db, provider, currentUser = null, unsubscribeSnapshot = null;
- 
+
     if (CONFIGURED) {
       app      = initializeApp(FIREBASE_CONFIG);
       auth     = getAuth(app);
@@ -1480,7 +1272,7 @@ Pasaporte · HTML
       document.getElementById('auth-screen').classList.add('hidden');
       setupUIWithLocalStorage();
     }
- 
+
     // ── Sign in ──
     window.signInWithGoogle = async function() {
       if (!CONFIGURED) { document.getElementById('auth-screen').classList.add('hidden'); return; }
@@ -1495,7 +1287,7 @@ Pasaporte · HTML
         showToast('Error al iniciar sesión. Intenta de nuevo.');
       }
     };
- 
+
     // ── Sign out ──
     window.signOut = async function() {
       closeDropdown();
@@ -1508,7 +1300,7 @@ Pasaporte · HTML
       refreshMarkers();
       document.getElementById('auth-screen').classList.remove('hidden');
     };
- 
+
     // ── Auth state ──
     if (CONFIGURED) {
       onAuthStateChanged(auth, async user => {
@@ -1526,7 +1318,7 @@ Pasaporte · HTML
         }
       });
     }
- 
+
     // ── Firestore: load data ──
     async function loadUserData(uid) {
       setSyncDot('syncing');
@@ -1550,7 +1342,7 @@ Pasaporte · HTML
         setSyncDot('');
       }
     }
- 
+
     // ── Firestore: real-time listener ──
     function setupRealtimeSync(uid) {
       if (unsubscribeSnapshot) unsubscribeSnapshot();
@@ -1565,7 +1357,7 @@ Pasaporte · HTML
         }
       });
     }
- 
+
     // ── Firestore: save check-in ──
     window.saveCheckin = async function(cafeName, dateStr) {
       setSyncDot('syncing');
@@ -1586,7 +1378,7 @@ Pasaporte · HTML
         } catch (e2) { console.error(e2); setSyncDot(''); }
       }
     };
- 
+
     // ── Firestore: save profile ──
     window.saveProfile = async function(profileData) {
       setSyncDot('syncing');
@@ -1606,10 +1398,10 @@ Pasaporte · HTML
         } catch (e2) { console.error(e2); setSyncDot(''); }
       }
     };
- 
+
     // Firestore keys can't have slashes — replace with unicode lookalike
     function safeFbKey(str) { return str.replace(/\//g, '∕'); }
- 
+
     // ── Fallback: no Firebase ──
     function setupUIWithLocalStorage() {
       visited = JSON.parse(localStorage.getItem('cafeVisited') || '{}');
@@ -1625,7 +1417,7 @@ Pasaporte · HTML
       initMap();
       if (window.checkProfileScreen) window.checkProfileScreen();
     }
- 
+
     // ── Update topbar user UI ──
     function updateUserUI(user) {
       const placeholder = document.getElementById('user-avatar-placeholder');
@@ -1633,7 +1425,7 @@ Pasaporte · HTML
       const nameShort   = document.getElementById('user-name-short');
       const ddName      = document.getElementById('dropdown-name');
       const ddEmail     = document.getElementById('dropdown-email');
- 
+
       if (!user) {
         placeholder.textContent = '?';
         placeholder.style.display = 'flex';
@@ -1644,13 +1436,13 @@ Pasaporte · HTML
         window.currentDisplayName = 'Usuario';
         return;
       }
- 
+
       window.currentDisplayName = user.displayName || 'Usuario';
       const first = (user.displayName || 'Usuario').split(' ')[0];
       nameShort.textContent = first;
       ddName.textContent    = user.displayName || 'Usuario';
       ddEmail.textContent   = user.email || '';
- 
+
       if (user.photoURL) {
         img.src = user.photoURL;
         img.style.display = 'block';
@@ -1661,16 +1453,16 @@ Pasaporte · HTML
         img.style.display = 'none';
       }
     }
- 
+
     function setSyncDot(state) {
       const dot = document.getElementById('sync-dot');
       dot.className = 'sync-dot';
       if (state) dot.classList.add(state);
     }
   </script>
- 
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
- 
+
   <script>
     // ──────────────────────────────────────────────
     // DATA
@@ -1710,7 +1502,7 @@ Pasaporte · HTML
       { name:"Meri Meri Coffee Community", address:"Blvd. Manlio Fabio Beltrones 717, San Carlos", coords:[27.962812,-111.026543], menu:["Specialty Coffee","Malteadas","Pancakes","Tacos"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–20"} },
       { name:"PALOMINA COFFEE SHOP", address:"Los Pinitos, Sonora", coords:[29.235063,-110.887409], menu:["Café de Rancho","Atole","Pan Sonorense","Burritos"], hours:{lun:"7–19",mar:"7–19",mie:"7–19",jue:"7–19",vie:"7–20",sab:"8–20",dom:"8–17"} }
     ];
- 
+
     const REWARDS = [
       { id:'r1', title:'Primera Taza',       desc:'Visita tu primer café del pasaporte',       icon:'☕', need:1 },
       { id:'r2', title:'Explorador Novato',  desc:'Visita 5 cafés diferentes',                 icon:'🗺️', need:5 },
@@ -1719,7 +1511,7 @@ Pasaporte · HTML
       { id:'r5', title:'Gran Explorador',    desc:'Visita 25 cafés del pasaporte',             icon:'🏆', need:25 },
       { id:'r6', title:'Pasaporte Completo', desc:'¡Visita todos los cafés asociados!',        icon:'⭐', need:cafes.length }
     ];
- 
+
     // ──────────────────────────────────────────────
     // STATE
     // ──────────────────────────────────────────────
@@ -1731,16 +1523,16 @@ Pasaporte · HTML
     let mapInstance = null;
     let qrStream = null;
     let qrAnimationId = null;
- 
+
     function visitedCount() { return Object.keys(visited).length; }
- 
+
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 3500);
     }
- 
+
     // ──────────────────────────────────────────────
     // PAGE NAVIGATION
     // ──────────────────────────────────────────────
@@ -1752,7 +1544,7 @@ Pasaporte · HTML
       if (id === 'passport') renderPassport();
       if (id === 'map' && mapInstance) setTimeout(() => mapInstance.invalidateSize(), 100);
     }
- 
+
     // ──────────────────────────────────────────────
     // PROFILE (cuestionario obligatorio)
     // ──────────────────────────────────────────────
@@ -1766,17 +1558,17 @@ Pasaporte · HTML
       }
     }
     window.checkProfileScreen = checkProfileScreen;
- 
+
     function submitProfile() {
       const gender  = document.getElementById('profile-gender').value;
       const age     = document.getElementById('profile-age').value;
       const funFact = document.getElementById('profile-funfact').value.trim();
- 
+
       if (!gender || !age || !funFact) {
         showToast('Completa todos los campos ✏️');
         return;
       }
- 
+
       profile = { gender, age, funFact };
       if (window.saveProfile) window.saveProfile(profile);
       document.getElementById('profile-screen').classList.remove('show');
@@ -1784,63 +1576,63 @@ Pasaporte · HTML
       showToast('¡Perfil guardado! 🛂');
     }
     window.submitProfile = submitProfile;
- 
+
     function updatePassportIdCard() {
       const name = window.currentDisplayName || 'Invitado';
       document.getElementById('id-name').textContent    = name;
       document.getElementById('id-gender').textContent  = profile ? profile.gender  : '—';
       document.getElementById('id-age').textContent     = profile ? profile.age     : '—';
       document.getElementById('id-funfact').textContent = profile ? profile.funFact : '—';
- 
+
       const mrzName = normalize(name).toUpperCase().replace(/[^A-Z]/g, '<');
       const mrz = ('P<HMO' + mrzName).padEnd(30, '<').slice(0, 30);
       document.getElementById('id-mrz').textContent = mrz;
     }
- 
+
     // ──────────────────────────────────────────────
     // DROPDOWN
     // ──────────────────────────────────────────────
     function toggleDropdown() {
       document.getElementById('user-dropdown').classList.toggle('open');
     }
- 
+
     function closeDropdown() {
       document.getElementById('user-dropdown').classList.remove('open');
     }
- 
+
     document.addEventListener('click', e => {
       if (!e.target.closest('#user-btn') && !e.target.closest('#user-dropdown')) {
         closeDropdown();
       }
     });
- 
+
     // ──────────────────────────────────────────────
     // MAP
     // ──────────────────────────────────────────────
     window.initMap = function() {
       if (mapInitialized) return;
       mapInitialized = true;
- 
+
       const map = L.map('map', { minZoom:12, maxZoom:18 }).setView([29.072967,-110.955919], 13);
       mapInstance = map;
- 
+
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         minZoom:12, maxZoom:18,
         attribution:'&copy; OpenStreetMap contributors'
       }).addTo(map);
- 
+
       const cafeIcon = L.divIcon({
         className:'',
         html:'<div style="font-size:36px;line-height:1;filter:drop-shadow(0 4px 8px rgba(0,0,0,.22));">📍</div>',
         iconSize:[40,40], iconAnchor:[20,38], popupAnchor:[0,-38]
       });
- 
+
       const visitedIcon = L.divIcon({
         className:'',
         html:'<div style="font-size:36px;line-height:1;filter:drop-shadow(0 4px 8px rgba(0,0,0,.22));">✅</div>',
         iconSize:[40,40], iconAnchor:[20,38], popupAnchor:[0,-38]
       });
- 
+
       cafes.forEach(c => {
         const marker = L.marker(c.coords, { icon: visited[c.name] ? visitedIcon : cafeIcon })
           .addTo(map)
@@ -1850,9 +1642,9 @@ Pasaporte · HTML
           );
         markersByName.set(normalize(c.name), { cafe:c, marker, cafeIcon, visitedIcon });
       });
- 
+
       setTimeout(() => map.invalidateSize(), 250);
- 
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
           const userCoords = [pos.coords.latitude, pos.coords.longitude];
@@ -1861,12 +1653,12 @@ Pasaporte · HTML
           map.setView(userCoords, 15);
         }, () => {}, { enableHighAccuracy:true, timeout:15000, maximumAge:0 });
       }
- 
+
       // Search
       const input = document.getElementById('searchInput');
       const btnEl = document.getElementById('searchBtn');
       const suggestions = document.getElementById('suggestions');
- 
+
       function showSuggestions(list) {
         suggestions.innerHTML = '';
         if (!list.length) { suggestions.style.display='none'; return; }
@@ -1879,7 +1671,7 @@ Pasaporte · HTML
         });
         suggestions.style.display='block';
       }
- 
+
       function goToCafe(query) {
         const q = normalize(query);
         if (!q) return;
@@ -1890,24 +1682,24 @@ Pasaporte · HTML
         if (obj) { map.setView(obj.cafe.coords, 17); obj.marker.openPopup(); }
         else alert('No encontré ese café.');
       }
- 
+
       input.addEventListener('input', () => {
         const q = normalize(input.value);
         if (!q) { suggestions.style.display='none'; return; }
         showSuggestions(cafes.filter(c => normalize(c.name).includes(q)));
       });
- 
+
       input.addEventListener('keydown', e => {
         if (e.key==='Enter') { suggestions.style.display='none'; goToCafe(input.value); }
       });
- 
+
       btnEl.addEventListener('click', () => { suggestions.style.display='none'; goToCafe(input.value); });
- 
+
       document.addEventListener('click', e => {
         if (!e.target.closest('.searchbar')) suggestions.style.display='none';
       });
     };
- 
+
     // ──────────────────────────────────────────────
     // MARKER REFRESH
     // ──────────────────────────────────────────────
@@ -1916,7 +1708,7 @@ Pasaporte · HTML
         marker.setIcon(visited[cafe.name] ? visitedIcon : cafeIcon);
       });
     }
- 
+
     // ──────────────────────────────────────────────
     // CAFE DETAIL SHEET
     // ──────────────────────────────────────────────
@@ -1925,22 +1717,22 @@ Pasaporte · HTML
       const cafe = cafes.find(c => c.name === name);
       if (!cafe) return;
       currentCafe = cafe;
- 
+
       document.getElementById('sheet-name').textContent = cafe.name;
       document.getElementById('sheet-address').textContent = '📍 ' + cafe.address;
- 
+
       const gmapsQuery = encodeURIComponent(cafe.name + ', ' + cafe.address + ', Hermosillo, Sonora');
       document.getElementById('sheet-gmaps-link').href = 'https://www.google.com/search?q=' + gmapsQuery;
- 
+
       document.getElementById('sheet-menu').innerHTML =
         cafe.menu.map(m => `<span class="menu-tag">${m}</span>`).join('');
- 
+
       const dayNames = { lun:'Lun', mar:'Mar', mie:'Mié', jue:'Jue', vie:'Vie', sab:'Sáb', dom:'Dom' };
       document.getElementById('sheet-hours').innerHTML =
         Object.entries(cafe.hours).map(([d,h]) =>
           `<div class="hours-row"><span class="day">${dayNames[d]}</span><span class="${h==='Cerrado'?'':'hours-open'}">${h}</span></div>`
         ).join('');
- 
+
       const btn = document.getElementById('checkin-btn');
       const v = visited[cafe.name];
       if (v) {
@@ -1950,44 +1742,44 @@ Pasaporte · HTML
         btn.textContent = 'Registrar Visita ☕';
         btn.className = 'checkin-btn unstamped';
       }
- 
+
       document.getElementById('overlay').classList.add('open');
     };
- 
+
     function closeOverlay() {
       document.getElementById('overlay').classList.remove('open');
     }
- 
+
     function closeSheet(e) {
       if (e.target === document.getElementById('overlay')) closeOverlay();
     }
- 
+
 window.doCheckin = function() {
   if (!currentCafe) return;
   if (visited[currentCafe.name]) return;
- 
+
   document.getElementById('code-input').value = '';
   document.getElementById('qr-scanner-wrap').style.display = 'none';
   document.getElementById('verify-overlay').classList.add('open');
- 
+
   setTimeout(() => {
     document.getElementById('code-input').focus();
   }, 100);
 };
- 
+
   
- 
+
   function closeVerifyOverlay() {
   stopQrScan();
   document.getElementById('verify-overlay').classList.remove('open');
 }
- 
+
 function closeVerify(e) {
   if (e.target === document.getElementById('verify-overlay')) {
     closeVerifyOverlay();
   }
 }
- 
+
 // ──────────────────────────────────────────────
 // ESCÁNER QR (usa jsQR + cámara del dispositivo)
 // ──────────────────────────────────────────────
@@ -1995,15 +1787,15 @@ function startQrScan() {
   const wrap  = document.getElementById('qr-scanner-wrap');
   const video = document.getElementById('qr-video');
   const status = document.getElementById('qr-status');
- 
+
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     showToast('Tu navegador no soporta cámara ❌');
     return;
   }
- 
+
   wrap.style.display = 'block';
   status.textContent = 'Apunta la cámara al código QR del café ☕';
- 
+
   navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
     .then(stream => {
       qrStream = stream;
@@ -2018,38 +1810,38 @@ function startQrScan() {
     });
 }
 window.startQrScan = startQrScan;
- 
+
 function scanQrFrame() {
   const video  = document.getElementById('qr-video');
   const canvas = document.getElementById('qr-canvas');
   if (!video || !qrStream) return;
- 
+
   if (video.readyState !== video.HAVE_ENOUGH_DATA) {
     qrAnimationId = requestAnimationFrame(scanQrFrame);
     return;
   }
- 
+
   canvas.width  = video.videoWidth;
   canvas.height = video.videoHeight;
   const ctx = canvas.getContext('2d');
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
- 
+
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const result = jsQR(imageData.data, imageData.width, imageData.height, {
     inversionAttempts: 'dontInvert'
   });
- 
+
   if (result && result.data) {
     handleQrResult(result.data);
   } else {
     qrAnimationId = requestAnimationFrame(scanQrFrame);
   }
 }
- 
+
 function handleQrResult(data) {
   const status = document.getElementById('qr-status');
   const value = data.trim().toLowerCase();
- 
+
   if (value === 'cafe26') {
     status.textContent = '¡Código válido! ✓';
     stopQrScan();
@@ -2061,29 +1853,29 @@ function handleQrResult(data) {
     qrAnimationId = requestAnimationFrame(scanQrFrame);
   }
 }
- 
+
 function stopQrScan() {
   if (qrAnimationId) cancelAnimationFrame(qrAnimationId);
   qrAnimationId = null;
- 
+
   if (qrStream) {
     qrStream.getTracks().forEach(t => t.stop());
     qrStream = null;
   }
- 
+
   const video = document.getElementById('qr-video');
   if (video) video.srcObject = null;
- 
+
   const wrap = document.getElementById('qr-scanner-wrap');
   if (wrap) wrap.style.display = 'none';
 }
 window.stopQrScan = stopQrScan;
- 
+
 function confirmFromCode() {
   const code = document.getElementById('code-input')
     .value.trim()
     .toLowerCase();
- 
+
   if (code === 'cafe26') {
     closeVerifyOverlay();
     registrarVisita();
@@ -2092,7 +1884,7 @@ function confirmFromCode() {
     document.getElementById('code-input').value = '';
   }
 }
- 
+
     function registrarVisita() {
       const today = new Date().toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' });
       visited[currentCafe.name] = today;
@@ -2107,23 +1899,23 @@ function confirmFromCode() {
         if (count === r.need) setTimeout(() => showToast('🏆 Recompensa: ' + r.title + '!'), 3600);
       });
     }
- 
+
     // ──────────────────────────────────────────────
     // PASSPORT
     // ──────────────────────────────────────────────
     function renderPassport() {
       updatePassportIdCard();
- 
+
       const count = visitedCount();
       const total = cafes.length;
       const pct   = Math.round(count / total * 100);
- 
+
       document.getElementById('stat-visited').textContent = count;
       document.getElementById('stat-total').textContent   = total;
       document.getElementById('stat-pct').textContent     = pct + '%';
       document.getElementById('progress-fill').style.width = pct + '%';
       document.getElementById('progress-label').textContent = count + ' de ' + total + ' sellos';
- 
+
       document.getElementById('rewards-list').innerHTML = REWARDS.map(r => {
         const unlocked = count >= r.need;
         return `
@@ -2136,7 +1928,7 @@ function confirmFromCode() {
             <div class="reward-badge ${unlocked ? 'unlocked' : 'locked'}">${unlocked ? '¡Desbloqueado!' : r.need + ' cafés'}</div>
           </div>`;
       }).join('');
- 
+
       document.getElementById('stamps-grid').innerHTML = cafes.map(c => {
         const v = visited[c.name];
         return `
@@ -2147,7 +1939,7 @@ function confirmFromCode() {
           </div>`;
       }).join('');
     }
- 
+
     // ──────────────────────────────────────────────
     // UTILS
     // ──────────────────────────────────────────────
@@ -2157,4 +1949,3 @@ function confirmFromCode() {
   </script>
 </body>
 </html>
- 

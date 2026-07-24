@@ -964,16 +964,96 @@
       margin-bottom: 18px;
       position: relative;
       overflow: hidden;
+      isolation: isolate;
     }
 
     .passport-id-card::before {
-      content: '☕';
+      content: '';
       position: absolute;
-      top: -18px;
-      right: -14px;
-      font-size: 90px;
-      opacity: .06;
-      transform: rotate(-12deg);
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      background-repeat: repeat;
+    }
+
+    .passport-id-card.bg-coffee::before {
+      opacity: .07;
+      background-size: 68px 68px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='68' height='68' viewBox='0 0 68 68'%3E%3Cg fill='none' stroke='%237a3f25' stroke-width='2'%3E%3Cellipse cx='18' cy='18' rx='8' ry='12' transform='rotate(35 18 18)'/%3E%3Cpath d='M14 9c6 5 7 11 5 18'/%3E%3Cellipse cx='50' cy='49' rx='8' ry='12' transform='rotate(-35 50 49)'/%3E%3Cpath d='M54 40c-6 5-7 11-5 18'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .passport-id-card.bg-cactus::before {
+      opacity: .065;
+      background-size: 76px 76px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76' height='76' viewBox='0 0 76 76'%3E%3Cg fill='none' stroke='%234a7c59' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M38 62V25c0-8 12-8 12 0v8c0 5 8 5 8 0v-5'/%3E%3Cpath d='M38 45h-7c-6 0-6-9-6-14v-4'/%3E%3Cpath d='M31 62h14'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .passport-bg-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      border: 1.5px solid rgba(122,63,37,.22);
+      background: rgba(253,246,237,.86);
+      color: var(--espresso);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+
+    .background-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .background-option {
+      border: 2px solid rgba(122,63,37,.16);
+      border-radius: 14px;
+      background: white;
+      padding: 10px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--dark);
+      font-weight: 600;
+      transition: all .2s;
+    }
+
+    .background-option:hover { transform: translateY(-1px); border-color: var(--espresso); }
+    .background-option.selected { border-color: var(--stamp-gold); box-shadow: 0 0 0 2px rgba(201,162,39,.18); }
+
+    .background-preview {
+      height: 88px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(122,63,37,.12);
+      background: linear-gradient(135deg, var(--foam), var(--warm));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .background-preview::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-repeat: repeat;
+    }
+
+    .background-preview.coffee::after {
+      opacity: .1;
+      background-size: 46px 46px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='46' viewBox='0 0 46 46'%3E%3Cg fill='none' stroke='%237a3f25' stroke-width='2'%3E%3Cellipse cx='13' cy='13' rx='6' ry='9' transform='rotate(35 13 13)'/%3E%3Cpath d='M10 6c5 4 5 8 4 14'/%3E%3Cellipse cx='34' cy='34' rx='6' ry='9' transform='rotate(-35 34 34)'/%3E%3Cpath d='M37 27c-5 4-5 8-4 14'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .background-preview.cactus::after {
+      opacity: .09;
+      background-size: 50px 50px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cg fill='none' stroke='%234a7c59' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M25 42V17c0-5 8-5 8 0v5c0 4 6 4 6 0v-3'/%3E%3Cpath d='M25 31h-5c-4 0-4-6-4-9v-3'/%3E%3Cpath d='M20 42h10'/%3E%3C/g%3E%3C/svg%3E");
     }
 
     .id-card-header {
@@ -1184,7 +1264,8 @@
   <div class="page passport-page" id="page-passport">
 
     <!-- PASSPORT ID CARD -->
-    <div class="passport-id-card">
+    <div class="passport-id-card" id="passport-id-card">
+      <button class="passport-bg-btn" onclick="openBackgroundModal()">Cambiar fondo</button>
       <div class="id-card-header">
         <span class="id-card-country">PASAPORTE · HERMOSILLO</span>
         <span class="id-card-type">CAFÉ ID</span>
@@ -1337,6 +1418,23 @@
     </div>
   </div>
 
+
+
+  <!-- PASSPORT BACKGROUND SELECTOR MODAL -->
+  <div class="overlay" id="background-overlay" onclick="closeBackgroundModal(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div>
+          <h2>Fondo del pasaporte</h2>
+          <div class="sheet-address" style="margin:5px 0 0;">Elige el patrón de tu tarjeta de información.</div>
+        </div>
+        <button class="sheet-close" onclick="closeBackgroundModal()">✕</button>
+      </div>
+      <div class="background-grid" id="background-grid"></div>
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
 
@@ -1402,10 +1500,11 @@
       closeDropdown();
       if (unsubscribeSnapshot) unsubscribeSnapshot();
       if (CONFIGURED && auth) await fbSignOut(auth);
-      else { localStorage.removeItem('cafeVisited'); localStorage.removeItem('cafeMedals'); localStorage.removeItem('cafeAvatar'); }
+      else { localStorage.removeItem('cafeVisited'); localStorage.removeItem('cafeMedals'); localStorage.removeItem('cafeAvatar'); localStorage.removeItem('cafePassportBackground'); }
       visited = {};
       medals = {};
       selectedAvatar = 'classic';
+      selectedPassportBackground = 'empty';
       currentUser = null;
       updateUserUI(null);
       refreshMarkers();
@@ -1441,13 +1540,15 @@
           profile = snap.data().profile || null;
           medals = snap.data().medals || {};
           selectedAvatar = snap.data().selectedAvatar || 'classic';
+          selectedPassportBackground = snap.data().selectedPassportBackground || 'empty';
         } else {
           // New user — always start at zero
           visited = {};
           profile = null;
           medals = {};
           selectedAvatar = 'classic';
-          await setDoc(ref, { visited: {}, profile: null, medals: {}, selectedAvatar: 'classic', email: currentUser.email, name: currentUser.displayName });
+          selectedPassportBackground = 'empty';
+          await setDoc(ref, { visited: {}, profile: null, medals: {}, selectedAvatar: 'classic', selectedPassportBackground: 'empty', email: currentUser.email, name: currentUser.displayName });
         }
         setSyncDot('synced');
         refreshMarkers();
@@ -1468,7 +1569,9 @@
           profile = snap.data().profile || null;
           medals = snap.data().medals || {};
           selectedAvatar = snap.data().selectedAvatar || 'classic';
+          selectedPassportBackground = snap.data().selectedPassportBackground || 'empty';
           renderPassportCharacter();
+          renderPassportBackground();
           refreshMarkers();
           const activePage = document.querySelector('.nav-tab.active');
           if (activePage && activePage.textContent === 'Mi Pasaporte') renderPassport();
@@ -1546,6 +1649,22 @@
       } catch (e) { console.error(e); setSyncDot(''); }
     };
 
+
+    // ── Firestore: save passport background ──
+    window.savePassportBackground = async function(backgroundId) {
+      selectedPassportBackground = backgroundId;
+      setSyncDot('syncing');
+      try {
+        if (CONFIGURED && currentUser) {
+          const ref = doc(db, 'users', currentUser.uid);
+          await setDoc(ref, { selectedPassportBackground: backgroundId }, { merge: true });
+        } else {
+          localStorage.setItem('cafePassportBackground', backgroundId);
+        }
+        setSyncDot('synced');
+      } catch (e) { console.error(e); setSyncDot(''); }
+    };
+
     // Firestore keys can't have slashes — replace with unicode lookalike
     function safeFbKey(str) { return str.replace(/\//g, '∕'); }
 
@@ -1555,6 +1674,7 @@
       profile = JSON.parse(localStorage.getItem('cafeProfile') || 'null');
       medals = JSON.parse(localStorage.getItem('cafeMedals') || '{}');
       selectedAvatar = localStorage.getItem('cafeAvatar') || 'classic';
+      selectedPassportBackground = localStorage.getItem('cafePassportBackground') || 'empty';
       window.saveCheckin = function(cafeName) {
         localStorage.setItem('cafeVisited', JSON.stringify(visited));
       };
@@ -1566,6 +1686,10 @@
       window.saveAvatar = function(avatarId) {
         selectedAvatar = avatarId;
         localStorage.setItem('cafeAvatar', avatarId);
+      };
+      window.savePassportBackground = function(backgroundId) {
+        selectedPassportBackground = backgroundId;
+        localStorage.setItem('cafePassportBackground', backgroundId);
       };
       updateUserUI({ displayName:'Invitado', email:'Sin cuenta', photoURL: null });
       initMap();
@@ -1680,6 +1804,12 @@
       }
     ];
 
+    const PASSPORT_BACKGROUNDS = [
+      { id:'empty', name:'Vacío', preview:'' },
+      { id:'coffee', name:'Granos de café', preview:'coffee' },
+      { id:'cactus', name:'Cactus', preview:'cactus' }
+    ];
+
     const AVATARS = [
       { id:'classic', name:'Clásico' },
       { id:'glasses', name:'Con lentes' },
@@ -1696,6 +1826,7 @@
     let profile = null;
     let medals = {};
     let selectedAvatar = 'classic';
+    let selectedPassportBackground = 'empty';
     let currentCafe = null;
     let mapInitialized = false;
     let markersByName = new Map();
@@ -1748,6 +1879,47 @@
       const target = document.getElementById('passport-character');
       if (target) target.innerHTML = avatarSvg(selectedAvatar, true, true);
     }
+
+
+    function renderPassportBackground() {
+      const card = document.getElementById('passport-id-card');
+      if (!card) return;
+      card.classList.remove('bg-coffee', 'bg-cactus');
+      if (selectedPassportBackground === 'coffee') card.classList.add('bg-coffee');
+      if (selectedPassportBackground === 'cactus') card.classList.add('bg-cactus');
+    }
+
+    function renderBackgroundGrid() {
+      const grid = document.getElementById('background-grid');
+      if (!grid) return;
+      grid.innerHTML = PASSPORT_BACKGROUNDS.map(bg => `
+        <button class="background-option ${selectedPassportBackground === bg.id ? 'selected' : ''}" onclick="selectPassportBackground('${bg.id}')">
+          <div class="background-preview ${bg.preview}"></div>
+          ${bg.name}
+        </button>`).join('');
+    }
+
+    function openBackgroundModal() {
+      renderBackgroundGrid();
+      document.getElementById('background-overlay').classList.add('open');
+    }
+    window.openBackgroundModal = openBackgroundModal;
+
+    function closeBackgroundModal(e) {
+      if (!e || e.target === document.getElementById('background-overlay')) document.getElementById('background-overlay').classList.remove('open');
+    }
+    window.closeBackgroundModal = closeBackgroundModal;
+
+    function selectPassportBackground(id) {
+      if (!PASSPORT_BACKGROUNDS.some(bg => bg.id === id)) return;
+      selectedPassportBackground = id;
+      if (window.savePassportBackground) window.savePassportBackground(id);
+      renderPassportBackground();
+      renderBackgroundGrid();
+      showToast('Fondo del pasaporte actualizado ✓');
+      setTimeout(() => closeBackgroundModal(), 350);
+    }
+    window.selectPassportBackground = selectPassportBackground;
 
     function getVisitDate(value) {
       if (!value) return null;

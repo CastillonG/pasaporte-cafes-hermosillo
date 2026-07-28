@@ -2130,8 +2130,19 @@
       saveProfile: async (cafeName, data) => {
         if (!CONFIGURED || !currentUser) throw new Error('auth-required');
         const ref = doc(db, 'cafeProfiles', safeFbKey(cafeName));
-        await setDoc(ref, data, { merge: true });
-        const confirmation = await getDoc(ref);
+
+        const withTimeout = (promise, ms, code) => Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => {
+            const error = new Error(code);
+            error.code = code;
+            reject(error);
+          }, ms))
+        ]);
+
+        // Firestore normally answers in a few seconds. Avoid leaving the UI frozen forever.
+        await withTimeout(setDoc(ref, data, { merge: true }), 12000, 'firestore-write-timeout');
+        const confirmation = await withTimeout(getDoc(ref), 12000, 'firestore-read-timeout');
         if (!confirmation.exists()) throw new Error('profile-not-found-after-save');
         return confirmation.data();
       }
@@ -2625,11 +2636,16 @@
         setSyncDot('synced');
       } catch(e) {
         console.error('Save cafe profile:', e);
-        const detail = e && e.code === 'permission-denied'
-          ? 'Permiso insuficiente en Firestore. Publica las reglas del dashboard.'
-          : (e && e.message === 'auth-required')
+        const errorCode = (e && (e.code || e.message)) || 'error desconocido';
+        const detail = errorCode === 'permission-denied'
+          ? 'Permiso insuficiente en Firestore. Revisa y publica las reglas del dashboard.'
+          : errorCode === 'auth-required'
             ? 'La sesión no está disponible. Cierra sesión y vuelve a entrar con la cuenta owner.'
-            : 'No se guardaron los cambios: ' + ((e && (e.code || e.message)) || 'error desconocido');
+            : errorCode === 'firestore-write-timeout'
+              ? 'Firestore no respondió al guardar en 12 segundos. Revisa tu conexión, bloqueadores del navegador y que Firestore esté habilitado.'
+              : errorCode === 'firestore-read-timeout'
+                ? 'El cambio pudo enviarse, pero Firestore no respondió al verificarlo. Recarga la página y revisa la colección cafeProfiles.'
+                : 'No se guardaron los cambios: ' + errorCode;
         setOwnerSaveStatus('error', '✕ ' + detail);
         showToast('No se pudo actualizar el café');
         setSyncDot('');

@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
   <style>
     :root {
@@ -1157,7 +1156,146 @@
       position: relative;
     }
 
+
+    /* ── OWNER INBOX ── */
+    .owner-inbox-btn {
+      display: none;
+      position: fixed;
+      right: 18px;
+      top: 72px;
+      z-index: 1350;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid rgba(122,63,37,.18);
+      background: var(--foam);
+      color: var(--espresso);
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(62,31,14,.2);
+    }
+    .owner-inbox-btn.show { display: flex; align-items: center; justify-content: center; }
+    .owner-inbox-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      min-width: 21px;
+      height: 21px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: #c0392b;
+      color: white;
+      border: 2px solid var(--foam);
+      font-size: 11px;
+      font-weight: 800;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .owner-inbox-count.show { display: flex; }
+    .request-list { display: grid; gap: 12px; }
+    .request-card {
+      border: 1.5px solid rgba(122,63,37,.16);
+      background: white;
+      border-radius: 16px;
+      padding: 15px;
+    }
+    .request-user { font-weight: 800; color: var(--dark); font-size: 15px; }
+    .request-meta { color: var(--espresso); opacity: .68; font-size: 12px; margin-top: 3px; }
+    .request-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 13px; }
+    .request-action {
+      border: none;
+      border-radius: 11px;
+      padding: 11px 8px;
+      font: 700 13px 'DM Sans', sans-serif;
+      cursor: pointer;
+    }
+    .request-action.accept { background: var(--green); color: white; }
+    .request-action.reject { background: #f4dfdc; color: #a33328; }
+    .owner-empty { text-align:center; padding: 30px 12px; color:var(--espresso); opacity:.65; }
+
+    /* Medallas: popup centrado, fondo borroso y 20 espacios */
+    #medals-overlay, #owner-overlay, #request-overlay { align-items: center; padding: 18px; backdrop-filter: blur(7px); }
+    #medals-overlay .cafe-sheet, #owner-overlay .cafe-sheet, #request-overlay .cafe-sheet {
+      border-radius: 24px;
+      max-width: 620px;
+      max-height: 86vh;
+      transform: translateY(18px) scale(.97);
+      box-shadow: 0 24px 60px rgba(35,18,9,.35);
+    }
+    #medals-overlay.open .cafe-sheet, #owner-overlay.open .cafe-sheet, #request-overlay.open .cafe-sheet {
+      transform: translateY(0) scale(1);
+    }
+    .medals-slots {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(58px, 1fr));
+      gap: 14px;
+      padding: 8px 2px 4px;
+    }
+    .medal-slot {
+      aspect-ratio: 1;
+      min-width: 0;
+      border-radius: 50%;
+      border: 2px dashed #aaa49e;
+      background: rgba(190,186,181,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      color: #97918b;
+    }
+    .medal-slot.locked::after { content: ''; width: 11%; height: 11%; border-radius:50%; background:#aaa49e; opacity:.45; }
+    .medal-slot.unlocked {
+      border-style: solid;
+      border-color: var(--stamp-gold);
+      background: radial-gradient(circle at 35% 30%, #fff1a9, #c9a227);
+      box-shadow: inset 0 0 0 4px rgba(255,255,255,.34), 0 5px 12px rgba(62,31,14,.18);
+      color: var(--dark);
+      cursor: pointer;
+    }
+    .medal-slot-icon { font-size: clamp(24px, 5vw, 38px); }
+    .medals-help { font-size:12px; color:var(--espresso); opacity:.62; text-align:center; margin-top:14px; }
+
+    .founder-toggle {
+      display: none;
+      margin: 0 0 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fff9df;
+      border: 1.5px solid rgba(201,162,39,.45);
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--dark);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .founder-toggle.show { display:flex; }
+    .switch { position:relative; width:46px; height:26px; flex-shrink:0; }
+    .switch input { opacity:0; width:0; height:0; }
+    .switch-slider { position:absolute; inset:0; border-radius:999px; background:#c8c1ba; cursor:pointer; transition:.2s; }
+    .switch-slider::before { content:''; position:absolute; width:20px; height:20px; left:3px; top:3px; border-radius:50%; background:white; transition:.2s; box-shadow:0 2px 5px rgba(0,0,0,.2); }
+    .switch input:checked + .switch-slider { background:var(--stamp-gold); }
+    .switch input:checked + .switch-slider::before { transform:translateX(20px); }
+    .owner-badge {
+      display:none;
+      margin-top: 11px;
+      padding-top: 9px;
+      border-top: 1px dashed rgba(122,63,37,.25);
+      text-align: right;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .45px;
+      color: var(--espresso);
+      opacity: .72;
+      position: relative;
+    }
+    .owner-badge.show { display:block; }
+    .pending-note { margin-top:10px; text-align:center; color:var(--espresso); opacity:.66; font-size:12px; }
+
     @media (max-width: 480px) {
+      .medals-slots { grid-template-columns: repeat(4, 1fr); gap: 9px; }
       .topbar h1 { font-size: 14px; }
       .nav-tab { padding: 6px 10px; font-size: 12px; }
       .stamps-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
@@ -1303,6 +1441,7 @@
           </div>
         </div>
       </div>
+      <div class="owner-badge" id="owner-badge">Owner de Ágape Café</div>
       <div class="id-card-mrz" id="id-mrz">P&lt;HMO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
     </div>
 
@@ -1360,46 +1499,21 @@
     </div>
   </div>
 
-  <!-- VERIFY MODAL -->
-  <div class="overlay" id="verify-overlay" onclick="closeVerify(event)">
-    <div class="cafe-sheet" id="verify-sheet">
-      <div class="sheet-handle"></div>
+  <!-- REQUEST CHECK-IN MODAL -->
+  <div class="overlay" id="request-overlay" onclick="closeRequestModal(event)">
+    <div class="cafe-sheet modal-sheet">
       <div class="sheet-header">
-        <h2>Verificar visita</h2>
-        <button class="sheet-close" onclick="closeVerifyOverlay()">✕</button>
+        <div>
+          <h2>Solicitar sello</h2>
+          <div class="sheet-address" id="request-cafe-name" style="margin:5px 0 0;">—</div>
+        </div>
+        <button class="sheet-close" onclick="closeRequestModal()">✕</button>
       </div>
-
-  <div id="verify-code">
-  <button class="checkin-btn unstamped" style="margin-bottom:14px;" onclick="startQrScan()">📷 Escanear código QR</button>
-
-  <div id="qr-scanner-wrap" style="display:none;margin-bottom:14px;">
-    <video id="qr-video" playsinline muted style="width:100%;border-radius:12px;background:#000;display:block;"></video>
-    <canvas id="qr-canvas" style="display:none;"></canvas>
-    <div id="qr-status" style="font-size:12px;color:var(--espresso);opacity:.7;text-align:center;margin-top:8px;">
-      Apunta la cámara al código QR del café ☕
-    </div>
-    <button class="checkin-btn"
-            style="margin-top:8px;background:rgba(122,63,37,.1);color:var(--espresso);"
-            onclick="stopQrScan()">
-      Cancelar escaneo
-    </button>
-  </div>
-
-  <div style="text-align:center;font-size:12px;color:var(--espresso);opacity:.5;margin:10px 0;">
-    — o ingresa el código manualmente —
-  </div>
-
-  <input id="code-input"
-         type="text"
-         placeholder="Ingresa el código del café"
-         style="width:100%;padding:14px;border-radius:12px;border:2px solid rgba(122,63,37,.25);font-size:16px;text-align:center;"/>
-
-  <button class="checkin-btn unstamped"
-          style="margin-top:12px;"
-          onclick="confirmFromCode()">
-    ✓ Confirmar
-  </button>
-      </div>
+      <p style="color:var(--espresso);line-height:1.55;font-size:14px;">
+        Se enviará una solicitud al owner de este café. Tu sello aparecerá cuando la acepte.
+      </p>
+      <button class="checkin-btn unstamped" onclick="sendCheckinRequest()">Enviar solicitud ☕</button>
+      <button class="checkin-btn" style="margin-top:9px;background:rgba(122,63,37,.1);color:var(--espresso);" onclick="closeRequestModal()">Cancelar</button>
     </div>
   </div>
 
@@ -1426,6 +1540,13 @@
         </div>
         <button class="sheet-close" onclick="closeAvatarModal()">✕</button>
       </div>
+      <div class="founder-toggle" id="founder-toggle">
+        <span>👑 Mostrar corona de fundador</span>
+        <label class="switch">
+          <input type="checkbox" id="founder-crown-toggle" onchange="toggleFounderCrown(this.checked)">
+          <span class="switch-slider"></span>
+        </label>
+      </div>
       <div class="avatar-grid" id="avatar-grid"></div>
     </div>
   </div>
@@ -1444,6 +1565,23 @@
         <button class="sheet-close" onclick="closeBackgroundModal()">✕</button>
       </div>
       <div class="background-grid" id="background-grid"></div>
+    </div>
+  </div>
+
+  <!-- OWNER INBOX -->
+  <button class="owner-inbox-btn" id="owner-inbox-btn" onclick="openOwnerInbox()" aria-label="Solicitudes de sellos">
+    🔔<span class="owner-inbox-count" id="owner-inbox-count">0</span>
+  </button>
+  <div class="overlay" id="owner-overlay" onclick="closeOwnerInbox(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-header">
+        <div>
+          <h2>Solicitudes de sellos</h2>
+          <div class="sheet-address" style="margin:5px 0 0;">Ágape Café</div>
+        </div>
+        <button class="sheet-close" onclick="closeOwnerInbox()">✕</button>
+      </div>
+      <div id="owner-request-list"></div>
     </div>
   </div>
 
@@ -1475,10 +1613,10 @@
     import { initializeApp }                      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot }
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, addDoc, query, where, deleteDoc }
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    let app, auth, db, provider, currentUser = null, unsubscribeSnapshot = null;
+    let app, auth, db, provider, currentUser = null, unsubscribeSnapshot = null, unsubscribeOwnerRequests = null;
 
     if (CONFIGURED) {
       app      = initializeApp(FIREBASE_CONFIG);
@@ -1511,12 +1649,15 @@
     window.signOut = async function() {
       closeDropdown();
       if (unsubscribeSnapshot) unsubscribeSnapshot();
+      if (unsubscribeOwnerRequests) unsubscribeOwnerRequests();
       if (CONFIGURED && auth) await fbSignOut(auth);
       else { localStorage.removeItem('cafeVisited'); localStorage.removeItem('cafeMedals'); localStorage.removeItem('cafeAvatar'); localStorage.removeItem('cafePassportBackground'); }
       visited = {};
       medals = {};
       selectedAvatar = 'classic';
       selectedPassportBackground = 'empty';
+      selectedFounderCrown = false;
+      ownerRequests = [];
       currentUser = null;
       updateUserUI(null);
       refreshMarkers();
@@ -1532,6 +1673,7 @@
           document.getElementById('auth-screen').classList.add('hidden');
           await loadUserData(user.uid);
           setupRealtimeSync(user.uid);
+          setupOwnerInbox();
           initMap();
         } else {
           currentUser = null;
@@ -1553,6 +1695,7 @@
           medals = snap.data().medals || {};
           selectedAvatar = snap.data().selectedAvatar || 'classic';
           selectedPassportBackground = snap.data().selectedPassportBackground || 'empty';
+          selectedFounderCrown = !!snap.data().selectedFounderCrown;
         } else {
           // New user — always start at zero
           visited = {};
@@ -1560,7 +1703,7 @@
           medals = {};
           selectedAvatar = 'classic';
           selectedPassportBackground = 'empty';
-          await setDoc(ref, { visited: {}, profile: null, medals: {}, selectedAvatar: 'classic', selectedPassportBackground: 'empty', email: currentUser.email, name: currentUser.displayName });
+          await setDoc(ref, { visited: {}, profile: null, medals: {}, selectedAvatar: 'classic', selectedPassportBackground: 'empty', selectedFounderCrown: false, email: currentUser.email, name: currentUser.displayName });
         }
         setSyncDot('synced');
         refreshMarkers();
@@ -1582,6 +1725,7 @@
           medals = snap.data().medals || {};
           selectedAvatar = snap.data().selectedAvatar || 'classic';
           selectedPassportBackground = snap.data().selectedPassportBackground || 'empty';
+          selectedFounderCrown = !!snap.data().selectedFounderCrown;
           renderPassportCharacter();
           renderPassportBackground();
           refreshMarkers();
@@ -1662,6 +1806,82 @@
     };
 
 
+    // ── Firestore: save optional founder crown ──
+    window.saveFounderCrown = async function(enabled) {
+      selectedFounderCrown = !!enabled;
+      setSyncDot('syncing');
+      try {
+        if (CONFIGURED && currentUser) {
+          await setDoc(doc(db, 'users', currentUser.uid), { selectedFounderCrown }, { merge: true });
+        } else {
+          localStorage.setItem('cafeFounderCrown', String(selectedFounderCrown));
+        }
+        setSyncDot('synced');
+      } catch (e) { console.error(e); setSyncDot(''); }
+    };
+
+    // ── Check-in requests and owner inbox ──
+    window.createCheckinRequest = async function(cafe) {
+      if (!CONFIGURED || !currentUser) throw new Error('Necesitas iniciar sesión.');
+      if (!cafe.ownerEmail) throw new Error('Este café todavía no tiene owner asignado.');
+      const requestId = `${currentUser.uid}_${safeFbKey(cafe.name)}`;
+      const ref = doc(db, 'checkinRequests', requestId);
+      const previous = await getDoc(ref);
+      if (previous.exists() && previous.data().status === 'pending') return 'pending';
+      await setDoc(ref, {
+        cafeName: cafe.name,
+        ownerEmail: cafe.ownerEmail.toLowerCase(),
+        requesterUid: currentUser.uid,
+        requesterEmail: currentUser.email || '',
+        requesterName: window.currentDisplayName || currentUser.displayName || 'Usuario',
+        username: (profile && profile.username) || window.currentDisplayName || currentUser.displayName || 'Usuario',
+        status: 'pending',
+        requestedAt: new Date().toISOString()
+      });
+      return 'created';
+    };
+
+    window.setupOwnerInbox = function() {
+      const email = (window.currentUserEmail || '').toLowerCase();
+      const ownerCafe = cafes.find(c => (c.ownerEmail || '').toLowerCase() === email);
+      const btn = document.getElementById('owner-inbox-btn');
+      const badge = document.getElementById('owner-badge');
+      if (badge) badge.classList.toggle('show', !!ownerCafe);
+      if (!ownerCafe || !CONFIGURED) {
+        btn.classList.remove('show');
+        ownerRequests = [];
+        renderOwnerRequests();
+        return;
+      }
+      btn.classList.add('show');
+      setDoc(doc(db, 'users', currentUser.uid), { role: 'owner', ownerCafeName: ownerCafe.name }, { merge: true }).catch(console.error);
+      if (unsubscribeOwnerRequests) unsubscribeOwnerRequests();
+      const q = query(collection(db, 'checkinRequests'), where('ownerEmail', '==', email), where('status', '==', 'pending'));
+      unsubscribeOwnerRequests = onSnapshot(q, snap => {
+        ownerRequests = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+        renderOwnerRequests();
+      }, err => console.error('Owner inbox:', err));
+    };
+
+    window.respondCheckinRequest = async function(requestId, accepted) {
+      const req = ownerRequests.find(r => r.id === requestId);
+      if (!req || !currentUser) return;
+      const ownerEmail = (window.currentUserEmail || '').toLowerCase();
+      if (ownerEmail !== (req.ownerEmail || '').toLowerCase()) return;
+      try {
+        if (accepted) {
+          const now = new Date();
+          const visitData = { timestamp: now.toISOString(), label: now.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' }) };
+          await updateDoc(doc(db, 'users', req.requesterUid), { [`visited.${safeFbKey(req.cafeName)}`]: visitData });
+        }
+        await deleteDoc(doc(db, 'checkinRequests', requestId));
+        showToast(accepted ? 'Solicitud aceptada ✓' : 'Solicitud rechazada');
+      } catch (e) {
+        console.error(e);
+        showToast('No se pudo procesar la solicitud');
+      }
+    };
+
     // ── Firestore: save passport background ──
     window.savePassportBackground = async function(backgroundId) {
       selectedPassportBackground = backgroundId;
@@ -1687,6 +1907,7 @@
       medals = JSON.parse(localStorage.getItem('cafeMedals') || '{}');
       selectedAvatar = localStorage.getItem('cafeAvatar') || 'classic';
       selectedPassportBackground = localStorage.getItem('cafePassportBackground') || 'empty';
+      selectedFounderCrown = localStorage.getItem('cafeFounderCrown') === 'true';
       window.saveCheckin = function(cafeName) {
         localStorage.setItem('cafeVisited', JSON.stringify(visited));
       };
@@ -1699,6 +1920,7 @@
         selectedAvatar = avatarId;
         localStorage.setItem('cafeAvatar', avatarId);
       };
+      window.saveFounderCrown = function(enabled) { selectedFounderCrown = !!enabled; localStorage.setItem('cafeFounderCrown', String(selectedFounderCrown)); };
       window.savePassportBackground = function(backgroundId) {
         selectedPassportBackground = backgroundId;
         localStorage.setItem('cafePassportBackground', backgroundId);
@@ -1761,7 +1983,7 @@
     // ──────────────────────────────────────────────
     const cafes = [
       { name:"211 Barra Café", address:"C. Benito Juárez 211, Issste Federal", coords:[29.105567,-110.952852], menu:["Espresso","Cappuccino","Té","Pasteles"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"10–18"} },
-      { name:"Ágape Café", address:"Av. Saturnino Campoy 869-GG, Álvaro Obregón", coords:[29.103832,-111.006329], menu:["Cold Brew","Latte","Sándwiches","Waffles"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { name:"Ágape Café", ownerEmail:"kelitzkeliton@gmail.com", address:"Av. Saturnino Campoy 869-GG, Álvaro Obregón", coords:[29.103832,-111.006329], menu:["Cold Brew","Latte","Sándwiches","Waffles"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
       { name:"Aletto Café", address:"Av. Dr. Ignacio Pesqueira 608-A, Las Quintas", coords:[29.084816,-110.991711], menu:["V60","Aeropress","Croissants","Matcha"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–20",dom:"10–17"} },
       { name:"Café Central", address:"Blvd. Miguel Hidalgo 63, El Centenario", coords:[29.076014,-110.961434], menu:["Americano","Café de Olla","Pan de Dulce"], hours:{lun:"7–21",mar:"7–21",mie:"7–21",jue:"7–21",vie:"7–22",sab:"8–22",dom:"9–18"} },
       { name:"Cafelita", address:"Av. Tehuantepec 53, El Centenario", coords:[29.073757,-110.959006], menu:["Espresso","Muffins","Licuados","Tés"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"9–17"} },
@@ -1840,12 +2062,12 @@
     let medals = {};
     let selectedAvatar = 'classic';
     let selectedPassportBackground = 'empty';
+    let selectedFounderCrown = false;
+    let ownerRequests = [];
     let currentCafe = null;
     let mapInitialized = false;
     let markersByName = new Map();
     let mapInstance = null;
-    let qrStream = null;
-    let qrAnimationId = null;
 
     function visitedCount() { return Object.keys(visited).length; }
 
@@ -1862,28 +2084,23 @@
       const glasses = id.includes('glasses');
       const cap = id.includes('cap');
       const coffee = id.includes('coffee');
-      const isFounder = allowFounderCrown && window.currentUserEmail === FOUNDER_EMAIL;
-
-      const founderCrown = isFounder ? `
-        <g transform="translate(20 0)">
-          <path d="M4 25 L1 7 L14 16 L25 2 L36 16 L49 7 L46 25 Z"
-                fill="#d6a928" stroke="#7a3f25" stroke-width="2" stroke-linejoin="round"/>
-          <rect x="4" y="23" width="42" height="9" rx="3"
-                fill="#c9a227" stroke="#7a3f25" stroke-width="2"/>
-          <ellipse cx="25" cy="18" rx="7" ry="9"
-                   fill="#7a3f25" transform="rotate(18 25 18)"/>
-          <path d="M22 11 Q29 18 24 26"
-                fill="none" stroke="#f5ead8" stroke-width="1.7" stroke-linecap="round"/>
+      const showCrown = allowFounderCrown && window.currentUserEmail === FOUNDER_EMAIL && selectedFounderCrown;
+      const capLayer = cap ? '<g><path d="M24 29 Q45 7 67 29 L64 36 H27 Z" fill="#71695e" stroke="#4b443c" stroke-width="1.5"/><path d="M59 31 Q76 29 81 36 Q69 41 58 37 Z" fill="#71695e" stroke="#4b443c" stroke-width="1.5"/></g>' : '';
+      const crownLayer = showCrown ? `
+        <g transform="translate(20 -1)">
+          <path d="M4 27 L1 9 L14 18 L25 3 L36 18 L49 9 L46 27 Z" fill="#d6a928" stroke="#7a3f25" stroke-width="2" stroke-linejoin="round"/>
+          <rect x="4" y="24" width="42" height="8" rx="3" fill="#c9a227" stroke="#7a3f25" stroke-width="2"/>
+          <ellipse cx="25" cy="19" rx="6" ry="8" fill="#7a3f25" transform="rotate(18 25 19)"/>
+          <path d="M22 13 Q28 19 24 26" fill="none" stroke="#f5ead8" stroke-width="1.5" stroke-linecap="round"/>
         </g>` : '';
-
       return `
         <svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <rect width="90" height="110" rx="8" fill="#d9d1c2"/>
-          ${founderCrown}
-          ${cap ? '<path d="M24 27 Q45 7 67 27 L64 35 H27 Z" fill="#71695e"/><path d="M61 30 Q77 30 80 36 Q68 39 59 36 Z" fill="#71695e"/>' : ''}
+          <path d="M8 110 C8 78 24 65 43 65 C62 65 78 78 78 110 Z" fill="#9b8a72"/>
           <circle cx="43" cy="43" r="19" fill="#9b8a72"/>
           ${glasses ? '<g fill="none" stroke="#4b443c" stroke-width="3"><circle cx="35" cy="42" r="7"/><circle cx="51" cy="42" r="7"/><path d="M42 42h2"/></g>' : ''}
-          <path d="M8 110 C8 78 24 65 43 65 C62 65 78 78 78 110 Z" fill="#9b8a72"/>
+          ${capLayer}
+          ${crownLayer}
           ${coffee ? '<g transform="translate(61 68)"><rect x="0" y="8" width="22" height="18" rx="4" fill="#f5ead8" stroke="#7a3f25" stroke-width="2"/><path d="M22 12 Q31 12 28 20 Q26 24 22 22" fill="none" stroke="#7a3f25" stroke-width="2"/><path d="M6 5 Q4 1 7 -2 M13 5 Q11 1 14 -2" fill="none" stroke="#7a3f25" stroke-width="1.5"/></g>' : ''}
         </svg>`;
     }
@@ -2008,19 +2225,16 @@
     window.unlockFestivalMedal2026 = function() { unlockMedal('festival_2026'); };
 
     function openMedalsModal() {
-      const unlocked = MEDALS.filter(m => medals[m.id]);
       const list = document.getElementById('medals-list');
-      list.innerHTML = unlocked.length ? `<div class="medals-grid">${unlocked.map(m => `
-        <div class="medal-card">
-          <div class="medal-placeholder">${m.icon}</div>
-          <div class="medal-title">${m.title}</div>
-          <div class="medal-desc">${m.desc}</div>
-          <div class="medal-date">Desbloqueada · ${medals[m.id].label || ''}</div>
-        </div>`).join('')}</div>` : `
-        <div class="medals-empty">
-          <div style="font-size:42px;margin-bottom:8px;">🏅</div>
-          Aún no has desbloqueado medallas.<br>Continúa visitando cafés para descubrirlas.
+      const slots = Array.from({ length: 20 }, (_, i) => {
+        const medal = MEDALS[i];
+        const unlocked = medal && medals[medal.id];
+        if (!unlocked) return `<div class="medal-slot locked" title="Espacio de medalla ${i + 1}"></div>`;
+        return `<div class="medal-slot unlocked" title="${medal.title} — ${medal.desc}">
+          <span class="medal-slot-icon">${medal.icon}</span>
         </div>`;
+      }).join('');
+      list.innerHTML = `<div class="medals-slots">${slots}</div><div class="medals-help">20 espacios para tus medallas. Las nuevas se irán mostrando aquí.</div>`;
       document.getElementById('medals-overlay').classList.add('open');
     }
     window.openMedalsModal = openMedalsModal;
@@ -2039,6 +2253,9 @@
     }
 
     function openAvatarModal() {
+      const isFounder = window.currentUserEmail === FOUNDER_EMAIL;
+      document.getElementById('founder-toggle').classList.toggle('show', isFounder);
+      document.getElementById('founder-crown-toggle').checked = isFounder && selectedFounderCrown;
       renderAvatarGrid();
       document.getElementById('avatar-overlay').classList.add('open');
     }
@@ -2059,6 +2276,40 @@
       setTimeout(() => closeAvatarModal(), 350);
     }
     window.selectAvatar = selectAvatar;
+
+    function toggleFounderCrown(enabled) {
+      if (window.currentUserEmail !== FOUNDER_EMAIL) return;
+      selectedFounderCrown = !!enabled;
+      if (window.saveFounderCrown) window.saveFounderCrown(selectedFounderCrown);
+      renderPassportCharacter();
+      showToast(selectedFounderCrown ? 'Corona activada 👑' : 'Corona desactivada');
+    }
+    window.toggleFounderCrown = toggleFounderCrown;
+
+    function renderOwnerRequests() {
+      const count = document.getElementById('owner-inbox-count');
+      const list = document.getElementById('owner-request-list');
+      if (count) {
+        count.textContent = ownerRequests.length;
+        count.classList.toggle('show', ownerRequests.length > 0);
+      }
+      if (!list) return;
+      list.innerHTML = ownerRequests.length ? `<div class="request-list">${ownerRequests.map(r => `
+        <div class="request-card">
+          <div class="request-user">@${r.username || r.requesterName || 'Usuario'}</div>
+          <div class="request-meta">${r.requesterEmail || ''}</div>
+          <div class="request-meta">Solicita sello de ${r.cafeName}</div>
+          <div class="request-actions">
+            <button class="request-action reject" onclick="respondCheckinRequest('${r.id}', false)">Rechazar</button>
+            <button class="request-action accept" onclick="respondCheckinRequest('${r.id}', true)">Aceptar</button>
+          </div>
+        </div>`).join('')}</div>` : '<div class="owner-empty">No tienes solicitudes pendientes.</div>';
+    }
+
+    function openOwnerInbox() { renderOwnerRequests(); document.getElementById('owner-overlay').classList.add('open'); }
+    window.openOwnerInbox = openOwnerInbox;
+    function closeOwnerInbox(e) { if (!e || e.target === document.getElementById('owner-overlay')) document.getElementById('owner-overlay').classList.remove('open'); }
+    window.closeOwnerInbox = closeOwnerInbox;
 
     // ──────────────────────────────────────────────
     // PAGE NAVIGATION
@@ -2283,153 +2534,33 @@
     }
 
 window.doCheckin = function() {
-  if (!currentCafe) return;
-  if (visited[currentCafe.name]) return;
-
-  document.getElementById('code-input').value = '';
-  document.getElementById('qr-scanner-wrap').style.display = 'none';
-  document.getElementById('verify-overlay').classList.add('open');
-
-  setTimeout(() => {
-    document.getElementById('code-input').focus();
-  }, 100);
-};
-
-  
-
-  function closeVerifyOverlay() {
-  stopQrScan();
-  document.getElementById('verify-overlay').classList.remove('open');
-}
-
-function closeVerify(e) {
-  if (e.target === document.getElementById('verify-overlay')) {
-    closeVerifyOverlay();
-  }
-}
-
-// ──────────────────────────────────────────────
-// ESCÁNER QR (usa jsQR + cámara del dispositivo)
-// ──────────────────────────────────────────────
-function startQrScan() {
-  const wrap  = document.getElementById('qr-scanner-wrap');
-  const video = document.getElementById('qr-video');
-  const status = document.getElementById('qr-status');
-
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    showToast('Tu navegador no soporta cámara ❌');
-    return;
-  }
-
-  wrap.style.display = 'block';
-  status.textContent = 'Apunta la cámara al código QR del café ☕';
-
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-    .then(stream => {
-      qrStream = stream;
-      video.srcObject = stream;
-      video.play();
-      qrAnimationId = requestAnimationFrame(scanQrFrame);
-    })
-    .catch(err => {
-      console.error(err);
-      showToast('No se pudo acceder a la cámara ❌');
-      wrap.style.display = 'none';
-    });
-}
-window.startQrScan = startQrScan;
-
-function scanQrFrame() {
-  const video  = document.getElementById('qr-video');
-  const canvas = document.getElementById('qr-canvas');
-  if (!video || !qrStream) return;
-
-  if (video.readyState !== video.HAVE_ENOUGH_DATA) {
-    qrAnimationId = requestAnimationFrame(scanQrFrame);
-    return;
-  }
-
-  canvas.width  = video.videoWidth;
-  canvas.height = video.videoHeight;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const result = jsQR(imageData.data, imageData.width, imageData.height, {
-    inversionAttempts: 'dontInvert'
-  });
-
-  if (result && result.data) {
-    handleQrResult(result.data);
-  } else {
-    qrAnimationId = requestAnimationFrame(scanQrFrame);
-  }
-}
-
-function handleQrResult(data) {
-  const status = document.getElementById('qr-status');
-  const value = data.trim().toLowerCase();
-
-  if (value === 'cafe26') {
-    status.textContent = '¡Código válido! ✓';
-    stopQrScan();
-    closeVerifyOverlay();
-    registrarVisita();
-  } else {
-    showToast('Código QR no válido ❌');
-    // sigue escaneando por si apuntó a otro código sin querer
-    qrAnimationId = requestAnimationFrame(scanQrFrame);
-  }
-}
-
-function stopQrScan() {
-  if (qrAnimationId) cancelAnimationFrame(qrAnimationId);
-  qrAnimationId = null;
-
-  if (qrStream) {
-    qrStream.getTracks().forEach(t => t.stop());
-    qrStream = null;
-  }
-
-  const video = document.getElementById('qr-video');
-  if (video) video.srcObject = null;
-
-  const wrap = document.getElementById('qr-scanner-wrap');
-  if (wrap) wrap.style.display = 'none';
-}
-window.stopQrScan = stopQrScan;
-
-function confirmFromCode() {
-  const code = document.getElementById('code-input')
-    .value.trim()
-    .toLowerCase();
-
-  if (code === 'cafe26') {
-    closeVerifyOverlay();
-    registrarVisita();
-  } else {
-    showToast('Código incorrecto ❌');
-    document.getElementById('code-input').value = '';
-  }
-}
-
-    function registrarVisita() {
       if (!currentCafe || visited[currentCafe.name]) return;
-      const now = new Date();
-      const visitData = {
-        timestamp: now.toISOString(),
-        label: now.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' })
-      };
-      visited[currentCafe.name] = visitData;
-      if (window.saveCheckin) window.saveCheckin(currentCafe.name, visitData);
-      refreshMarkers();
-      const btn = document.getElementById('checkin-btn');
-      btn.textContent = '✓ Visitado el ' + visitData.label;
-      btn.className = 'checkin-btn visited';
-      const count = visitedCount();
-      showToast('¡Sello agregado! Llevas ' + count + ' de ' + cafes.length + ' ☕');
-      evaluateMedals();
+      if (!currentCafe.ownerEmail) {
+        showToast('Este café todavía no tiene owner asignado.');
+        return;
+      }
+      document.getElementById('request-cafe-name').textContent = currentCafe.name;
+      document.getElementById('request-overlay').classList.add('open');
+    };
+
+    function closeRequestModal(e) {
+      if (!e || e.target === document.getElementById('request-overlay')) document.getElementById('request-overlay').classList.remove('open');
     }
+    window.closeRequestModal = closeRequestModal;
+
+    async function sendCheckinRequest() {
+      if (!currentCafe) return;
+      try {
+        const result = await window.createCheckinRequest(currentCafe);
+        closeRequestModal();
+        closeOverlay();
+        showToast(result === 'pending' ? 'Ya tienes una solicitud pendiente ☕' : 'Solicitud enviada al owner ✓');
+      } catch (e) {
+        console.error(e);
+        showToast(e.message || 'No se pudo enviar la solicitud');
+      }
+    }
+    window.sendCheckinRequest = sendCheckinRequest;
 
     // ──────────────────────────────────────────────
     // PASSPORT

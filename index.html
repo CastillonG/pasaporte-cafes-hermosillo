@@ -2115,6 +2115,27 @@
       dot.className = 'sync-dot';
       if (state) dot.classList.add(state);
     }
+
+    // Puente seguro entre el módulo de Firebase y el código general de la página.
+    // Las variables db/currentUser no son globales dentro de un script type="module".
+    window.firebaseCafeProfileApi = {
+      isConfigured: () => CONFIGURED,
+      getCurrentUser: () => currentUser,
+      getProfile: async (cafeName) => {
+        if (!CONFIGURED || !currentUser) throw new Error('auth-required');
+        const ref = doc(db, 'cafeProfiles', safeFbKey(cafeName));
+        const snap = await getDoc(ref);
+        return snap.exists() ? snap.data() : null;
+      },
+      saveProfile: async (cafeName, data) => {
+        if (!CONFIGURED || !currentUser) throw new Error('auth-required');
+        const ref = doc(db, 'cafeProfiles', safeFbKey(cafeName));
+        await setDoc(ref, data, { merge: true });
+        const confirmation = await getDoc(ref);
+        if (!confirmation.exists()) throw new Error('profile-not-found-after-save');
+        return confirmation.data();
+      }
+    };
   </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -2523,9 +2544,8 @@
       currentOwnerCafe = ownerCafe;
       let saved = null;
       try {
-        if (CONFIGURED) {
-          const snap = await getDoc(doc(db, 'cafeProfiles', safeFbKey(ownerCafe.name)));
-          if (snap.exists()) saved = snap.data();
+        if (window.firebaseCafeProfileApi && window.firebaseCafeProfileApi.isConfigured()) {
+          saved = await window.firebaseCafeProfileApi.getProfile(ownerCafe.name);
         }
       } catch(e) { console.error('Cafe profile:', e); }
       ownerCafeProfile = saved || { googleLocation:'', specialties:ownerCafe.menu || [], hours:ownerCafe.hours || {} };
@@ -2551,12 +2571,13 @@
 
     async function saveOwnerCafeInfo() {
       const saveBtn = document.getElementById('owner-save-btn');
-      if (!currentOwnerCafe || !currentUser) {
+      const firebaseUser = window.firebaseCafeProfileApi && window.firebaseCafeProfileApi.getCurrentUser();
+      if (!currentOwnerCafe || !firebaseUser) {
         setOwnerSaveStatus('error', 'No se identificó la cuenta propietaria. Vuelve a iniciar sesión.');
         return;
       }
 
-      const signedEmail = (currentUser.email || '').trim().toLowerCase();
+      const signedEmail = (firebaseUser.email || '').trim().toLowerCase();
       const assignedEmail = (currentOwnerCafe.ownerEmail || '').trim().toLowerCase();
       if (!signedEmail || signedEmail !== assignedEmail) {
         setOwnerSaveStatus('error', 'Esta cuenta no tiene permiso para editar este café.');
@@ -2584,13 +2605,8 @@
       setSyncDot('syncing');
 
       try {
-        const ref = doc(db, 'cafeProfiles', safeFbKey(currentOwnerCafe.name));
-        await setDoc(ref, data, { merge:true });
-
-        // Read the document back so the UI only confirms after Firestore really stored it.
-        const confirmation = await getDoc(ref);
-        if (!confirmation.exists()) throw new Error('Firestore no devolvió el perfil guardado.');
-        const officialData = confirmation.data();
+        if (!window.firebaseCafeProfileApi) throw new Error('firebase-api-unavailable');
+        const officialData = await window.firebaseCafeProfileApi.saveProfile(currentOwnerCafe.name, data);
         applyCafeProfile(officialData);
 
         // Keep the edit form synchronized with the official stored values.
@@ -2611,7 +2627,9 @@
         console.error('Save cafe profile:', e);
         const detail = e && e.code === 'permission-denied'
           ? 'Permiso insuficiente en Firestore. Publica las reglas del dashboard.'
-          : 'No se guardaron los cambios. Revisa tu conexión e inténtalo otra vez.';
+          : (e && e.message === 'auth-required')
+            ? 'La sesión no está disponible. Cierra sesión y vuelve a entrar con la cuenta owner.'
+            : 'No se guardaron los cambios: ' + ((e && (e.code || e.message)) || 'error desconocido');
         setOwnerSaveStatus('error', '✕ ' + detail);
         showToast('No se pudo actualizar el café');
         setSyncDot('');

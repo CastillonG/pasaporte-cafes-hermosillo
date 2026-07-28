@@ -1804,7 +1804,7 @@
           selectedPassportBackground = 'empty';
           await setDoc(ref, { visited: {}, profile: null, medals: {}, selectedAvatar: 'classic', selectedPassportBackground: 'empty', selectedFounderCrown: false, email: currentUser.email, name: currentUser.displayName });
         }
-        setSyncDot('synced');
+        if (window.setSyncDot) window.setSyncDot('synced');
         refreshMarkers();
         if (window.checkProfileScreen) window.checkProfileScreen();
       } catch (e) {
@@ -1938,6 +1938,8 @@
         ownerCafeProfile = profileData;
       }
     }
+
+    window.applyCafeProfile = applyCafeProfile;
 
     window.setupCafeProfilesSync = function() {
       if (!CONFIGURED || !currentUser) return;
@@ -2116,6 +2118,8 @@
       if (state) dot.classList.add(state);
     }
 
+    window.setSyncDot = setSyncDot;
+
     // Puente seguro entre el módulo de Firebase y el código general de la página.
     // Las variables db/currentUser no son globales dentro de un script type="module".
     window.firebaseCafeProfileApi = {
@@ -2147,6 +2151,34 @@
         return confirmation.data();
       }
     };
+  </script>
+
+  <script>
+    window.addEventListener('error', function(event) {
+      const status = document.getElementById('owner-save-status');
+      const button = document.getElementById('owner-save-btn');
+      if (button && button.disabled) {
+        button.disabled = false;
+        button.textContent = 'Guardar cambios';
+      }
+      if (status && button && button.closest('.page.active')) {
+        status.className = 'owner-save-status show error';
+        status.textContent = '✕ Error del código: ' + (event.message || 'error desconocido');
+      }
+    });
+    window.addEventListener('unhandledrejection', function(event) {
+      const status = document.getElementById('owner-save-status');
+      const button = document.getElementById('owner-save-btn');
+      if (button && button.disabled) {
+        button.disabled = false;
+        button.textContent = 'Guardar cambios';
+      }
+      if (status && button && button.closest('.page.active')) {
+        const reason = event.reason && (event.reason.code || event.reason.message) || 'error desconocido';
+        status.className = 'owner-save-status show error';
+        status.textContent = '✕ Error al guardar: ' + reason;
+      }
+    });
   </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -2613,12 +2645,12 @@
       saveBtn.disabled = true;
       saveBtn.textContent = 'Guardando…';
       setOwnerSaveStatus('saving', 'Guardando cambios en la información oficial…');
-      setSyncDot('syncing');
+      if (window.setSyncDot) window.setSyncDot('syncing');
 
       try {
         if (!window.firebaseCafeProfileApi) throw new Error('firebase-api-unavailable');
         const officialData = await window.firebaseCafeProfileApi.saveProfile(currentOwnerCafe.name, data);
-        applyCafeProfile(officialData);
+        if (window.applyCafeProfile) window.applyCafeProfile(officialData);
 
         // Keep the edit form synchronized with the official stored values.
         document.getElementById('owner-google-location').value = officialData.googleLocation || '';
@@ -2633,7 +2665,7 @@
         });
         setOwnerSaveStatus('success', '✓ Cambios guardados y publicados a las ' + savedTime);
         showToast('Información oficial actualizada ✓');
-        setSyncDot('synced');
+        if (window.setSyncDot) window.setSyncDot('synced');
       } catch(e) {
         console.error('Save cafe profile:', e);
         const errorCode = (e && (e.code || e.message)) || 'error desconocido';
@@ -2648,7 +2680,7 @@
                 : 'No se guardaron los cambios: ' + errorCode;
         setOwnerSaveStatus('error', '✕ ' + detail);
         showToast('No se pudo actualizar el café');
-        setSyncDot('');
+        if (window.setSyncDot) window.setSyncDot('');
       } finally {
         saveBtn.disabled = false;
         saveBtn.textContent = 'Guardar cambios';

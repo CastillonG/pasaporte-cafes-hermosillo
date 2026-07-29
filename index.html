@@ -1641,6 +1641,100 @@
     .store-buy.owned { background:var(--green); }
     .store-buy.equipped { background:rgba(122,63,37,.12); color:var(--espresso); }
     .store-note { margin-top:14px; text-align:center; font-size:11px; color:var(--espresso); opacity:.58; }
+
+
+    /* ── ÁGAPE LOYALTY CARD ── */
+    .loyalty-wrap { display:none; margin-top:20px; }
+    .loyalty-wrap.show { display:block; }
+    .loyalty-mini-label { font-size:11px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:var(--espresso); opacity:.55; margin-bottom:8px; }
+    .loyalty-card {
+      position:relative;
+      background:linear-gradient(145deg,#f7fff7,#e7f3e9);
+      border:1.5px solid rgba(56,117,69,.28);
+      border-radius:17px;
+      padding:14px;
+      box-shadow:0 5px 14px rgba(56,117,69,.08);
+    }
+    .loyalty-card::after {
+      content:'Tarjeta de lealtad';
+      position:absolute;
+      right:10px;
+      top:-31px;
+      background:var(--dark);
+      color:white;
+      border-radius:8px;
+      padding:6px 9px;
+      font-size:10px;
+      font-weight:700;
+      opacity:0;
+      pointer-events:none;
+      transform:translateY(4px);
+      transition:.18s;
+      white-space:nowrap;
+    }
+    .loyalty-card:hover::after { opacity:1; transform:translateY(0); }
+    .loyalty-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .loyalty-brand { display:flex; align-items:center; gap:9px; }
+    .agape-heart-logo { width:34px; height:30px; flex-shrink:0; }
+    .loyalty-title { font-family:'Playfair Display',serif; font-size:16px; color:var(--dark); }
+    .loyalty-count { font-size:12px; font-weight:800; color:var(--green); }
+    .loyalty-stamps { display:grid; grid-template-columns:repeat(6,1fr); gap:7px; }
+    .loyalty-dot {
+      aspect-ratio:1;
+      border-radius:50%;
+      border:2px dashed rgba(56,117,69,.35);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      font-weight:800;
+      color:rgba(56,117,69,.55);
+      background:rgba(255,255,255,.6);
+      position:relative;
+    }
+    .loyalty-dot.done { border-style:solid; border-color:#4a7c59; background:#4a7c59; color:white; }
+    .loyalty-dot.reward::after { content:'★'; position:absolute; right:-3px; top:-5px; color:#c9a227; font-size:13px; text-shadow:0 1px 0 white; }
+    .loyalty-rewards { display:grid; gap:7px; margin-top:12px; }
+    .loyalty-reward { display:flex; align-items:center; gap:9px; border-radius:11px; padding:8px 10px; background:rgba(255,255,255,.72); font-size:11px; color:var(--espresso); }
+    .loyalty-reward.unlocked { background:#fff8d7; color:var(--dark); font-weight:700; }
+    .loyalty-request-btn { width:100%; margin-top:12px; border:0; border-radius:11px; padding:11px; background:var(--green); color:white; font:800 12px 'DM Sans',sans-serif; cursor:pointer; }
+    .loyalty-request-btn:disabled { background:rgba(74,124,89,.18); color:var(--green); cursor:default; }
+    .loyalty-note { margin-top:8px; font-size:10px; color:var(--espresso); opacity:.62; text-align:center; }
+
+    .cosmetic-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .cosmetic-option { border:2px solid rgba(122,63,37,.15); background:white; border-radius:16px; padding:12px; text-align:center; cursor:pointer; font:700 12px 'DM Sans',sans-serif; color:var(--espresso); }
+    .cosmetic-option.selected { border-color:var(--stamp-gold); background:#fff9df; }
+    .cosmetic-option.locked { opacity:.58; cursor:default; }
+    .cosmetic-preview { height:105px; display:flex; align-items:center; justify-content:center; margin-bottom:7px; }
+    .cosmetic-preview svg { width:86px; height:104px; }
+
+    /* Green coffee beans reward animation */
+    .bean-rain {
+      position:fixed;
+      inset:0;
+      z-index:100000;
+      pointer-events:none;
+      overflow:hidden;
+      display:none;
+    }
+    .bean-rain.show { display:block; }
+    .bean-rain-title {
+      position:absolute;
+      left:50%; top:43%;
+      transform:translate(-50%,-50%);
+      width:min(88vw,420px);
+      text-align:center;
+      font-family:'Playfair Display',serif;
+      color:#2f6d3d;
+      font-size:30px;
+      font-weight:700;
+      text-shadow:0 2px 0 white,0 8px 24px rgba(0,0,0,.15);
+      animation:beanRewardPop 2.8s ease forwards;
+    }
+    .falling-bean { position:absolute; top:-60px; width:30px; height:42px; border-radius:48% 52% 50% 50%; background:#67a951; border:2px solid #2f6d3d; transform:rotate(28deg); animation:greenBeanFall 2.7s linear forwards; box-shadow:inset -5px -3px 0 rgba(33,92,44,.18); }
+    .falling-bean::after { content:''; position:absolute; left:13px; top:4px; width:3px; height:31px; border-radius:99px; background:#d2e7a5; transform:rotate(-8deg); }
+    @keyframes greenBeanFall { 0%{transform:translateY(-80px) rotate(0deg);opacity:0} 10%{opacity:1} 100%{transform:translateY(115vh) rotate(540deg);opacity:1} }
+    @keyframes beanRewardPop { 0%{opacity:0;transform:translate(-50%,-35%) scale(.8)} 18%{opacity:1;transform:translate(-50%,-50%) scale(1.05)} 75%{opacity:1} 100%{opacity:0;transform:translate(-50%,-60%) scale(1)} }
     .desert-night-preview { width:100%; height:100%; background:linear-gradient(#26324c 0 62%,#c87942 62% 75%,#e7c18f 75%); position:relative; }
     .desert-night-preview::before { content:'✦  ✧    ✦'; position:absolute; top:16px; left:20px; color:#fff7d4; letter-spacing:16px; }
     .desert-night-preview::after { content:'🌵'; position:absolute; bottom:8px; right:20px; font-size:44px; }
@@ -1930,6 +2024,10 @@
       <div class="menu-tags" id="sheet-menu"></div>
       <div class="sheet-section-title">Horarios</div>
       <div id="sheet-hours"></div>
+      <div class="loyalty-wrap" id="loyalty-wrap">
+        <div class="loyalty-mini-label">Beneficio exclusivo</div>
+        <div id="loyalty-card-content"></div>
+      </div>
       <button class="checkin-btn" id="checkin-btn" onclick="doCheckin()">Registrar Visita ☕</button>
     </div>
   </div>
@@ -1992,6 +2090,7 @@
       </div>
       <div class="editor-tabs">
         <button class="editor-tab active" onclick="openEditorTab('character', this)">Personaje</button>
+        <button class="editor-tab" onclick="openEditorTab('cosmetics', this)">Cosméticos</button>
         <button class="editor-tab" onclick="openEditorTab('pets', this)">Mascotas</button>
       </div>
       <div class="editor-panel active" id="editor-panel-character">
@@ -2003,6 +2102,9 @@
           </label>
         </div>
         <div class="avatar-grid" id="avatar-grid"></div>
+      </div>
+      <div class="editor-panel" id="editor-panel-cosmetics">
+        <div class="cosmetic-grid" id="cosmetic-grid"></div>
       </div>
       <div class="editor-panel" id="editor-panel-pets">
         <div class="pet-grid" id="pet-grid"></div>
@@ -2057,6 +2159,9 @@
       <div class="store-note">Prototipo: los artículos se desbloquean sin realizar un cobro real.</div>
     </div>
   </div>
+
+  <!-- GREEN BEAN REWARD ANIMATION -->
+  <div class="bean-rain" id="bean-rain"><div class="bean-rain-title">¡6 visitas!<br><span style="font-size:18px;">Café con 50 % de descuento desbloqueado</span></div></div>
 
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
@@ -2245,7 +2350,9 @@
           if (window.updateStampAnimationSummary) window.updateStampAnimationSummary();
           renderPassportBackground();
           if (window.handleVisitedUpdateForAnimation) window.handleVisitedUpdateForAnimation(previousVisited, visited);
+          if (window.handleLoyaltyUpdate) window.handleLoyaltyUpdate(previousVisited, visited);
           refreshMarkers();
+          if (currentCafe && currentCafe.name === 'Ágape Café' && document.getElementById('overlay').classList.contains('open')) renderAgapeLoyaltyCard();
           const activePage = document.querySelector('.nav-tab.active');
           if (activePage && activePage.textContent === 'Mi Pasaporte') renderPassport();
         }
@@ -2392,6 +2499,28 @@
       return 'created';
     };
 
+    window.createLoyaltyRequest = async function(cafe, currentCount) {
+      if (!CONFIGURED || !currentUser) throw new Error('Necesitas iniciar sesión.');
+      if (!cafe || cafe.name !== 'Ágape Café') throw new Error('Esta tarjeta solo está disponible en Ágape Café.');
+      if (Number(currentCount) >= 6) throw new Error('Ya completaste tu tarjeta de lealtad.');
+      const requestId = `${currentUser.uid}_${safeFbKey(cafe.name)}_loyalty_${Date.now()}`;
+      const rawVisit = visited[cafe.name];
+      const baseVisit = rawVisit && typeof rawVisit === 'object'
+        ? { ...rawVisit }
+        : { timestamp: rawVisit || new Date().toISOString(), label: typeof rawVisit === 'string' ? rawVisit : '' };
+      await setDoc(doc(db, 'checkinRequests', requestId), {
+        requestType:'loyalty',
+        cafeName:cafe.name, ownerEmail:(cafe.ownerEmail||'').toLowerCase(),
+        requesterUid:currentUser.uid, requesterEmail:currentUser.email||'',
+        requesterName:window.currentDisplayName||currentUser.displayName||'Usuario',
+        username:(profile&&profile.username)||window.currentDisplayName||currentUser.displayName||'Usuario',
+        requesterAge:Number(profile&&profile.age)||null, requesterGender:(profile&&profile.gender)||'',
+        requestedLoyaltyVisit:Number(currentCount)+1, baseVisit, status:'pending', requestedAt:new Date().toISOString()
+      });
+      await updateDoc(doc(db,'users',currentUser.uid), { [`visited.${safeFbKey(cafe.name)}`]: { ...baseVisit, loyaltyPending:true } });
+      return 'created';
+    };
+
     window.setupOwnerInbox = function() {
       const email = (window.currentUserEmail || '').toLowerCase();
       const ownerCafe = cafes.find(c => (c.ownerEmail || '').toLowerCase() === email);
@@ -2426,9 +2555,25 @@
       const ownerEmail = (window.currentUserEmail || '').toLowerCase();
       if (ownerEmail !== (req.ownerEmail || '').toLowerCase()) return;
       try {
-        if (accepted) {
+        if (req.requestType === 'loyalty') {
+          const safeCafe = safeFbKey(req.cafeName);
+          if (accepted) {
+            const previousApproved = ownerRequestHistory.filter(r =>
+              r.id !== requestId && r.status === 'approved' && r.requestType === 'loyalty' &&
+              r.requesterUid === req.requesterUid && r.cafeName === req.cafeName
+            ).length;
+            const nextCount = Math.min(6, previousApproved + 1);
+            const baseVisit = req.baseVisit && typeof req.baseVisit === 'object' ? req.baseVisit : {};
+            await updateDoc(doc(db, 'users', req.requesterUid), {
+              [`visited.${safeCafe}`]: { ...baseVisit, loyaltyCount:nextCount, loyaltyPending:false, loyaltyUpdatedAt:new Date().toISOString() }
+            });
+          } else {
+            const baseVisit = req.baseVisit && typeof req.baseVisit === 'object' ? req.baseVisit : {};
+            await updateDoc(doc(db, 'users', req.requesterUid), { [`visited.${safeCafe}`]: { ...baseVisit, loyaltyPending:false } });
+          }
+        } else if (accepted) {
           const now = new Date();
-          const visitData = { timestamp: now.toISOString(), label: now.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' }) };
+          const visitData = { timestamp: now.toISOString(), label: now.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' }), loyaltyCount:0, loyaltyPending:false };
           await updateDoc(doc(db, 'users', req.requesterUid), { [`visited.${safeFbKey(req.cafeName)}`]: visitData });
         }
         await updateDoc(doc(db, 'checkinRequests', requestId), {
@@ -2910,7 +3055,16 @@
       const showCrown = allowFounderCrown && window.currentUserEmail === FOUNDER_EMAIL && selectedFounderCrown;
       const scarfLayer = cosmetic === 'scarf_red' ? '<g transform="translate(24 61)"><path d="M3 6 Q19 17 38 5 L34 18 Q19 25 7 18 Z" fill="#b94335" stroke="#7a261f" stroke-width="1.5"/><path d="M29 15 L40 32 L28 28 Z" fill="#a33429"/></g>' : '';
       const petLayer = pet === 'coffee_bean_dog' ? `<g transform="translate(-2 66) scale(.48)">${coffeeBeanDogSvg().replace(/<svg[^>]*>|<\/svg>/g,'')}</g>` : '';
-      const capLayer = cap ? '<g><path d="M24 29 Q45 7 67 29 L64 36 H27 Z" fill="#71695e" stroke="#4b443c" stroke-width="1.5"/><path d="M59 31 Q76 29 81 36 Q69 41 58 37 Z" fill="#71695e" stroke="#4b443c" stroke-width="1.5"/></g>' : '';
+      const agapeCapLayer = cosmetic === 'agape_cap' ? `<g>
+        <path d="M23 29 Q45 6 68 29 L65 37 H27 Z" fill="#f3efe4" stroke="#315f38" stroke-width="1.7"/>
+        <path d="M59 31 Q77 29 82 36 Q69 42 58 37 Z" fill="#f3efe4" stroke="#315f38" stroke-width="1.7"/>
+        <g transform="translate(40 18) scale(.34)">
+          <ellipse cx="-8" cy="5" rx="10" ry="16" fill="#65a94f" transform="rotate(-38 -8 5)"/>
+          <ellipse cx="8" cy="5" rx="10" ry="16" fill="#65a94f" transform="rotate(38 8 5)"/>
+          <path d="M-13 -6 Q-5 5 -3 17 M13 -6 Q5 5 3 17" fill="none" stroke="#dcecc2" stroke-width="2"/>
+        </g>
+      </g>` : '';
+      const capLayer = cosmetic === 'agape_cap' ? agapeCapLayer : (cap ? '<g><path d="M24 29 Q45 7 67 29 L64 36 H27 Z" fill="#71695e" stroke="#4b443c" stroke-width="1.5"/><path d="M59 31 Q76 29 81 36 Q69 41 58 37 Z" fill="#71695e" stroke="#4b443c" stroke-width="1.5"/></g>' : '');
       const crownLayer = showCrown ? `
         <g transform="translate(20 -1)">
           <path d="M4 27 L1 9 L14 18 L25 3 L36 18 L49 9 L46 27 Z" fill="#d6a928" stroke="#7a3f25" stroke-width="2" stroke-linejoin="round"/>
@@ -3047,6 +3201,31 @@
         </button>`).join('');
     }
 
+    function agapeVisitData() {
+      const v = visited['Ágape Café'];
+      return (v && typeof v === 'object') ? v : {};
+    }
+    function agapeLoyaltyCount() { return Math.max(0, Math.min(6, Number(agapeVisitData().loyaltyCount) || 0)); }
+    function agapeCapUnlocked() { return agapeLoyaltyCount() >= 3; }
+
+    function renderCosmeticGrid() {
+      const grid=document.getElementById('cosmetic-grid'); if(!grid) return;
+      const unlocked=agapeCapUnlocked();
+      grid.innerHTML=`
+        <button class="cosmetic-option ${equippedCosmetic===''?'selected':''}" onclick="selectCosmetic('')"><div class="cosmetic-preview" style="font-size:34px;opacity:.5;">—</div>Sin cosmético</button>
+        ${ownedStoreItems.scarf_red ? `<button class="cosmetic-option ${equippedCosmetic==='scarf_red'?'selected':''}" onclick="selectCosmetic('scarf_red')"><div class="cosmetic-preview">${avatarSvg('classic',false,false,{cosmetic:'scarf_red',pet:''})}</div>Pañuelo Cafetero</button>` : ''}
+        <button class="cosmetic-option ${equippedCosmetic==='agape_cap'?'selected':''} ${unlocked?'':'locked'}" onclick="${unlocked?"selectCosmetic('agape_cap')":"void(0)"}"><div class="cosmetic-preview">${avatarSvg('classic',false,false,{cosmetic:'agape_cap',pet:''})}</div>Gorra Ágape${unlocked?'':' · 3 visitas'}</button>`;
+    }
+    async function selectCosmetic(id) {
+      if(id==='agape_cap' && !agapeCapUnlocked()) return;
+      if(id==='scarf_red' && !ownedStoreItems.scarf_red) return;
+      equippedCosmetic=id;
+      if(window.saveStoreCustomization) await window.saveStoreCustomization();
+      renderCosmeticGrid(); renderPassportCharacter(); renderAccountCharacter();
+      showToast(id?'Cosmético equipado ✓':'Cosmético retirado');
+    }
+    window.selectCosmetic=selectCosmetic;
+
     function renderPetGrid() {
       const grid=document.getElementById('pet-grid'); if(!grid) return;
       const owned=!!ownedStoreItems.coffee_bean_dog;
@@ -3059,6 +3238,7 @@
       document.querySelectorAll('.editor-panel').forEach(p=>p.classList.remove('active'));
       document.getElementById('editor-panel-'+tab).classList.add('active');
       if(tab==='pets') renderPetGrid();
+      if(tab==='cosmetics') renderCosmeticGrid();
     }
     async function selectPet(id) { if(id && !ownedStoreItems[id]) return; selectedPet=id; if(window.saveStoreCustomization) await window.saveStoreCustomization(); renderPetGrid(); renderPassportCharacter(); showToast(id?'Mascota equipada 🐾':'Mascota retirada'); }
     function openStoreFromPets(){ closeAvatarModal(); activeStoreCategory='pets'; openStore(); }
@@ -3068,9 +3248,10 @@
       const isFounder = window.currentUserEmail === FOUNDER_EMAIL;
       document.getElementById('founder-toggle').classList.toggle('show', isFounder);
       document.getElementById('founder-crown-toggle').checked = isFounder && selectedFounderCrown;
-      renderAvatarGrid(); renderPetGrid();
+      renderAvatarGrid(); renderPetGrid(); renderCosmeticGrid();
       document.querySelectorAll('.editor-tab').forEach((b,i)=>b.classList.toggle('active',i===0));
       document.getElementById('editor-panel-character').classList.add('active');
+      document.getElementById('editor-panel-cosmetics').classList.remove('active');
       document.getElementById('editor-panel-pets').classList.remove('active');
       document.getElementById('avatar-overlay').classList.add('open');
     }
@@ -3113,7 +3294,7 @@
         <div class="request-card">
           <div class="request-user">@${r.username || r.requesterName || 'Usuario'}</div>
           <div class="request-meta">${r.requesterEmail || ''}</div>
-          <div class="request-meta">Solicita sello de ${r.cafeName}</div>
+          <div class="request-meta">${r.requestType === 'loyalty' ? `Solicita visita ${r.requestedLoyaltyVisit || ''} de la tarjeta de lealtad` : `Solicita sello de ${r.cafeName}`}</div>
           <div class="request-actions">
             <button class="request-action reject" onclick="respondCheckinRequest('${r.id}', false)">Rechazar</button>
             <button class="request-action accept" onclick="respondCheckinRequest('${r.id}', true)">Aceptar</button>
@@ -3161,7 +3342,7 @@
 
     function renderOwnerDashboard() {
       if (!currentOwnerCafe) return;
-      const approved = ownerRequestHistory.filter(r => r.status === 'approved');
+      const approved = ownerRequestHistory.filter(r => r.status === 'approved' && r.requestType !== 'loyalty');
       const unique = new Set(approved.map(r => r.requesterUid || r.requesterEmail)).size;
       const buckets = {'<18':0,'18–24':0,'25–34':0,'35–44':0,'45+':0,'Sin dato':0};
       approved.forEach(r => buckets[ageBucket(r.requesterAge)]++);
@@ -3177,7 +3358,7 @@
       const pendingTarget = document.getElementById('owner-dashboard-requests');
       pendingTarget.innerHTML = ownerRequests.length ? `<div class="request-list">${ownerRequests.map(r => `
         <div class="request-card"><div class="request-user">@${r.username || r.requesterName || 'Usuario'}</div>
-        <div class="request-meta">${r.requesterAge ? r.requesterAge + ' años' : 'Edad no disponible'} · ${r.requesterGender || 'Sin género registrado'}</div>
+        <div class="request-meta">${r.requestType === 'loyalty' ? `Tarjeta de lealtad · visita ${r.requestedLoyaltyVisit || ''}` : `${r.requesterAge ? r.requesterAge + ' años' : 'Edad no disponible'} · ${r.requesterGender || 'Sin género registrado'}`}</div>
         <div class="request-actions"><button class="request-action reject" onclick="respondCheckinRequest('${r.id}', false)">Rechazar</button><button class="request-action accept" onclick="respondCheckinRequest('${r.id}', true)">Aceptar</button></div></div>`).join('')}</div>` : '<div class="owner-empty-dashboard">No tienes solicitudes pendientes.</div>';
       const recent = [...approved].sort((a,b)=>String(b.resolvedAt||'').localeCompare(String(a.resolvedAt||''))).slice(0,6);
       document.getElementById('owner-recent-visits').innerHTML = recent.length ? recent.map(r => `<div class="recent-item"><div class="recent-name">${r.requesterName || r.username || 'Usuario'}</div><div class="recent-meta">${r.requesterAge ? r.requesterAge+' años · ' : ''}${r.resolvedAt ? new Date(r.resolvedAt).toLocaleDateString('es-MX') : ''}</div></div>`).join('') : '<div class="owner-empty-dashboard">Todavía no hay visitas aprobadas.</div>';
@@ -3472,6 +3653,50 @@
       });
     }
 
+    function agapeLogoSvg() {
+      return `<svg class="agape-heart-logo" viewBox="0 0 64 54" xmlns="http://www.w3.org/2000/svg"><ellipse cx="22" cy="27" rx="14" ry="21" fill="#66a950" transform="rotate(-38 22 27)"/><ellipse cx="42" cy="27" rx="14" ry="21" fill="#66a950" transform="rotate(38 42 27)"/><path d="M15 12 Q27 27 25 44 M49 12 Q37 27 39 44" fill="none" stroke="#dcecc2" stroke-width="3" stroke-linecap="round"/></svg>`;
+    }
+    function renderAgapeLoyaltyCard() {
+      const wrap=document.getElementById('loyalty-wrap'); const target=document.getElementById('loyalty-card-content');
+      if(!wrap||!target) return;
+      const hasSeal=!!visited['Ágape Café'];
+      if(!currentCafe || currentCafe.name!=='Ágape Café' || !hasSeal){ wrap.classList.remove('show'); target.innerHTML=''; return; }
+      const data=agapeVisitData(), count=agapeLoyaltyCount(), pending=!!data.loyaltyPending;
+      const dots=Array.from({length:6},(_,i)=>`<div class="loyalty-dot ${i<count?'done':''} ${(i===2||i===5)?'reward':''}">${i<count?'✓':i+1}</div>`).join('');
+      target.innerHTML=`<div class="loyalty-card">
+        <div class="loyalty-head"><div class="loyalty-brand">${agapeLogoSvg()}<div><div class="loyalty-title">Ágape Café</div><div style="font-size:10px;color:var(--espresso);opacity:.62;">Tarjeta de lealtad</div></div></div><div class="loyalty-count">${count}/6</div></div>
+        <div class="loyalty-stamps">${dots}</div>
+        <div class="loyalty-rewards">
+          <div class="loyalty-reward ${count>=3?'unlocked':''}">🧢 3 visitas · Gorra Ágape ${count>=3?'desbloqueada':'bloqueada'}</div>
+          <div class="loyalty-reward ${count>=6?'unlocked':''}">☕ 6 visitas · Café con 50 % de descuento ${count>=6?'desbloqueado':'bloqueado'}</div>
+        </div>
+        <button class="loyalty-request-btn" ${pending||count>=6?'disabled':''} onclick="requestAgapeLoyaltyVisit()">${count>=6?'Tarjeta completada ✓':pending?'Solicitud pendiente…':'Solicitar visita de lealtad'}</button>
+        <div class="loyalty-note">El owner de Ágape debe aceptar cada visita.</div>
+      </div>`;
+    }
+    async function requestAgapeLoyaltyVisit(){
+      if(!currentCafe || currentCafe.name!=='Ágape Café') return;
+      const count=agapeLoyaltyCount();
+      try{ await window.createLoyaltyRequest(currentCafe,count); renderAgapeLoyaltyCard(); showToast('Solicitud de lealtad enviada ✓'); }
+      catch(e){ console.error(e); showToast(e.message||'No se pudo enviar la solicitud'); }
+    }
+    window.requestAgapeLoyaltyVisit=requestAgapeLoyaltyVisit;
+    window.renderAgapeLoyaltyCard=renderAgapeLoyaltyCard;
+
+    function playGreenBeanReward(){
+      const rain=document.getElementById('bean-rain'); if(!rain) return;
+      rain.querySelectorAll('.falling-bean').forEach(x=>x.remove());
+      for(let i=0;i<28;i++){ const b=document.createElement('div'); b.className='falling-bean'; b.style.left=(Math.random()*96)+'%'; b.style.animationDelay=(Math.random()*.8)+'s'; b.style.animationDuration=(2.1+Math.random()*1.2)+'s'; b.style.transform=`scale(${.65+Math.random()*.7}) rotate(${Math.random()*180}deg)`; rain.appendChild(b); }
+      rain.classList.add('show'); setTimeout(()=>rain.classList.remove('show'),3600);
+    }
+    function handleLoyaltyUpdate(previousVisited,nextVisited){
+      const prev=Number(previousVisited?.['Ágape Café']?.loyaltyCount)||0;
+      const next=Number(nextVisited?.['Ágape Café']?.loyaltyCount)||0;
+      if(prev<3 && next>=3){ showToast('¡Gorra Ágape desbloqueada! 🧢'); renderCosmeticGrid(); }
+      if(prev<6 && next>=6) playGreenBeanReward();
+    }
+    window.handleLoyaltyUpdate=handleLoyaltyUpdate;
+
     // ──────────────────────────────────────────────
     // CAFE DETAIL SHEET
     // ──────────────────────────────────────────────
@@ -3505,6 +3730,7 @@
         btn.textContent = 'Registrar Visita ☕';
         btn.className = 'checkin-btn unstamped';
       }
+      renderAgapeLoyaltyCard();
 
       document.getElementById('overlay').classList.add('open');
     };

@@ -1709,7 +1709,7 @@
     const CONFIGURED = !FIREBASE_CONFIG.apiKey.startsWith("TU_");
 
     import { initializeApp }                      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut as fbSignOut }
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, addDoc, query, where, deleteDoc }
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -1721,26 +1721,6 @@
       auth     = getAuth(app);
       db       = getFirestore(app);
       provider = new GoogleAuthProvider();
-
-      // Completa el inicio de sesión cuando el usuario regresa de Google en celular.
-      getRedirectResult(auth).catch(e => {
-        console.error('Error al regresar de Google:', e);
-        const loginBtn = document.getElementById('google-login-btn');
-        const loading = document.getElementById('auth-loading');
-        if (loginBtn) loginBtn.style.display = 'flex';
-        if (loading) loading.classList.remove('show');
-
-        let message = 'No se pudo completar el inicio de sesión.';
-        if (e?.code === 'auth/unauthorized-domain') {
-          message = 'Este dominio no está autorizado en Firebase Authentication.';
-        } else if (e?.code === 'auth/network-request-failed') {
-          message = 'No se pudo conectar con Firebase. Revisa tu conexión.';
-        }
-        setTimeout(() => {
-          showToast(message);
-          alert(message + (e?.code ? `\n\nCódigo: ${e.code}` : ''));
-        }, 100);
-      });
     } else {
       // Not configured — show notice and fallback to localStorage
       document.getElementById('config-notice').classList.add('show');
@@ -1751,40 +1731,15 @@
     // ── Sign in ──
     window.signInWithGoogle = async function() {
       if (!CONFIGURED) { document.getElementById('auth-screen').classList.add('hidden'); return; }
-
-      const loginBtn = document.getElementById('google-login-btn');
-      const loading = document.getElementById('auth-loading');
-      loginBtn.style.display = 'none';
-      loading.classList.add('show');
-
+      document.getElementById('google-login-btn').style.display = 'none';
+      document.getElementById('auth-loading').classList.add('show');
       try {
-        const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-
-        if (isMobile) {
-          // En celular, la redirección es más confiable que una ventana emergente.
-          await signInWithRedirect(auth, provider);
-          return;
-        }
-
         await signInWithPopup(auth, provider);
       } catch (e) {
-        console.error('Error de inicio de sesión:', e);
-        loginBtn.style.display = 'flex';
-        loading.classList.remove('show');
-
-        let message = 'No se pudo iniciar sesión. Intenta nuevamente.';
-        if (e?.code === 'auth/unauthorized-domain') {
-          message = 'Este dominio no está autorizado en Firebase Authentication.';
-        } else if (e?.code === 'auth/popup-blocked') {
-          message = 'El navegador bloqueó la ventana de Google. Permite ventanas emergentes o usa otro navegador.';
-        } else if (e?.code === 'auth/network-request-failed') {
-          message = 'No se pudo conectar con Firebase. Revisa tu conexión a internet.';
-        } else if (e?.code === 'auth/operation-not-supported-in-this-environment') {
-          message = 'Abre la página desde un sitio web HTTPS, no como archivo local.';
-        }
-
-        showToast(message);
-        alert(message + (e?.code ? `\n\nCódigo: ${e.code}` : ''));
+        console.error(e);
+        document.getElementById('google-login-btn').style.display = 'flex';
+        document.getElementById('auth-loading').classList.remove('show');
+        showToast('Error al iniciar sesión. Intenta de nuevo.');
       }
     };
 

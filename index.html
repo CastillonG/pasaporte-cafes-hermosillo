@@ -582,13 +582,7 @@
     .medals-btn:hover { background: var(--warm); transform: translateY(-1px); }
     .medals-btn-icon { font-size: 23px; }
 
-    .stamp-animation-current {
-      font-size: 12px;
-      color: var(--espresso);
-      opacity: .7;
-      margin-top: -4px;
-      text-align: center;
-    }
+    .stamp-animation-current { display:none; }
 
     .animation-options-grid {
       display: grid;
@@ -670,89 +664,91 @@
       position: fixed;
       inset: 0;
       z-index: 99999;
-      background: rgba(62,31,14,.35);
-      backdrop-filter: blur(5px);
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 10px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .25s ease;
+      transition: opacity .2s ease;
     }
     .stamp-celebration.show { opacity: 1; pointer-events: all; }
     .stamp-celebration-card {
-      width: min(92vw, 360px);
-      background: var(--foam);
-      border-radius: 26px;
-      padding: 24px 22px 22px;
+      width: min(98vw, 520px);
+      background: transparent;
+      border: 0;
+      padding: 0;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(62,31,14,.28);
-      transform: translateY(10px) scale(.97);
-      transition: transform .25s ease;
+      box-shadow: none;
+      transform: scale(.92);
+      transition: transform .22s ease;
     }
-    .stamp-celebration.show .stamp-celebration-card { transform: translateY(0) scale(1); }
+    .stamp-celebration.show .stamp-celebration-card { transform: scale(1); }
     .stamp-celebration-title {
       font-family: 'Playfair Display', serif;
       color: var(--dark);
-      font-size: 24px;
+      font-size: clamp(30px, 8vw, 46px);
+      text-shadow: 0 2px 12px rgba(253,246,237,.95), 0 1px 2px rgba(62,31,14,.16);
     }
     .stamp-celebration-subtitle {
-      margin-top: 6px;
+      margin-top: 5px;
       color: var(--espresso);
-      opacity: .72;
-      font-size: 13px;
+      font-size: clamp(15px, 4vw, 20px);
+      font-weight: 800;
+      text-shadow: 0 2px 10px rgba(253,246,237,.98);
     }
     .cup-fill-stage {
       position: relative;
-      width: 160px;
-      height: 170px;
-      margin: 18px auto 8px;
+      width: 300px;
+      height: 330px;
+      margin: 4px auto 0;
+      filter: drop-shadow(0 12px 18px rgba(62,31,14,.22));
     }
     .cup-fill-drop {
       position:absolute;
       left:50%;
-      top:6px;
-      width: 14px;
-      height: 32px;
-      margin-left:-7px;
+      top:0;
+      width: 24px;
+      height: 66px;
+      margin-left:-12px;
       border-radius: 999px;
       background: linear-gradient(180deg, #b57044, #7a3f25);
       opacity: 0;
-      transform: translateY(-8px) scaleY(.4);
+      transform: translateY(-12px) scaleY(.35);
     }
     .cup-fill-cup {
       position:absolute;
       left:50%;
-      bottom:18px;
-      width: 92px;
-      height: 78px;
-      margin-left:-46px;
-      border: 4px solid var(--espresso);
+      bottom:38px;
+      width: 178px;
+      height: 150px;
+      margin-left:-89px;
+      border: 7px solid var(--espresso);
       border-top: 0;
-      border-radius: 0 0 22px 22px;
-      background: white;
+      border-radius: 0 0 40px 40px;
+      background: rgba(255,255,255,.94);
       overflow: hidden;
-      box-shadow: inset 0 -2px 0 rgba(122,63,37,.08);
+      box-shadow: inset 0 -3px 0 rgba(122,63,37,.08);
     }
     .cup-fill-cup::before {
       content:'';
       position:absolute;
-      inset:-6px -4px auto -4px;
-      height: 10px;
+      inset:-10px -7px auto -7px;
+      height: 18px;
       border-radius: 999px;
       background: var(--espresso);
     }
     .cup-fill-handle {
       position:absolute;
       left:50%;
-      bottom:36px;
-      width: 24px;
-      height: 30px;
-      margin-left: 46px;
-      border: 4px solid var(--espresso);
+      bottom:72px;
+      width: 47px;
+      height: 58px;
+      margin-left: 89px;
+      border: 7px solid var(--espresso);
       border-left: 0;
-      border-radius: 0 15px 15px 0;
+      border-radius: 0 28px 28px 0;
     }
     .cup-fill-liquid {
       position:absolute;
@@ -764,52 +760,45 @@
     }
     .cup-fill-foam {
       position:absolute;
-      left:-4px;
-      right:-4px;
-      top:-6px;
-      height: 12px;
+      left:-5px;
+      right:-5px;
+      top:-8px;
+      height: 20px;
       border-radius: 999px;
-      background: rgba(255,245,235,.9);
-      opacity: .95;
+      background: rgba(255,245,235,.94);
     }
     .cup-fill-saucer {
       position:absolute;
       left:50%;
-      bottom:6px;
-      width: 126px;
-      height: 16px;
-      margin-left:-63px;
+      bottom:12px;
+      width: 246px;
+      height: 28px;
+      margin-left:-123px;
       border-radius: 999px;
-      background: #e8d8c6;
-      border: 2px solid rgba(122,63,37,.16);
+      background: rgba(232,216,198,.96);
+      border: 3px solid rgba(122,63,37,.18);
     }
     .cup-fill-steam {
       position:absolute;
-      bottom: 104px;
-      width: 16px;
-      height: 42px;
-      border: 3px solid rgba(122,63,37,.28);
-      border-color: rgba(122,63,37,.28) transparent transparent transparent;
+      bottom: 205px;
+      width: 28px;
+      height: 76px;
+      border: 5px solid rgba(122,63,37,.35);
+      border-color: rgba(122,63,37,.35) transparent transparent transparent;
       border-radius: 50%;
       opacity: 0;
     }
-    .cup-fill-steam.s1 { left: 47px; transform: rotate(-10deg); }
-    .cup-fill-steam.s2 { left: 72px; height:50px; }
-    .cup-fill-steam.s3 { left: 98px; transform: rotate(12deg); }
+    .cup-fill-steam.s1 { left: 88px; transform: rotate(-10deg); }
+    .cup-fill-steam.s2 { left: 136px; height:90px; }
+    .cup-fill-steam.s3 { left: 185px; transform: rotate(12deg); }
 
-    .cup-fill-stage.play .cup-fill-drop {
-      animation: dropPour .55s ease forwards;
-    }
-    .cup-fill-stage.play .cup-fill-liquid {
-      animation: cupFillUp 1.35s ease .3s forwards;
-    }
-    .cup-fill-stage.play .cup-fill-steam {
-      animation: steamRise 1.1s ease 1.15s forwards;
-    }
+    .cup-fill-stage.play .cup-fill-drop { animation: dropPour .55s ease forwards; }
+    .cup-fill-stage.play .cup-fill-liquid { animation: cupFillUp 1.35s ease .3s forwards; }
+    .cup-fill-stage.play .cup-fill-steam { animation: steamRise 1.1s ease 1.15s forwards; }
     @keyframes dropPour {
       0% { opacity:0; transform: translateY(-8px) scaleY(.4); }
       20% { opacity:1; }
-      100% { opacity:1; transform: translateY(58px) scaleY(1); }
+      100% { opacity:1; transform: translateY(116px) scaleY(1); }
     }
     @keyframes cupFillUp {
       0% { height: 0%; }
@@ -1198,7 +1187,7 @@
       background: linear-gradient(135deg, var(--foam), var(--warm));
       border: 2px solid var(--espresso);
       border-radius: 18px;
-      padding: 18px;
+      padding: 18px 18px 62px;
       margin-bottom: 18px;
       position: relative;
       overflow: hidden;
@@ -1232,6 +1221,28 @@
   background-size: 72px 72px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%237a3f25' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 24h26v17c0 7-5 12-12 12h-2c-7 0-12-5-12-12z'/%3E%3Cpath d='M41 29h5c7 0 7 11 0 11h-5'/%3E%3Cpath d='M20 18c-3-4 3-6 0-10M28 18c-3-4 3-6 0-10M36 18c-3-4 3-6 0-10'/%3E%3Cpath d='M12 54h35'/%3E%3C/g%3E%3C/svg%3E");
 }
+
+    .passport-effects-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      z-index: 3;
+      border: 1.5px solid rgba(122,63,37,.24);
+      background: rgba(253,246,237,.9);
+      color: var(--espresso);
+      border-radius: 999px;
+      padding: 7px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 3px 9px rgba(62,31,14,.1);
+    }
+    .passport-effects-btn:hover { background: white; transform: translateY(-1px); }
 
     .passport-bg-btn {
       position: absolute;
@@ -1734,6 +1745,7 @@
       </div>
       <div class="owner-badge" id="owner-badge">Owner de Ágape Café</div>
       <div class="id-card-mrz" id="id-mrz">P&lt;HMO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+      <button class="passport-effects-btn" onclick="openStampAnimationModal()" aria-label="Elegir efectos del sello">✨ Efectos</button>
     </div>
 
     <div class="passport-cover">
@@ -1765,11 +1777,6 @@
         <span class="medals-btn-icon">🏅</span>
         <span>Medallas</span>
       </button>
-      <button class="medals-btn" onclick="openStampAnimationModal()">
-        <span class="medals-btn-icon">✨</span>
-        <span>Animación de sello</span>
-      </button>
-      <div class="stamp-animation-current" id="stamp-animation-current">Actual: Taza llenándose</div>
     </div>
     <div class="stamps-section" style="margin-top:24px;">
       <h3>Mis Sellos</h3>
@@ -2534,26 +2541,7 @@
       { name:"PALOMINA COFFEE SHOP", address:"Los Pinitos, Sonora", coords:[29.235063,-110.887409], menu:["Café de Rancho","Atole","Pan Sonorense","Burritos"], hours:{lun:"7–19",mar:"7–19",mie:"7–19",jue:"7–19",vie:"7–20",sab:"8–20",dom:"8–17"} }
     ];
 
-    const MEDALS = [
-      {
-        id: 'expert_2026',
-        title: 'Experto Cafetero 2026',
-        desc: 'Completaste todos los cafés del pasaporte 2026.',
-        icon: '☕'
-      },
-      {
-        id: 'coffee_rush',
-        title: 'Subidón de Café',
-        desc: 'Registraste 5 cafés diferentes durante la misma semana.',
-        icon: '⚡'
-      },
-      {
-        id: 'festival_2026',
-        title: 'Festival del Café 2026',
-        desc: 'Asististe al Festival del Café 2026.',
-        icon: '🎪'
-      }
-    ];
+    const MEDALS = [];
 
   const PASSPORT_BACKGROUNDS = [
   { id:'empty', name:'Vacío', preview:'' },
@@ -2801,54 +2789,16 @@
       return d ? d.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' }) : '';
     }
 
-    function getWeekKey(date) {
-      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-      const day = d.getUTCDay() || 7;
-      d.setUTCDate(d.getUTCDate() + 4 - day);
-      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-      const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-      return `${d.getUTCFullYear()}-W${String(week).padStart(2,'0')}`;
-    }
-
-    function unlockMedal(id, silent = false) {
-      if (medals[id]) return false;
-      const now = new Date();
-      medals[id] = {
-        timestamp: now.toISOString(),
-        label: now.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' })
-      };
-      if (window.saveMedals) window.saveMedals();
-      const medal = MEDALS.find(m => m.id === id);
-      if (!silent && medal) setTimeout(() => showToast('🏅 Nueva medalla: ' + medal.title), 700);
-      return true;
-    }
-
     function evaluateMedals() {
-      if (visitedCount() >= cafes.length) unlockMedal('expert_2026');
-      const weeks = {};
-      Object.values(visited).forEach(v => {
-        const d = getVisitDate(v);
-        if (!d) return;
-        const key = getWeekKey(d);
-        weeks[key] = (weeks[key] || 0) + 1;
-      });
-      if (Object.values(weeks).some(n => n >= 5)) unlockMedal('coffee_rush');
+      // Aún no existen medallas. Se conserva únicamente el formato vacío.
     }
-
-    // Se puede llamar desde el futuro QR/botón del evento: unlockFestivalMedal2026()
-    window.unlockFestivalMedal2026 = function() { unlockMedal('festival_2026'); };
 
     function openMedalsModal() {
       const list = document.getElementById('medals-list');
-      const slots = Array.from({ length: 20 }, (_, i) => {
-        const medal = MEDALS[i];
-        const unlocked = medal && medals[medal.id];
-        if (!unlocked) return `<div class="medal-slot locked" title="Espacio de medalla ${i + 1}"></div>`;
-        return `<div class="medal-slot unlocked" title="${medal.title} — ${medal.desc}">
-          <span class="medal-slot-icon">${medal.icon}</span>
-        </div>`;
-      }).join('');
-      list.innerHTML = `<div class="medals-slots">${slots}</div><div class="medals-help">20 espacios para tus medallas. Las nuevas se irán mostrando aquí.</div>`;
+      const slots = Array.from({ length: 20 }, (_, i) =>
+        `<div class="medal-slot locked" title="Espacio de medalla ${i + 1}"></div>`
+      ).join('');
+      list.innerHTML = `<div class="medals-slots">${slots}</div><div class="medals-help">Aún no hay medallas disponibles.</div>`;
       document.getElementById('medals-overlay').classList.add('open');
     }
     window.openMedalsModal = openMedalsModal;

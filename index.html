@@ -1710,7 +1710,7 @@
     .loyalty-card:hover::after { opacity:1; transform:translateY(0); }
     .loyalty-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
     .loyalty-brand { display:flex; align-items:center; gap:9px; }
-    .agape-heart-logo { width:34px; height:30px; flex-shrink:0; }
+    .agape-heart-logo { width:46px; height:40px; flex-shrink:0; }
     .loyalty-title { font-family:'Playfair Display',serif; font-size:16px; color:var(--dark); }
     .loyalty-count { font-size:12px; font-weight:800; color:var(--green); }
     .loyalty-stamps { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; max-width:270px; margin:0 auto; }
@@ -1750,7 +1750,25 @@
       display:flex; align-items:center; justify-content:center; font-size:13px;
       box-shadow:0 3px 8px rgba(62,31,14,.14); z-index:2;
     }
-    .loyalty-dot.has-reward { margin-top:12px; }
+    .loyalty-dot.has-reward { margin-top:18px; }
+    .loyalty-reward-marker {
+      font-size:22px !important;
+      width:34px; height:34px;
+      display:flex; align-items:center; justify-content:center;
+      top:-27px !important; left:50%; transform:translateX(-50%);
+      filter:grayscale(1); opacity:.42;
+      transition:.25s;
+    }
+    .loyalty-reward-marker.unlocked {
+      filter:none; opacity:1;
+      text-shadow:0 0 10px rgba(201,162,39,.8), 0 2px 0 white;
+      animation:rewardGlow 1.6s ease-in-out infinite alternate;
+    }
+    @keyframes rewardGlow { from{transform:translateX(-50%) scale(1)} to{transform:translateX(-50%) scale(1.12)} }
+    .reward-locked { filter:grayscale(1); opacity:.46; }
+    .reward-unlocked { filter:none; opacity:1; box-shadow:0 0 0 3px rgba(201,162,39,.18),0 7px 18px rgba(201,162,39,.2); }
+    .reward-unlocked .animation-option-icon, .reward-unlocked .cosmetic-preview { filter:none; }
+    .reward-locked .animation-option-icon, .reward-locked .cosmetic-preview { filter:grayscale(1); }
     .loyalty-cycle-note { margin:9px 0 0; text-align:center; font-size:10px; color:var(--espresso); opacity:.68; }
 
     #discounts-overlay { align-items:stretch; padding:0; background:var(--cream); backdrop-filter:none; }
@@ -2248,6 +2266,7 @@
           <span class="settings-slider"></span>
         </label>
       </div>
+      <button class="checkin-btn unstamped" style="max-width:420px;margin:18px auto 0;display:block;" onclick="testNearestCafeNow()">Probar café más cercano ahora</button>
     </div>
   </div>
 
@@ -2409,7 +2428,8 @@
           setupCafeProfilesSync();
           setupOwnerInbox();
           initMap();
-          setTimeout(() => { if (window.maybeShowNearestCafePopup) window.maybeShowNearestCafePopup(); }, 900);
+          setTimeout(() => { if (window.maybeShowNearestCafePopup) window.maybeShowNearestCafePopup(); }, 1200);
+          setTimeout(() => localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now())), 2500);
         } else {
           currentUser = null;
           updateUserUI(null);
@@ -2449,6 +2469,7 @@
         if (window.setSyncDot) window.setSyncDot('synced');
         if (window.handleVisitedUpdateForAnimation) window.handleVisitedUpdateForAnimation({}, visited, true);
         if (window.updateStampAnimationSummary) window.updateStampAnimationSummary();
+        if (window.syncUnlockedRewards) setTimeout(() => window.syncUnlockedRewards(), 350);
         refreshMarkers();
         if (window.checkProfileScreen) window.checkProfileScreen();
       } catch (e) {
@@ -2723,6 +2744,8 @@
               discounts.push({ id:`agape50_${Date.now()}`, cafeName:'Ágape Café', title:'Café con 50 % de descuento', description:'Válido en Ágape Café. Solicita el canje para que el owner lo confirme.', earnedAt:new Date().toISOString(), pending:false });
               updates[`visited.${safeCafe}.loyaltyCount`] = 0;
               updates[`visited.${safeCafe}.loyaltyCycles`] = cycles;
+              updates[`visited.${safeCafe}.lastLoyaltyCompletedAt`] = new Date().toISOString();
+              updates[`visited.${safeCafe}.lastEarnedDiscountId`] = discounts[discounts.length-1].id;
               updates[`visited.${safeCafe}.loyaltyDiscounts`] = discounts;
               if (firstCycle) updates[`visited.${safeCafe}.greenBeanAnimationUnlocked`] = true;
             } else {
@@ -3072,12 +3095,11 @@
     let selectedPet = '';
     let selectedStampStyle = 'coffee';
     let nearestCafeEnabled = true;
-    const NEAREST_INACTIVITY_MS = 7 * 24 * 60 * 60 * 1000;
+    const NEAREST_INACTIVITY_MS = 3 * 24 * 60 * 60 * 1000;
     const LAST_ACTIVE_KEY = 'cafePassportLastActiveAt';
     const previousAppActivity = Number(localStorage.getItem(LAST_ACTIVE_KEY) || 0);
     let shouldOfferNearestCafe = previousAppActivity > 0 && (Date.now() - previousAppActivity) >= NEAREST_INACTIVITY_MS;
     let nearestCafeOfferAttempted = false;
-    localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now()));
     window.addEventListener('pagehide', () => localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now())));
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now()));
@@ -3122,12 +3144,12 @@
       wrap.innerHTML = STAMP_ANIMATIONS.map(item => {
         const unlocked = item.id !== 'green_bean_rain' || !!agapeVisitData().greenBeanAnimationUnlocked;
         const preview = item.preview === 'cup_fill' ? '<div class="mini-cup-preview"></div>' : item.preview === 'green_bean_rain' ? '<span style="font-size:31px;">🫘</span>' : '<span style="font-size:28px;color:var(--espresso);opacity:.7;">—</span>';
-        return `<div class="animation-option ${selectedStampAnimation === item.id ? 'selected' : ''}" style="${unlocked?'':'opacity:.5;cursor:default;'}" onclick="${unlocked?`selectStampAnimation('${item.id}')`:'void(0)'}">
+        return `<div class="animation-option ${selectedStampAnimation === item.id ? 'selected' : ''} ${unlocked?'reward-unlocked':'reward-locked'}" onclick="${unlocked?`selectStampAnimation('${item.id}')`:'void(0)'}">
           <div class="animation-option-icon">${preview}</div>
           <div class="animation-option-info">
             <div class="animation-option-name">${item.name}</div>
             <div class="animation-option-desc">${item.desc}</div>
-            <span class="animation-option-badge">${unlocked?item.badge:'Se desbloquea al completar Ágape'}</span>
+            <span class="animation-option-badge">${unlocked?'Desbloqueada':'Bloqueada · completa 6 visitas en Ágape'}</span>
           </div>
         </div>`;
       }).join('');
@@ -3284,6 +3306,14 @@
     window.closeSettings = closeSettings;
     window.toggleNearestCafeSetting = toggleNearestCafeSetting;
 
+    function testNearestCafeNow() {
+      shouldOfferNearestCafe = true;
+      nearestCafeOfferAttempted = false;
+      closeSettings();
+      maybeShowNearestCafePopup();
+    }
+    window.testNearestCafeNow = testNearestCafeNow;
+
     function distanceKm(lat1, lon1, lat2, lon2) {
       const R = 6371;
       const dLat = (lat2-lat1) * Math.PI/180;
@@ -3295,14 +3325,14 @@
       if (nearestCafeOfferAttempted || !shouldOfferNearestCafe || !nearestCafeEnabled) return;
       nearestCafeOfferAttempted = true;
       shouldOfferNearestCafe = false;
-      if (!navigator.geolocation) return;
+      if (!navigator.geolocation) { showToast('Tu navegador no permite obtener la ubicación'); return; }
       navigator.geolocation.getCurrentPosition(pos => {
         const lat = pos.coords.latitude, lon = pos.coords.longitude;
         const ranked = cafes.map(c => ({ cafe:c, km:distanceKm(lat,lon,c.coords[0],c.coords[1]) })).sort((a,b)=>a.km-b.km);
         if (!ranked.length) return;
         const closest = ranked[0];
         window.openCafeSheet(encodeURIComponent(closest.cafe.name), { nearest:true, distanceKm:closest.km });
-      }, err => { console.warn('Ubicación no disponible para café cercano:', err); }, { enableHighAccuracy:false, timeout:10000, maximumAge:300000 });
+      }, err => { console.warn('Ubicación no disponible para café cercano:', err); showToast('Activa el permiso de ubicación para ver tu café más cercano'); }, { enableHighAccuracy:false, timeout:12000, maximumAge:300000 });
     }
     window.maybeShowNearestCafePopup = maybeShowNearestCafePopup;
 
@@ -3514,7 +3544,7 @@
       grid.innerHTML=`
         <button class="cosmetic-option ${equippedCosmetic===''?'selected':''}" onclick="selectCosmetic('')"><div class="cosmetic-preview" style="font-size:34px;opacity:.5;">—</div>Sin cosmético</button>
         ${ownedStoreItems.scarf_red ? `<button class="cosmetic-option ${equippedCosmetic==='scarf_red'?'selected':''}" onclick="selectCosmetic('scarf_red')"><div class="cosmetic-preview">${avatarSvg('classic',false,false,{cosmetic:'scarf_red',pet:''})}</div>Pañuelo Cafetero</button>` : ''}
-        <button class="cosmetic-option ${equippedCosmetic==='agape_cap'?'selected':''} ${unlocked?'':'locked'}" onclick="${unlocked?"selectCosmetic('agape_cap')":"void(0)"}"><div class="cosmetic-preview">${avatarSvg('classic',false,false,{cosmetic:'agape_cap',pet:''})}</div>Gorra Ágape${unlocked?'':' · 3 visitas'}</button>`;
+        <button class="cosmetic-option ${equippedCosmetic==='agape_cap'?'selected':''} ${unlocked?'reward-unlocked':'reward-locked locked'}" onclick="${unlocked?"selectCosmetic('agape_cap')":"void(0)"}"><div class="cosmetic-preview">${avatarSvg('classic',false,false,{cosmetic:'agape_cap',pet:''})}</div>Gorra Ágape<br><small>${unlocked?'Desbloqueada':'Bloqueada · visita 3'}</small></button>`;
     }
     async function selectCosmetic(id) {
       if(id==='agape_cap' && !agapeCapUnlocked()) return;
@@ -3999,8 +4029,8 @@
       const dots=Array.from({length:6},(_,i)=>{
         const n=i+1;
         let reward='';
-        if(firstCycle && n===3) reward='<span class="loyalty-reward-marker" title="Gorra Ágape: dos granos verdes formando un corazón">🧢</span>';
-        if(n===6) reward=`<span class="loyalty-reward-marker" title="${firstCycle?'Animación de granos verdes y ':''}café con 50 % de descuento">${firstCycle?'🫘':'🏷️'}</span>`;
+        if(firstCycle && n===3) reward=`<span class="loyalty-reward-marker ${data.agapeCapUnlocked?'unlocked':''}" title="Gorra Ágape: dos granos verdes formando un corazón">🧢</span>`;
+        if(n===6) reward=`<span class="loyalty-reward-marker ${(data.greenBeanAnimationUnlocked || cycles>0)?'unlocked':''}" title="${firstCycle?'Animación de granos verdes y ':''}café con 50 % de descuento">${firstCycle?'🫘':'🏷️'}</span>`;
         return `<div class="loyalty-dot ${i<count?'done':''} ${reward?'has-reward':''}" title="${n===3&&firstCycle?'Visita 3: Gorra Ágape':n===6?(firstCycle?'Visita 6: animación de granos verdes + descuento':'Visita 6: café con 50 % de descuento'):''}">${reward}${i<count?'✓':n}</div>`;
       }).join('');
       target.innerHTML=`<div class="loyalty-card">
@@ -4050,15 +4080,30 @@
       setTimeout(showNextRewardPopup,220);
     }
     window.closeRewardPopup=closeRewardPopup;
+    function rewardSeenKey(id){ return `cafeRewardSeen:${window.currentUserEmail||'guest'}:${id}`; }
+    function showPersistentRewardOnce(id, icon, title, desc){
+      if(localStorage.getItem(rewardSeenKey(id))==='1') return;
+      localStorage.setItem(rewardSeenKey(id),'1');
+      showRewardPopup(icon,title,desc);
+    }
+    function syncUnlockedRewards(data=agapeVisitData()){
+      if(data.agapeCapUnlocked) showPersistentRewardOnce('agape_cap','🧢','Gorra Ágape desbloqueada','Ya es parte de tu perfil. Equípala en Editar personaje → Cosméticos.');
+      if(data.greenBeanAnimationUnlocked) showPersistentRewardOnce('green_bean_rain','🫘','Lluvia de granos desbloqueada','Ya es parte de tu perfil. Encuéntrala en Efectos → Animaciones.');
+      renderCosmeticGrid(); renderStampAnimationOptions();
+    }
+    window.syncUnlockedRewards=syncUnlockedRewards;
     function handleLoyaltyUpdate(previousVisited,nextVisited){
       const prevData=getAgapeFromVisitedObject(previousVisited), nextData=getAgapeFromVisitedObject(nextVisited);
       const prev=Number(prevData.loyaltyCount)||0, next=Number(nextData.loyaltyCount)||0;
       const prevCycles=Number(prevData.loyaltyCycles)||0, nextCycles=Number(nextData.loyaltyCycles)||0;
-      renderAgapeLoyaltyCard(); renderDiscounts(); renderStampAnimationOptions();
-      if(!prevData.agapeCapUnlocked && nextData.agapeCapUnlocked){ showRewardPopup('🧢','Gorra Ágape desbloqueada','Ya puedes equiparla en Editar personaje → Cosméticos.'); renderCosmeticGrid(); }
-      if(!prevData.greenBeanAnimationUnlocked && nextData.greenBeanAnimationUnlocked){ showRewardPopup('🫘','Animación desbloqueada','La lluvia de granos verdes ya está disponible en Efectos → Animaciones.'); }
-      if(nextCycles>prevCycles){
-        showRewardPopup('🏷️','Café con 50 % de descuento','Tu descuento ya aparece en el apartado Descuentos del menú.');
+      renderAgapeLoyaltyCard(); renderDiscounts(); syncUnlockedRewards(nextData);
+      if(!prevData.agapeCapUnlocked && nextData.agapeCapUnlocked){ showPersistentRewardOnce('agape_cap','🧢','Gorra Ágape desbloqueada','Ya es parte de tu perfil. Equípala en Editar personaje → Cosméticos.'); }
+      if(!prevData.greenBeanAnimationUnlocked && nextData.greenBeanAnimationUnlocked){ showPersistentRewardOnce('green_bean_rain','🫘','Lluvia de granos desbloqueada','Ya es parte de tu perfil. Encuéntrala en Efectos → Animaciones.'); }
+      const prevDiscountIds=new Set((Array.isArray(prevData.loyaltyDiscounts)?prevData.loyaltyDiscounts:[]).map(d=>d.id));
+      const newDiscount=(Array.isArray(nextData.loyaltyDiscounts)?nextData.loyaltyDiscounts:[]).find(d=>!prevDiscountIds.has(d.id));
+      if(newDiscount || nextCycles>prevCycles){
+        const id=newDiscount?.id || `cycle_${nextCycles}`;
+        showPersistentRewardOnce('discount_'+id,'🏷️','Café con 50 % de descuento','Se guardó en tu cuenta y ya aparece en Descuentos. No desaparecerá hasta que el owner acepte su canje.');
         playGreenBeanReward('¡Tarjeta completada!<br><span style="font-size:18px;">Nuevo descuento desbloqueado</span>');
       }
     }

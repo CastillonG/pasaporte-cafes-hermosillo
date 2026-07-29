@@ -3201,8 +3201,15 @@
         </button>`).join('');
     }
 
+    function findAgapeVisitedEntry() {
+      const exact = visited['Ágape Café'];
+      if (exact) return { key:'Ágape Café', value:exact };
+      const foundKey = Object.keys(visited || {}).find(key => normalize(key) === normalize('Ágape Café'));
+      return foundKey ? { key:foundKey, value:visited[foundKey] } : null;
+    }
     function agapeVisitData() {
-      const v = visited['Ágape Café'];
+      const entry = findAgapeVisitedEntry();
+      const v = entry && entry.value;
       return (v && typeof v === 'object') ? v : {};
     }
     function agapeLoyaltyCount() { return Math.max(0, Math.min(6, Number(agapeVisitData().loyaltyCount) || 0)); }
@@ -3659,8 +3666,10 @@
     function renderAgapeLoyaltyCard() {
       const wrap=document.getElementById('loyalty-wrap'); const target=document.getElementById('loyalty-card-content');
       if(!wrap||!target) return;
-      const hasSeal=!!visited['Ágape Café'];
-      if(!currentCafe || currentCafe.name!=='Ágape Café' || !hasSeal){ wrap.classList.remove('show'); target.innerHTML=''; return; }
+      const hasSeal=!!findAgapeVisitedEntry();
+      if(!currentCafe || normalize(currentCafe.name)!==normalize('Ágape Café') || !hasSeal){ wrap.classList.remove('show'); wrap.style.display='none'; target.innerHTML=''; return; }
+      wrap.classList.add('show');
+      wrap.style.display='block';
       const data=agapeVisitData(), count=agapeLoyaltyCount(), pending=!!data.loyaltyPending;
       const dots=Array.from({length:6},(_,i)=>`<div class="loyalty-dot ${i<count?'done':''} ${(i===2||i===5)?'reward':''}">${i<count?'✓':i+1}</div>`).join('');
       target.innerHTML=`<div class="loyalty-card">
@@ -3730,9 +3739,8 @@
         btn.textContent = 'Registrar Visita ☕';
         btn.className = 'checkin-btn unstamped';
       }
-      renderAgapeLoyaltyCard();
-
       document.getElementById('overlay').classList.add('open');
+      requestAnimationFrame(() => renderAgapeLoyaltyCard());
     };
 
     function closeOverlay() {

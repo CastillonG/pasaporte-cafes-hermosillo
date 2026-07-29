@@ -1749,6 +1749,7 @@
       if (unsubscribeSnapshot) unsubscribeSnapshot();
       if (unsubscribeCafeProfiles) unsubscribeCafeProfiles();
       if (unsubscribeOwnerRequests) unsubscribeOwnerRequests();
+      if (unsubscribeCafeProfiles) unsubscribeCafeProfiles();
       if (CONFIGURED && auth) await fbSignOut(auth);
       else { localStorage.removeItem('cafeVisited'); localStorage.removeItem('cafeMedals'); localStorage.removeItem('cafeAvatar'); localStorage.removeItem('cafePassportBackground'); }
       visited = {};
@@ -1772,6 +1773,7 @@
           document.getElementById('auth-screen').classList.add('hidden');
           await loadUserData(user.uid);
           setupRealtimeSync(user.uid);
+          setupCafeProfilesSync();
           setupOwnerInbox();
           initMap();
         } else {

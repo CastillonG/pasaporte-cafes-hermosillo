@@ -1743,6 +1743,41 @@
     .cosmetic-preview { height:105px; display:flex; align-items:center; justify-content:center; margin-bottom:7px; }
     .cosmetic-preview svg { width:86px; height:104px; }
 
+    .loyalty-reward-marker {
+      position:absolute; left:50%; top:-17px; transform:translateX(-50%);
+      min-width:25px; height:25px; padding:0 5px; border-radius:999px;
+      background:#fff8d7; border:1.5px solid var(--stamp-gold); color:var(--dark);
+      display:flex; align-items:center; justify-content:center; font-size:13px;
+      box-shadow:0 3px 8px rgba(62,31,14,.14); z-index:2;
+    }
+    .loyalty-dot.has-reward { margin-top:12px; }
+    .loyalty-cycle-note { margin:9px 0 0; text-align:center; font-size:10px; color:var(--espresso); opacity:.68; }
+
+    #discounts-overlay { align-items:stretch; padding:0; background:var(--cream); backdrop-filter:none; }
+    #discounts-overlay .cafe-sheet { border-radius:0; max-width:none; width:100%; height:100vh; max-height:none; transform:translateX(100%); padding:24px 18px 40px; }
+    #discounts-overlay.open .cafe-sheet { transform:translateX(0); }
+    .discounts-grid { display:grid; gap:14px; max-width:760px; margin:8px auto; }
+    .discount-card { background:white; border:1.5px solid rgba(122,63,37,.15); border-radius:19px; padding:16px; box-shadow:0 5px 15px rgba(62,31,14,.06); }
+    .discount-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .discount-cafe { font:700 12px 'DM Sans',sans-serif; color:var(--green); text-transform:uppercase; letter-spacing:.7px; }
+    .discount-title { font-family:'Playfair Display',serif; color:var(--dark); font-size:20px; margin-top:3px; }
+    .discount-desc { color:var(--espresso); opacity:.72; font-size:12px; line-height:1.5; margin:8px 0 13px; }
+    .discount-status { font-size:10px; font-weight:800; border-radius:999px; padding:5px 8px; background:#edf5ef; color:var(--green); white-space:nowrap; }
+    .discount-claim { width:100%; border:0; border-radius:12px; padding:12px; background:var(--espresso); color:var(--cream); font:800 13px 'DM Sans',sans-serif; cursor:pointer; }
+    .discount-claim:disabled { background:rgba(122,63,37,.12); color:var(--espresso); cursor:default; }
+    .discount-empty { text-align:center; padding:45px 20px; color:var(--espresso); opacity:.68; }
+
+    .reward-popup { position:fixed; inset:0; z-index:100003; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(62,31,14,.42); backdrop-filter:blur(6px); opacity:0; pointer-events:none; transition:.22s; }
+    .reward-popup.show { opacity:1; pointer-events:all; }
+    .reward-popup-card { position:relative; width:min(92vw,390px); background:var(--foam); border-radius:26px; padding:28px 24px 23px; text-align:center; box-shadow:0 22px 60px rgba(62,31,14,.3); transform:scale(.95) translateY(8px); transition:.22s; }
+    .reward-popup.show .reward-popup-card { transform:scale(1) translateY(0); }
+    .reward-popup-close { position:absolute; right:13px; top:13px; width:32px; height:32px; border-radius:50%; border:0; background:rgba(122,63,37,.1); color:var(--espresso); cursor:pointer; }
+    .reward-popup-icon { font-size:58px; margin-bottom:7px; }
+    .reward-popup-kicker { color:var(--green); font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:1px; }
+    .reward-popup-card h2 { font-family:'Playfair Display',serif; color:var(--dark); font-size:25px; margin-top:5px; }
+    .reward-popup-card p { color:var(--espresso); opacity:.75; font-size:13px; line-height:1.55; margin:9px 0 18px; }
+    .reward-popup-btn { width:100%; border:0; border-radius:13px; padding:13px; background:var(--espresso); color:var(--cream); font:800 13px 'DM Sans',sans-serif; cursor:pointer; }
+
     /* Green coffee beans reward animation */
     .bean-rain {
       position:fixed;
@@ -1915,6 +1950,8 @@
   <!-- MAIN MENU -->
   <div class="main-menu" id="main-menu">
     <button class="main-menu-item" onclick="openSettings()"><span>⚙️</span> Configuraciones</button>
+    <div class="main-menu-separator"></div>
+    <button class="main-menu-item" onclick="openDiscounts()"><span>🏷️</span> Descuentos</button>
     <div class="main-menu-separator"></div>
     <button class="main-menu-item" onclick="openStore()"><span>🛍️</span> Tienda</button>
   </div>
@@ -2214,6 +2251,18 @@
     </div>
   </div>
 
+  <!-- DISCOUNTS -->
+  <div class="overlay" id="discounts-overlay" onclick="closeDiscounts(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div><h2>Mis descuentos</h2><div class="sheet-address" style="margin:5px 0 0;">Beneficios ganados en tarjetas de lealtad.</div></div>
+        <button class="sheet-close" onclick="closeDiscounts()">✕</button>
+      </div>
+      <div id="discounts-list"></div>
+    </div>
+  </div>
+
   <!-- STORE -->
   <div class="overlay" id="store-overlay" onclick="closeStore(event)">
     <div class="cafe-sheet modal-sheet">
@@ -2224,6 +2273,18 @@
       </div>
       <div id="store-all-sections"></div>
       <div class="store-note">Prototipo: los artículos se desbloquean sin realizar un cobro real.</div>
+    </div>
+  </div>
+
+  <!-- REWARD POPUP -->
+  <div class="reward-popup" id="reward-popup" onclick="closeRewardPopup(event)">
+    <div class="reward-popup-card">
+      <button class="reward-popup-close" onclick="closeRewardPopup()">✕</button>
+      <div class="reward-popup-icon" id="reward-popup-icon">🎁</div>
+      <div class="reward-popup-kicker">¡Nueva recompensa!</div>
+      <h2 id="reward-popup-title">Recompensa desbloqueada</h2>
+      <p id="reward-popup-desc"></p>
+      <button class="reward-popup-btn" onclick="closeRewardPopup()">Entendido</button>
     </div>
   </div>
 
@@ -2572,7 +2633,7 @@
     window.createLoyaltyRequest = async function(cafe, currentCount) {
       if (!CONFIGURED || !currentUser) throw new Error('Necesitas iniciar sesión.');
       if (!cafe || cafe.name !== 'Ágape Café') throw new Error('Esta tarjeta solo está disponible en Ágape Café.');
-      if (Number(currentCount) >= 6) throw new Error('Ya completaste tu tarjeta de lealtad.');
+      if (Number(currentCount) >= 6) currentCount = 0;
       const requestId = `${currentUser.uid}_${safeFbKey(cafe.name)}_loyalty_${Date.now()}`;
       const rawVisit = visited[cafe.name];
       const baseVisit = rawVisit && typeof rawVisit === 'object'
@@ -2585,9 +2646,29 @@
         requesterName:window.currentDisplayName||currentUser.displayName||'Usuario',
         username:(profile&&profile.username)||window.currentDisplayName||currentUser.displayName||'Usuario',
         requesterAge:window.calculateProfileAge ? window.calculateProfileAge(profile) : (Number(profile&&profile.age)||null), requesterGender:(profile&&profile.gender)||'',
-        requestedLoyaltyVisit:Number(currentCount)+1, baseVisit, status:'pending', requestedAt:new Date().toISOString()
+        requestedLoyaltyVisit:Number(currentCount)+1, loyaltyCycle:Number(baseVisit.loyaltyCycles)||0, existingDiscounts:Array.isArray(baseVisit.loyaltyDiscounts)?baseVisit.loyaltyDiscounts:[], baseVisit, status:'pending', requestedAt:new Date().toISOString()
       });
       await updateDoc(doc(db,'users',currentUser.uid), { [`visited.${safeFbKey(cafe.name)}`]: { ...baseVisit, loyaltyPending:true } });
+      return 'created';
+    };
+
+    window.createDiscountRequest = async function(discountId) {
+      if (!CONFIGURED || !currentUser) throw new Error('Necesitas iniciar sesión.');
+      const cafe = cafes.find(c => c.name === 'Ágape Café');
+      const data = agapeVisitData();
+      const discounts = Array.isArray(data.loyaltyDiscounts) ? data.loyaltyDiscounts : [];
+      const discount = discounts.find(d => d.id === discountId);
+      if (!discount) throw new Error('Este descuento ya no está disponible.');
+      if (discount.pending) throw new Error('Este descuento ya está pendiente.');
+      const requestId = `${currentUser.uid}_${safeFbKey(cafe.name)}_discount_${Date.now()}`;
+      await setDoc(doc(db,'checkinRequests',requestId), {
+        requestType:'discount', cafeName:cafe.name, ownerEmail:(cafe.ownerEmail||'').toLowerCase(),
+        requesterUid:currentUser.uid, requesterEmail:currentUser.email||'', requesterName:window.currentDisplayName||currentUser.displayName||'Usuario',
+        username:(profile&&profile.username)||window.currentDisplayName||currentUser.displayName||'Usuario',
+        discountId, discountTitle:discount.title||'Café con 50 % de descuento', discountSnapshot:discounts.map(d=>({...d,pending:d.id===discountId?true:!!d.pending})), status:'pending', requestedAt:new Date().toISOString()
+      });
+      const updated = discounts.map(d => d.id === discountId ? {...d,pending:true} : d);
+      await updateDoc(doc(db,'users',currentUser.uid), { [`visited.${safeFbKey(cafe.name)}.loyaltyDiscounts`]: updated });
       return 'created';
     };
 
@@ -2625,36 +2706,55 @@
       const ownerEmail = (window.currentUserEmail || '').toLowerCase();
       if (ownerEmail !== (req.ownerEmail || '').toLowerCase()) return;
       try {
+        const safeCafe = safeFbKey(req.cafeName);
+        const userRef = doc(db, 'users', req.requesterUid);
         if (req.requestType === 'loyalty') {
-          const safeCafe = safeFbKey(req.cafeName);
-          const userRef = doc(db, 'users', req.requesterUid);
-          const nextCount = Math.max(1, Math.min(6, Number(req.requestedLoyaltyVisit) || 1));
-
-          // Actualizamos solo los campos internos de la tarjeta. No reemplazamos
-          // todo el sello con la copia antigua guardada en la solicitud.
+          const visitNumber = Math.max(1, Math.min(6, Number(req.requestedLoyaltyVisit) || 1));
+          const firstCycle = (Number(req.loyaltyCycle) || 0) === 0;
           if (accepted) {
-            await updateDoc(userRef, {
-              [`visited.${safeCafe}.loyaltyCount`]: nextCount,
+            const updates = {
               [`visited.${safeCafe}.loyaltyPending`]: false,
               [`visited.${safeCafe}.loyaltyUpdatedAt`]: new Date().toISOString()
-            });
+            };
+            if (visitNumber === 3 && firstCycle) updates[`visited.${safeCafe}.agapeCapUnlocked`] = true;
+            if (visitNumber === 6) {
+              const cycles = (Number(req.loyaltyCycle) || 0) + 1;
+              const discounts = Array.isArray(req.existingDiscounts) ? [...req.existingDiscounts] : [];
+              discounts.push({ id:`agape50_${Date.now()}`, cafeName:'Ágape Café', title:'Café con 50 % de descuento', description:'Válido en Ágape Café. Solicita el canje para que el owner lo confirme.', earnedAt:new Date().toISOString(), pending:false });
+              updates[`visited.${safeCafe}.loyaltyCount`] = 0;
+              updates[`visited.${safeCafe}.loyaltyCycles`] = cycles;
+              updates[`visited.${safeCafe}.loyaltyDiscounts`] = discounts;
+              if (firstCycle) updates[`visited.${safeCafe}.greenBeanAnimationUnlocked`] = true;
+            } else {
+              updates[`visited.${safeCafe}.loyaltyCount`] = visitNumber;
+            }
+            await updateDoc(userRef, updates);
           } else {
-            await updateDoc(userRef, {
-              [`visited.${safeCafe}.loyaltyPending`]: false
-            });
+            await updateDoc(userRef, { [`visited.${safeCafe}.loyaltyPending`]: false });
           }
+        } else if (req.requestType === 'discount') {
+          const baseDiscounts = Array.isArray(req.baseDiscounts) ? req.baseDiscounts : null;
+          const userSnap = null;
+          // La solicitud incluye el identificador; el usuario ya marcó el beneficio como pendiente.
+          // Conservamos el descuento si se rechaza y lo retiramos si se acepta.
+          const requesterDiscounts = Array.isArray(req.existingDiscounts) ? req.existingDiscounts : [];
+          // Para evitar lectura del documento de otro usuario, el request guarda la lista al crearla.
+          let discounts = Array.isArray(req.discountSnapshot) ? req.discountSnapshot : requesterDiscounts;
+          if (!discounts.length && req.discountData) discounts = [req.discountData];
+          if (accepted) discounts = discounts.filter(d => d.id !== req.discountId);
+          else discounts = discounts.map(d => d.id === req.discountId ? {...d,pending:false} : d);
+          await updateDoc(userRef, { [`visited.${safeCafe}.loyaltyDiscounts`]: discounts });
         } else if (accepted) {
           const now = new Date();
           const visitData = { timestamp: now.toISOString(), label: now.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' }), loyaltyCount:0, loyaltyPending:false };
-          await updateDoc(doc(db, 'users', req.requesterUid), { [`visited.${safeFbKey(req.cafeName)}`]: visitData });
+          await updateDoc(userRef, { [`visited.${safeCafe}`]: visitData });
         }
         await updateDoc(doc(db, 'checkinRequests', requestId), {
-          status: accepted ? 'approved' : 'rejected',
-          resolvedAt: new Date().toISOString(),
-          resolvedBy: ownerEmail
+          status: accepted ? 'approved' : 'rejected', resolvedAt: new Date().toISOString(), resolvedBy: ownerEmail
         });
         ownerRequests = ownerRequests.filter(r => r.id !== requestId); renderOwnerRequests(); renderOwnerDashboard();
-        showToast(accepted ? (req.requestType === 'loyalty' ? `Visita ${req.requestedLoyaltyVisit || ''} cargada ✓` : 'Solicitud aceptada ✓') : 'Solicitud rechazada');
+        const msg = req.requestType === 'discount' ? (accepted ? 'Descuento canjeado ✓' : 'Canje rechazado') : req.requestType === 'loyalty' ? (accepted ? `Visita ${req.requestedLoyaltyVisit || ''} cargada ✓` : 'Visita rechazada') : (accepted ? 'Solicitud aceptada ✓' : 'Solicitud rechazada');
+        showToast(msg);
       } catch (e) {
         console.error('Error al procesar solicitud:', e);
         const code = e && (e.code || e.message) ? String(e.code || e.message) : '';
@@ -2931,6 +3031,7 @@
 
     const STAMP_ANIMATIONS = [
       { id:'cup_fill', name:'Taza llenándose', desc:'Una taza se llena cuando recibes un nuevo sello.', badge:'Disponible', preview:'cup_fill' },
+      { id:'green_bean_rain', name:'Lluvia de granos verdes', desc:'Granos verdes caen para celebrar un nuevo sello.', badge:'Lealtad Ágape', preview:'green_bean_rain' },
       { id:'none', name:'Sin animación', desc:'Recibe tus sellos sin mostrar animación.', badge:'Minimalista', preview:'none' }
     ];
 
@@ -3018,16 +3119,18 @@
     function renderStampAnimationOptions() {
       const wrap = document.getElementById('stamp-animation-options');
       if (!wrap) return;
-      wrap.innerHTML = STAMP_ANIMATIONS.map(item => `
-        <div class="animation-option ${selectedStampAnimation === item.id ? 'selected' : ''}" onclick="selectStampAnimation('${item.id}')">
-          <div class="animation-option-icon">${item.preview === 'cup_fill' ? '<div class="mini-cup-preview"></div>' : '<span style="font-size:28px;color:var(--espresso);opacity:.7;">—</span>'}</div>
+      wrap.innerHTML = STAMP_ANIMATIONS.map(item => {
+        const unlocked = item.id !== 'green_bean_rain' || !!agapeVisitData().greenBeanAnimationUnlocked;
+        const preview = item.preview === 'cup_fill' ? '<div class="mini-cup-preview"></div>' : item.preview === 'green_bean_rain' ? '<span style="font-size:31px;">🫘</span>' : '<span style="font-size:28px;color:var(--espresso);opacity:.7;">—</span>';
+        return `<div class="animation-option ${selectedStampAnimation === item.id ? 'selected' : ''}" style="${unlocked?'':'opacity:.5;cursor:default;'}" onclick="${unlocked?`selectStampAnimation('${item.id}')`:'void(0)'}">
+          <div class="animation-option-icon">${preview}</div>
           <div class="animation-option-info">
             <div class="animation-option-name">${item.name}</div>
             <div class="animation-option-desc">${item.desc}</div>
-            <span class="animation-option-badge">${item.badge}</span>
+            <span class="animation-option-badge">${unlocked?item.badge:'Se desbloquea al completar Ágape'}</span>
           </div>
-        </div>
-      `).join('');
+        </div>`;
+      }).join('');
     }
 
     function stampStyleInfo(id) {
@@ -3076,6 +3179,7 @@
       }
     }
     async function selectStampAnimation(animationId) {
+      if (animationId === 'green_bean_rain' && !agapeVisitData().greenBeanAnimationUnlocked) return;
       selectedStampAnimation = animationId;
       renderStampAnimationOptions();
       updateStampAnimationSummary();
@@ -3097,6 +3201,7 @@
 
     function playSelectedStampAnimation(cafeName) {
       if (selectedStampAnimation === 'none') return;
+      if (selectedStampAnimation === 'green_bean_rain') { playGreenBeanReward('¡Nuevo sello!'); return; }
       const overlay = document.getElementById('stamp-celebration');
       const stage = document.getElementById('cup-fill-stage');
       const label = document.getElementById('stamp-celebration-cafe');
@@ -3401,7 +3506,7 @@
       return (v && typeof v === 'object') ? v : {};
     }
     function agapeLoyaltyCount() { return Math.max(0, Math.min(6, Number(agapeVisitData().loyaltyCount) || 0)); }
-    function agapeCapUnlocked() { return agapeLoyaltyCount() >= 3; }
+    function agapeCapUnlocked() { return !!agapeVisitData().agapeCapUnlocked || agapeLoyaltyCount() >= 3; }
 
     function renderCosmeticGrid() {
       const grid=document.getElementById('cosmetic-grid'); if(!grid) return;
@@ -3489,7 +3594,7 @@
         <div class="request-card">
           <div class="request-user">@${r.username || r.requesterName || 'Usuario'}</div>
           <div class="request-meta">${r.requesterEmail || ''}</div>
-          <div class="request-meta">${r.requestType === 'loyalty' ? `Solicita visita ${r.requestedLoyaltyVisit || ''} de la tarjeta de lealtad` : `Solicita sello de ${r.cafeName}`}</div>
+          <div class="request-meta">${r.requestType === 'loyalty' ? `Solicita visita ${r.requestedLoyaltyVisit || ''} de la tarjeta de lealtad` : r.requestType === 'discount' ? `Solicita canjear: ${r.discountTitle || 'descuento'}` : `Solicita sello de ${r.cafeName}`}</div>
           <div class="request-actions">
             <button class="request-action reject" onclick="respondCheckinRequest('${r.id}', false)">Rechazar</button>
             <button class="request-action accept" onclick="respondCheckinRequest('${r.id}', true)">Aceptar</button>
@@ -3537,7 +3642,7 @@
 
     function renderOwnerDashboard() {
       if (!currentOwnerCafe) return;
-      const approved = ownerRequestHistory.filter(r => r.status === 'approved' && r.requestType !== 'loyalty');
+      const approved = ownerRequestHistory.filter(r => r.status === 'approved' && r.requestType !== 'loyalty' && r.requestType !== 'discount');
       const unique = new Set(approved.map(r => r.requesterUid || r.requesterEmail)).size;
       const buckets = {'<18':0,'18–24':0,'25–34':0,'35–44':0,'45+':0,'Sin dato':0};
       approved.forEach(r => buckets[ageBucket(r.requesterAge)]++);
@@ -3553,7 +3658,7 @@
       const pendingTarget = document.getElementById('owner-dashboard-requests');
       pendingTarget.innerHTML = ownerRequests.length ? `<div class="request-list">${ownerRequests.map(r => `
         <div class="request-card"><div class="request-user">@${r.username || r.requesterName || 'Usuario'}</div>
-        <div class="request-meta">${r.requestType === 'loyalty' ? `Tarjeta de lealtad · visita ${r.requestedLoyaltyVisit || ''}` : `${r.requesterAge ? r.requesterAge + ' años' : 'Edad no disponible'} · ${r.requesterGender || 'Sin género registrado'}`}</div>
+        <div class="request-meta">${r.requestType === 'loyalty' ? `Tarjeta de lealtad · visita ${r.requestedLoyaltyVisit || ''}` : r.requestType === 'discount' ? `Canje de descuento · ${r.discountTitle || 'beneficio'}` : `${r.requesterAge ? r.requesterAge + ' años' : 'Edad no disponible'} · ${r.requesterGender || 'Sin género registrado'}`}</div>
         <div class="request-actions"><button class="request-action reject" onclick="respondCheckinRequest('${r.id}', false)">Rechazar</button><button class="request-action accept" onclick="respondCheckinRequest('${r.id}', true)">Aceptar</button></div></div>`).join('')}</div>` : '<div class="owner-empty-dashboard">No tienes solicitudes pendientes.</div>';
       const recent = [...approved].sort((a,b)=>String(b.resolvedAt||'').localeCompare(String(a.resolvedAt||''))).slice(0,6);
       document.getElementById('owner-recent-visits').innerHTML = recent.length ? recent.map(r => `<div class="recent-item"><div class="recent-name">${r.requesterName || r.username || 'Usuario'}</div><div class="recent-meta">${r.requesterAge ? r.requesterAge+' años · ' : ''}${r.resolvedAt ? new Date(r.resolvedAt).toLocaleDateString('es-MX') : ''}</div></div>`).join('') : '<div class="owner-empty-dashboard">Todavía no hay visitas aprobadas.</div>';
@@ -3739,6 +3844,26 @@
       document.getElementById('id-mrz').textContent = mrz;
     }
 
+    function currentDiscounts(){
+      const d=agapeVisitData(); return Array.isArray(d.loyaltyDiscounts)?d.loyaltyDiscounts:[];
+    }
+    function renderDiscounts(){
+      const target=document.getElementById('discounts-list'); if(!target) return;
+      const discounts=currentDiscounts();
+      target.innerHTML=discounts.length?`<div class="discounts-grid">${discounts.map(d=>`<div class="discount-card">
+        <div class="discount-card-head"><div><div class="discount-cafe">${d.cafeName||'Ágape Café'}</div><div class="discount-title">${d.title||'Café con 50 % de descuento'}</div></div><span class="discount-status">${d.pending?'Pendiente':'Disponible'}</span></div>
+        <div class="discount-desc">${d.description||'Solicita el canje para que el owner lo confirme.'}</div>
+        <button class="discount-claim" ${d.pending?'disabled':''} onclick="requestDiscountRedemption('${d.id}')">${d.pending?'Solicitud pendiente…':'Solicitar canje'}</button>
+      </div>`).join('')}</div>`:'<div class="discount-empty">Todavía no tienes descuentos.<br>Completa tarjetas de lealtad para ganarlos.</div>';
+    }
+    function openDiscounts(){ closeMainMenu(); renderDiscounts(); document.getElementById('discounts-overlay').classList.add('open'); }
+    function closeDiscounts(e){ if(!e||e.target===document.getElementById('discounts-overlay')) document.getElementById('discounts-overlay').classList.remove('open'); }
+    async function requestDiscountRedemption(id){
+      try{ await window.createDiscountRequest(id); renderDiscounts(); showToast('Solicitud de canje enviada ✓'); }
+      catch(e){ console.error(e); showToast(e.message||'No se pudo solicitar el canje'); }
+    }
+    window.openDiscounts=openDiscounts; window.closeDiscounts=closeDiscounts; window.requestDiscountRedemption=requestDiscountRedemption;
+
     // ──────────────────────────────────────────────
     // DROPDOWN
     // ──────────────────────────────────────────────
@@ -3868,18 +3993,21 @@
       if(!wrap||!target) return;
       const hasSeal=!!findAgapeVisitedEntry();
       if(!currentCafe || normalize(currentCafe.name)!==normalize('Ágape Café') || !hasSeal){ wrap.classList.remove('show'); wrap.style.display='none'; target.innerHTML=''; return; }
-      wrap.classList.add('show');
-      wrap.style.display='block';
-      const data=agapeVisitData(), count=agapeLoyaltyCount(), pending=!!data.loyaltyPending;
-      const dots=Array.from({length:6},(_,i)=>`<div class="loyalty-dot ${i<count?'done':''} ${(i===2||i===5)?'reward':''}">${i<count?'✓':i+1}</div>`).join('');
+      wrap.classList.add('show'); wrap.style.display='block';
+      const data=agapeVisitData(), count=agapeLoyaltyCount(), pending=!!data.loyaltyPending, cycles=Number(data.loyaltyCycles)||0;
+      const firstCycle=cycles===0;
+      const dots=Array.from({length:6},(_,i)=>{
+        const n=i+1;
+        let reward='';
+        if(firstCycle && n===3) reward='<span class="loyalty-reward-marker" title="Gorra Ágape: dos granos verdes formando un corazón">🧢</span>';
+        if(n===6) reward=`<span class="loyalty-reward-marker" title="${firstCycle?'Animación de granos verdes y ':''}café con 50 % de descuento">${firstCycle?'🫘':'🏷️'}</span>`;
+        return `<div class="loyalty-dot ${i<count?'done':''} ${reward?'has-reward':''}" title="${n===3&&firstCycle?'Visita 3: Gorra Ágape':n===6?(firstCycle?'Visita 6: animación de granos verdes + descuento':'Visita 6: café con 50 % de descuento'):''}">${reward}${i<count?'✓':n}</div>`;
+      }).join('');
       target.innerHTML=`<div class="loyalty-card">
         <div class="loyalty-head"><div class="loyalty-brand">${agapeLogoSvg()}<div><div class="loyalty-title">Ágape Café</div><div style="font-size:10px;color:var(--espresso);opacity:.62;">Tarjeta de lealtad</div></div></div><div class="loyalty-count">${count}/6</div></div>
         <div class="loyalty-stamps">${dots}</div>
-        <div class="loyalty-rewards">
-          <div class="loyalty-reward ${count>=3?'unlocked':''}">🧢 3 visitas · Gorra Ágape ${count>=3?'desbloqueada':'bloqueada'}</div>
-          <div class="loyalty-reward ${count>=6?'unlocked':''}">☕ 6 visitas · Café con 50 % de descuento ${count>=6?'desbloqueado':'bloqueado'}</div>
-        </div>
-        <button class="loyalty-request-btn" ${pending||count>=6?'disabled':''} onclick="requestAgapeLoyaltyVisit()">${count>=6?'Tarjeta completada ✓':pending?'Solicitud pendiente…':'Solicitar visita de lealtad'}</button>
+        <div class="loyalty-cycle-note">${firstCycle?'Primera tarjeta: incluye recompensas especiales.':`Tarjeta ${cycles+1}: al completar recibes otro descuento.`}</div>
+        <button class="loyalty-request-btn" ${pending?'disabled':''} onclick="requestAgapeLoyaltyVisit()">${pending?'Solicitud pendiente…':'Solicitar visita de lealtad'}</button>
         <div class="loyalty-note">El owner de Ágape debe aceptar cada visita.</div>
       </div>`;
     }
@@ -3892,8 +4020,9 @@
     window.requestAgapeLoyaltyVisit=requestAgapeLoyaltyVisit;
     window.renderAgapeLoyaltyCard=renderAgapeLoyaltyCard;
 
-    function playGreenBeanReward(){
+    function playGreenBeanReward(title='¡6 visitas!'){
       const rain=document.getElementById('bean-rain'); if(!rain) return;
+      const titleEl=rain.querySelector('.bean-rain-title'); if(titleEl) titleEl.innerHTML=title;
       rain.querySelectorAll('.falling-bean').forEach(x=>x.remove());
       for(let i=0;i<28;i++){ const b=document.createElement('div'); b.className='falling-bean'; b.style.left=(Math.random()*96)+'%'; b.style.animationDelay=(Math.random()*.8)+'s'; b.style.animationDuration=(2.1+Math.random()*1.2)+'s'; b.style.transform=`scale(${.65+Math.random()*.7}) rotate(${Math.random()*180}deg)`; rain.appendChild(b); }
       rain.classList.add('show'); setTimeout(()=>rain.classList.remove('show'),3600);
@@ -3903,12 +4032,35 @@
       const value=key ? source[key] : null;
       return value && typeof value==='object' ? value : {};
     }
+    const rewardPopupQueue=[];
+    function showRewardPopup(icon,title,desc){
+      rewardPopupQueue.push({icon,title,desc});
+      if(!document.getElementById('reward-popup').classList.contains('show')) showNextRewardPopup();
+    }
+    function showNextRewardPopup(){
+      const item=rewardPopupQueue.shift(); if(!item) return;
+      document.getElementById('reward-popup-icon').textContent=item.icon;
+      document.getElementById('reward-popup-title').textContent=item.title;
+      document.getElementById('reward-popup-desc').textContent=item.desc;
+      document.getElementById('reward-popup').classList.add('show');
+    }
+    function closeRewardPopup(e){
+      if(e && e.target!==document.getElementById('reward-popup')) return;
+      document.getElementById('reward-popup').classList.remove('show');
+      setTimeout(showNextRewardPopup,220);
+    }
+    window.closeRewardPopup=closeRewardPopup;
     function handleLoyaltyUpdate(previousVisited,nextVisited){
-      const prev=Number(getAgapeFromVisitedObject(previousVisited).loyaltyCount)||0;
-      const next=Number(getAgapeFromVisitedObject(nextVisited).loyaltyCount)||0;
-      renderAgapeLoyaltyCard();
-      if(prev<3 && next>=3){ showToast('¡Gorra Ágape desbloqueada! 🧢'); renderCosmeticGrid(); }
-      if(prev<6 && next>=6) playGreenBeanReward();
+      const prevData=getAgapeFromVisitedObject(previousVisited), nextData=getAgapeFromVisitedObject(nextVisited);
+      const prev=Number(prevData.loyaltyCount)||0, next=Number(nextData.loyaltyCount)||0;
+      const prevCycles=Number(prevData.loyaltyCycles)||0, nextCycles=Number(nextData.loyaltyCycles)||0;
+      renderAgapeLoyaltyCard(); renderDiscounts(); renderStampAnimationOptions();
+      if(!prevData.agapeCapUnlocked && nextData.agapeCapUnlocked){ showRewardPopup('🧢','Gorra Ágape desbloqueada','Ya puedes equiparla en Editar personaje → Cosméticos.'); renderCosmeticGrid(); }
+      if(!prevData.greenBeanAnimationUnlocked && nextData.greenBeanAnimationUnlocked){ showRewardPopup('🫘','Animación desbloqueada','La lluvia de granos verdes ya está disponible en Efectos → Animaciones.'); }
+      if(nextCycles>prevCycles){
+        showRewardPopup('🏷️','Café con 50 % de descuento','Tu descuento ya aparece en el apartado Descuentos del menú.');
+        playGreenBeanReward('¡Tarjeta completada!<br><span style="font-size:18px;">Nuevo descuento desbloqueado</span>');
+      }
     }
     window.handleLoyaltyUpdate=handleLoyaltyUpdate;
 

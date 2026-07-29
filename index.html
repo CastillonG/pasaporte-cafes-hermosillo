@@ -589,6 +589,16 @@
       gap: 12px;
       margin-top: 6px;
     }
+    .effects-tabs { display:flex; gap:8px; margin-bottom:16px; }
+    .effects-tab { flex:1; border:1.5px solid rgba(122,63,37,.18); background:white; color:var(--espresso); border-radius:999px; padding:9px 12px; font:800 12px 'DM Sans',sans-serif; cursor:pointer; }
+    .effects-tab.active { background:var(--espresso); color:var(--cream); border-color:var(--espresso); }
+    .effects-panel { display:none; }
+    .effects-panel.active { display:block; }
+    .stamp-style-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .stamp-style-option { border:2px solid rgba(122,63,37,.16); background:white; border-radius:17px; padding:13px; text-align:center; cursor:pointer; color:var(--espresso); font:800 12px 'DM Sans',sans-serif; }
+    .stamp-style-option.selected { border-color:var(--stamp-gold); background:#fff9df; }
+    .stamp-style-option.locked { opacity:.55; }
+    .stamp-style-preview { height:78px; display:flex; align-items:center; justify-content:center; font-size:48px; }
 
     .animation-option {
       border: 2px solid rgba(122,63,37,.16);
@@ -1609,12 +1619,12 @@
     .menu-toggle:hover { background:rgba(245,234,216,.2); }
     .menu-toggle span { width:18px; height:2px; border-radius:2px; background:var(--cream); }
     .main-menu {
-      position:fixed; top:62px; right:16px; z-index:1450; width:220px;
-      background:var(--foam); border:1.5px solid rgba(122,63,37,.15); border-radius:16px;
-      padding:8px; box-shadow:0 14px 36px rgba(62,31,14,.2); opacity:0;
-      pointer-events:none; transform:translateY(-8px); transition:.2s;
+      position:fixed; top:0; right:0; bottom:0; z-index:1450; width:min(82vw,320px);
+      background:var(--foam); border-left:1.5px solid rgba(122,63,37,.15);
+      padding:82px 16px 18px; box-shadow:-18px 0 40px rgba(62,31,14,.2); opacity:1;
+      pointer-events:none; transform:translateX(105%); transition:transform .28s cubic-bezier(.4,0,.2,1);
     }
-    .main-menu.open { opacity:1; pointer-events:all; transform:translateY(0); }
+    .main-menu.open { pointer-events:all; transform:translateX(0); }
     .main-menu-item {
       width:100%; border:0; background:transparent; border-radius:11px; padding:12px;
       display:flex; align-items:center; gap:10px; cursor:pointer; font:700 14px 'DM Sans',sans-serif;
@@ -1622,10 +1632,13 @@
     }
     .main-menu-item:hover { background:var(--warm); }
 
-    #store-overlay { align-items:center; padding:18px; backdrop-filter:blur(7px); }
-    #store-overlay .cafe-sheet { border-radius:24px; max-width:720px; max-height:90vh; transform:translateY(16px) scale(.98); }
-    #store-overlay.open .cafe-sheet { transform:translateY(0) scale(1); }
-    .store-tabs, .editor-tabs { display:flex; gap:7px; overflow-x:auto; padding-bottom:3px; margin-bottom:16px; }
+    #store-overlay { align-items:stretch; padding:0; background:var(--cream); backdrop-filter:none; }
+    #store-overlay .cafe-sheet { border-radius:0; max-width:none; width:100%; height:100vh; max-height:none; transform:translateX(100%); padding:24px 18px 40px; }
+    #store-overlay.open .cafe-sheet { transform:translateX(0); }
+    .store-tabs { display:none; }
+    .editor-tabs { display:flex; gap:7px; overflow-x:auto; padding-bottom:3px; margin-bottom:16px; }
+    .store-section { margin:8px auto 34px; max-width:900px; }
+    .store-section-title { font-family:'Playfair Display',serif; color:var(--dark); font-size:22px; margin-bottom:12px; padding-bottom:8px; border-bottom:1.5px dashed rgba(122,63,37,.22); }
     .store-tab, .editor-tab {
       border:1.5px solid rgba(122,63,37,.17); background:white; color:var(--espresso);
       border-radius:999px; padding:8px 13px; font:700 12px 'DM Sans',sans-serif; cursor:pointer; white-space:nowrap;
@@ -1678,7 +1691,7 @@
     .agape-heart-logo { width:34px; height:30px; flex-shrink:0; }
     .loyalty-title { font-family:'Playfair Display',serif; font-size:16px; color:var(--dark); }
     .loyalty-count { font-size:12px; font-weight:800; color:var(--green); }
-    .loyalty-stamps { display:grid; grid-template-columns:repeat(6,1fr); gap:7px; }
+    .loyalty-stamps { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; max-width:270px; margin:0 auto; }
     .loyalty-dot {
       aspect-ratio:1;
       border-radius:50%;
@@ -1817,8 +1830,8 @@
       </div>
 
       <div class="profile-field">
-        <label for="profile-age">Edad</label>
-        <input id="profile-age" type="number" min="1" max="120" placeholder="Ej. 27"/>
+        <label for="profile-birth-year">Año de nacimiento</label>
+        <input id="profile-birth-year" type="number" min="1900" max="2026" placeholder="Ej. 2002"/>
       </div>
 
       <div class="profile-field">
@@ -2073,7 +2086,16 @@
         </div>
         <button class="sheet-close" onclick="closeStampAnimationModal()">✕</button>
       </div>
-      <div class="animation-options-grid" id="stamp-animation-options"></div>
+      <div class="effects-tabs">
+        <button class="effects-tab active" onclick="openEffectsTab('animations', this)">Animaciones</button>
+        <button class="effects-tab" onclick="openEffectsTab('stamps', this)">Sellos</button>
+      </div>
+      <div class="effects-panel active" id="effects-panel-animations">
+        <div class="animation-options-grid" id="stamp-animation-options"></div>
+      </div>
+      <div class="effects-panel" id="effects-panel-stamps">
+        <div class="stamp-style-grid" id="stamp-style-options"></div>
+      </div>
     </div>
   </div>
 
@@ -2154,8 +2176,7 @@
         <div><h2>Tienda</h2><div class="sheet-address" style="margin:5px 0 0;">Personaliza tu pasaporte.</div></div>
         <button class="sheet-close" onclick="closeStore()">✕</button>
       </div>
-      <div class="store-tabs" id="store-tabs"></div>
-      <div class="store-grid" id="store-grid"></div>
+      <div id="store-all-sections"></div>
       <div class="store-note">Prototipo: los artículos se desbloquean sin realizar un cobro real.</div>
     </div>
   </div>
@@ -2491,7 +2512,7 @@
         requesterEmail: currentUser.email || '',
         requesterName: window.currentDisplayName || currentUser.displayName || 'Usuario',
         username: (profile && profile.username) || window.currentDisplayName || currentUser.displayName || 'Usuario',
-        requesterAge: Number(profile && profile.age) || null,
+        requesterAge: window.calculateProfileAge ? window.calculateProfileAge(profile) : (Number(profile && profile.age) || null),
         requesterGender: (profile && profile.gender) || '',
         status: 'pending',
         requestedAt: new Date().toISOString()
@@ -2514,7 +2535,7 @@
         requesterUid:currentUser.uid, requesterEmail:currentUser.email||'',
         requesterName:window.currentDisplayName||currentUser.displayName||'Usuario',
         username:(profile&&profile.username)||window.currentDisplayName||currentUser.displayName||'Usuario',
-        requesterAge:Number(profile&&profile.age)||null, requesterGender:(profile&&profile.gender)||'',
+        requesterAge:window.calculateProfileAge ? window.calculateProfileAge(profile) : (Number(profile&&profile.age)||null), requesterGender:(profile&&profile.gender)||'',
         requestedLoyaltyVisit:Number(currentCount)+1, baseVisit, status:'pending', requestedAt:new Date().toISOString()
       });
       await updateDoc(doc(db,'users',currentUser.uid), { [`visited.${safeFbKey(cafe.name)}`]: { ...baseVisit, loyaltyPending:true } });
@@ -2558,11 +2579,7 @@
         if (req.requestType === 'loyalty') {
           const safeCafe = safeFbKey(req.cafeName);
           if (accepted) {
-            const previousApproved = ownerRequestHistory.filter(r =>
-              r.id !== requestId && r.status === 'approved' && r.requestType === 'loyalty' &&
-              r.requesterUid === req.requesterUid && r.cafeName === req.cafeName
-            ).length;
-            const nextCount = Math.min(6, previousApproved + 1);
+            const nextCount = Math.max(1, Math.min(6, Number(req.requestedLoyaltyVisit) || 1));
             const baseVisit = req.baseVisit && typeof req.baseVisit === 'object' ? req.baseVisit : {};
             await updateDoc(doc(db, 'users', req.requesterUid), {
               [`visited.${safeCafe}`]: { ...baseVisit, loyaltyCount:nextCount, loyaltyPending:false, loyaltyUpdatedAt:new Date().toISOString() }
@@ -2581,7 +2598,8 @@
           resolvedAt: new Date().toISOString(),
           resolvedBy: ownerEmail
         });
-        showToast(accepted ? 'Solicitud aceptada ✓' : 'Solicitud rechazada');
+        ownerRequests = ownerRequests.filter(r => r.id !== requestId); renderOwnerRequests(); renderOwnerDashboard();
+        showToast(accepted ? (req.requestType === 'loyalty' ? `Visita ${req.requestedLoyaltyVisit || ''} cargada ✓` : 'Solicitud aceptada ✓') : 'Solicitud rechazada');
       } catch (e) {
         console.error(e);
         showToast('No se pudo procesar la solicitud');
@@ -2847,6 +2865,8 @@
       { id:'scarf_red', category:'cosmetics', name:'Pañuelo Cafetero', desc:'Un pañuelo rojo para tu personaje.', price:29 },
       { id:'desert_night', category:'backgrounds', name:'Noche Sonorense', desc:'Fondo nocturno inspirado en el desierto.', price:39 },
       { id:'gold_star_stamp', category:'stamps', name:'Sello Estrella', desc:'Cambia tus sellos visitados por una estrella dorada.', price:25 },
+      { id:'coffee_bean_stamp', category:'stamps', name:'Sello Grano de Café', desc:'Un sello con forma de grano de café.', price:20 },
+      { id:'lightning_stamp', category:'stamps', name:'Sello Rayo', desc:'Un sello eléctrico para tus visitas.', price:25 },
       { id:'coffee_bean_dog', category:'pets', name:'Perro Grano de Café', desc:'Un compañero con forma de grano de café.', price:49 }
     ];
     const STORE_CATEGORIES = [
@@ -2926,8 +2946,44 @@
       `).join('');
     }
 
+    function stampStyleInfo(id) {
+      const map = {
+        coffee:{name:'Taza de café',icon:'☕',owned:true},
+        gold_star_stamp:{name:'Estrella',icon:'★'},
+        coffee_bean_stamp:{name:'Grano de café',icon:'◒'},
+        lightning_stamp:{name:'Rayo',icon:'⚡'}
+      };
+      return map[id] || map.coffee;
+    }
+    function renderStampStyleOptions() {
+      const wrap=document.getElementById('stamp-style-options'); if(!wrap) return;
+      const ids=['coffee','gold_star_stamp','coffee_bean_stamp','lightning_stamp'];
+      wrap.innerHTML=ids.map(id=>{
+        const info=stampStyleInfo(id); const owned=id==='coffee'||!!ownedStoreItems[id];
+        return `<button class="stamp-style-option ${selectedStampStyle===id?'selected':''} ${owned?'':'locked'}" onclick="${owned?`selectStampStyle('${id}')`:`openStoreForStamp('${id}')`}"><div class="stamp-style-preview">${info.icon}</div>${info.name}${owned?'':' · Tienda'}</button>`;
+      }).join('');
+    }
+    function openEffectsTab(id,btn){
+      document.querySelectorAll('.effects-panel').forEach(x=>x.classList.remove('active'));
+      document.getElementById('effects-panel-'+id).classList.add('active');
+      document.querySelectorAll('.effects-tab').forEach(x=>x.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      if(id==='stamps') renderStampStyleOptions(); else renderStampAnimationOptions();
+    }
+    async function selectStampStyle(id){
+      if(id!=='coffee'&&!ownedStoreItems[id]) return;
+      selectedStampStyle=id;
+      if(window.saveStoreCustomization) await window.saveStoreCustomization();
+      renderStampStyleOptions(); renderPassport(); showToast('Sello actualizado ✓');
+    }
+    function openStoreForStamp(id){ closeStampAnimationModal(); openStore(); setTimeout(()=>document.getElementById('store-item-'+id)?.scrollIntoView({behavior:'smooth',block:'center'}),250); }
+    window.openEffectsTab=openEffectsTab; window.selectStampStyle=selectStampStyle; window.openStoreForStamp=openStoreForStamp;
+
     function openStampAnimationModal() {
-      renderStampAnimationOptions();
+      renderStampAnimationOptions(); renderStampStyleOptions();
+      document.querySelectorAll('.effects-tab').forEach((x,i)=>x.classList.toggle('active',i===0));
+      document.querySelectorAll('.effects-panel').forEach(x=>x.classList.remove('active'));
+      document.getElementById('effects-panel-animations').classList.add('active');
       document.getElementById('stamp-animation-overlay').classList.add('open');
     }
     function closeStampAnimationModal(e) {
@@ -3004,13 +3060,15 @@
       if (item.id === 'scarf_red') return avatarSvg('classic', false, false, { cosmetic:'scarf_red', pet:'' });
       if (item.id === 'desert_night') return '<div class="desert-night-preview"></div>';
       if (item.id === 'gold_star_stamp') return '<div class="stamp-star-preview">★</div>';
+      if (item.id === 'coffee_bean_stamp') return '<div class="stamp-star-preview" style="background:#7a3f25;transform:rotate(12deg);">◒</div>';
+      if (item.id === 'lightning_stamp') return '<div class="stamp-star-preview" style="background:#e2b52d;">⚡</div>';
       if (item.id === 'coffee_bean_dog') return coffeeBeanDogSvg();
       return '';
     }
     function isStoreItemEquipped(id) {
       return equippedCosmetic === id || selectedPet === id ||
         (id === 'desert_night' && selectedPassportBackground === id) ||
-        (id === 'gold_star_stamp' && selectedStampStyle === id);
+        (STORE_ITEMS.some(x=>x.id===id&&x.category==='stamps') && selectedStampStyle === id);
     }
     function toggleMainMenu(e) {
       if (e) e.stopPropagation();
@@ -3021,17 +3079,16 @@
 
     function openStore() { closeMainMenu(); renderStore(); document.getElementById('store-overlay').classList.add('open'); }
     function closeStore(e) { if (!e || e.target === document.getElementById('store-overlay')) document.getElementById('store-overlay').classList.remove('open'); }
-    function setStoreCategory(id) { activeStoreCategory=id; renderStore(); }
+    function setStoreCategory(id) { activeStoreCategory=id; const el=document.getElementById('store-section-'+id); if(el) el.scrollIntoView({behavior:'smooth'}); }
     function renderStore() {
-      document.getElementById('store-tabs').innerHTML = STORE_CATEGORIES.map(c =>
-        `<button class="store-tab ${activeStoreCategory===c.id?'active':''}" onclick="setStoreCategory('${c.id}')">${c.name}</button>`).join('');
-      const items=STORE_ITEMS.filter(i=>i.category===activeStoreCategory);
-      document.getElementById('store-grid').innerHTML=items.map(item=>{
-        const owned=!!ownedStoreItems[item.id], equipped=isStoreItemEquipped(item.id);
-        const label=equipped?'Equipado':owned?'Equipar':`Comprar · $${item.price} MXN`;
-        return `<div class="store-card"><div class="store-preview">${storePreview(item)}</div>
-          <div class="store-title">${item.name}</div><div class="store-desc">${item.desc}</div>
-          <button class="store-buy ${equipped?'equipped':owned?'owned':''}" onclick="buyOrEquipStoreItem('${item.id}')">${label}</button></div>`;
+      const root=document.getElementById('store-all-sections'); if(!root) return;
+      root.innerHTML=STORE_CATEGORIES.map(category=>{
+        const items=STORE_ITEMS.filter(i=>i.category===category.id);
+        return `<section class="store-section" id="store-section-${category.id}"><h3 class="store-section-title">${category.name}</h3><div class="store-grid">${items.map(item=>{
+          const owned=!!ownedStoreItems[item.id], equipped=isStoreItemEquipped(item.id);
+          const label=equipped?'Equipado':owned?'Equipar':`Comprar · $${item.price} MXN`;
+          return `<div class="store-card" id="store-item-${item.id}"><div class="store-preview">${storePreview(item)}</div><div class="store-title">${item.name}</div><div class="store-desc">${item.desc}</div><button class="store-buy ${equipped?'equipped':owned?'owned':''}" onclick="buyOrEquipStoreItem('${item.id}')">${label}</button></div>`;
+        }).join('')}</div></section>`;
       }).join('');
     }
     async function buyOrEquipStoreItem(id) {
@@ -3042,7 +3099,7 @@
       if (item.category==='backgrounds') selectedPassportBackground=id;
       if (item.category==='stamps') selectedStampStyle=id;
       try { if(window.saveStoreCustomization) await window.saveStoreCustomization(); } catch(e){ showToast('No se pudo guardar la compra'); return; }
-      renderStore(); renderPassportCharacter(); renderPassportBackground(); renderPassport(); renderAccountCharacter(); renderPetGrid();
+      renderStore(); renderPassportCharacter(); renderPassportBackground(); renderPassport(); renderAccountCharacter(); renderPetGrid(); renderStampStyleOptions();
     }
     window.openStore=openStore; window.closeStore=closeStore; window.setStoreCategory=setStoreCategory; window.buyOrEquipStoreItem=buyOrEquipStoreItem;
 
@@ -3497,8 +3554,19 @@
     // ──────────────────────────────────────────────
     // PROFILE (cuestionario obligatorio)
     // ──────────────────────────────────────────────
+    function calculateAgeFromBirthYear(birthYear) {
+      const year = Number(birthYear);
+      const currentYear = new Date().getFullYear();
+      if (!year || year < 1900 || year > currentYear) return null;
+      return currentYear - year;
+    }
+    window.calculateProfileAge = function(profileData) {
+      if (!profileData) return null;
+      return calculateAgeFromBirthYear(profileData.birthYear) || Number(profileData.age) || null;
+    };
+
     function checkProfileScreen() {
-      const complete = profile && profile.gender && profile.age && profile.funFact;
+      const complete = profile && profile.gender && (profile.birthYear || profile.age) && profile.funFact;
       if (!complete) {
         document.getElementById('profile-screen').classList.add('show');
       } else {
@@ -3510,15 +3578,16 @@
 
     function submitProfile() {
       const gender  = document.getElementById('profile-gender').value;
-      const age     = document.getElementById('profile-age').value;
+      const birthYear = Number(document.getElementById('profile-birth-year').value);
       const funFact = document.getElementById('profile-funfact').value.trim();
+      const currentYear = new Date().getFullYear();
 
-      if (!gender || !age || !funFact) {
-        showToast('Completa todos los campos ✏️');
+      if (!gender || !birthYear || birthYear < 1900 || birthYear > currentYear || !funFact) {
+        showToast('Completa todos los campos con un año válido ✏️');
         return;
       }
 
-      profile = { gender, age, funFact };
+      profile = { gender, birthYear, age: calculateAgeFromBirthYear(birthYear), funFact };
       if (window.saveProfile) window.saveProfile(profile);
       document.getElementById('profile-screen').classList.remove('show');
       updatePassportIdCard();
@@ -3531,7 +3600,7 @@
       const name = window.currentDisplayName || 'Invitado';
       document.getElementById('id-name').textContent    = name;
       document.getElementById('id-gender').textContent  = profile ? profile.gender  : '—';
-      document.getElementById('id-age').textContent     = profile ? profile.age     : '—';
+      document.getElementById('id-age').textContent     = profile ? (window.calculateProfileAge(profile) ?? '—') : '—';
       document.getElementById('id-funfact').textContent = profile ? profile.funFact : '—';
 
       const mrzName = normalize(name).toUpperCase().replace(/[^A-Z]/g, '<');
@@ -3698,9 +3767,14 @@
       for(let i=0;i<28;i++){ const b=document.createElement('div'); b.className='falling-bean'; b.style.left=(Math.random()*96)+'%'; b.style.animationDelay=(Math.random()*.8)+'s'; b.style.animationDuration=(2.1+Math.random()*1.2)+'s'; b.style.transform=`scale(${.65+Math.random()*.7}) rotate(${Math.random()*180}deg)`; rain.appendChild(b); }
       rain.classList.add('show'); setTimeout(()=>rain.classList.remove('show'),3600);
     }
+    function getAgapeFromVisitedObject(source){
+      const key=Object.keys(source||{}).find(k=>normalize(k)===normalize('Ágape Café'));
+      const value=key ? source[key] : null;
+      return value && typeof value==='object' ? value : {};
+    }
     function handleLoyaltyUpdate(previousVisited,nextVisited){
-      const prev=Number(previousVisited?.['Ágape Café']?.loyaltyCount)||0;
-      const next=Number(nextVisited?.['Ágape Café']?.loyaltyCount)||0;
+      const prev=Number(getAgapeFromVisitedObject(previousVisited).loyaltyCount)||0;
+      const next=Number(getAgapeFromVisitedObject(nextVisited).loyaltyCount)||0;
       if(prev<3 && next>=3){ showToast('¡Gorra Ágape desbloqueada! 🧢'); renderCosmeticGrid(); }
       if(prev<6 && next>=6) playGreenBeanReward();
     }
@@ -3803,7 +3877,7 @@ window.doCheckin = function() {
         const v = visited[c.name];
         return `
           <div class="stamp-item ${v ? 'stamped' : ''}" onclick="openCafeSheet('${encodeURIComponent(c.name)}')">
-            <span class="stamp-emoji">${v ? (selectedStampStyle === 'gold_star_stamp' ? '★' : '☕') : '○'}</span>
+            <span class="stamp-emoji">${v ? (selectedStampStyle === 'gold_star_stamp' ? '★' : selectedStampStyle === 'coffee_bean_stamp' ? '◒' : selectedStampStyle === 'lightning_stamp' ? '⚡' : '☕') : '○'}</span>
             <div class="stamp-name">${c.name}</div>
             ${v ? `<div class="stamp-date">${getVisitLabel(v)}</div>` : ''}
           </div>`;

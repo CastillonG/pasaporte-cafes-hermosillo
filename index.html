@@ -2627,15 +2627,21 @@
       try {
         if (req.requestType === 'loyalty') {
           const safeCafe = safeFbKey(req.cafeName);
+          const userRef = doc(db, 'users', req.requesterUid);
+          const nextCount = Math.max(1, Math.min(6, Number(req.requestedLoyaltyVisit) || 1));
+
+          // Actualizamos solo los campos internos de la tarjeta. No reemplazamos
+          // todo el sello con la copia antigua guardada en la solicitud.
           if (accepted) {
-            const nextCount = Math.max(1, Math.min(6, Number(req.requestedLoyaltyVisit) || 1));
-            const baseVisit = req.baseVisit && typeof req.baseVisit === 'object' ? req.baseVisit : {};
-            await updateDoc(doc(db, 'users', req.requesterUid), {
-              [`visited.${safeCafe}`]: { ...baseVisit, loyaltyCount:nextCount, loyaltyPending:false, loyaltyUpdatedAt:new Date().toISOString() }
+            await updateDoc(userRef, {
+              [`visited.${safeCafe}.loyaltyCount`]: nextCount,
+              [`visited.${safeCafe}.loyaltyPending`]: false,
+              [`visited.${safeCafe}.loyaltyUpdatedAt`]: new Date().toISOString()
             });
           } else {
-            const baseVisit = req.baseVisit && typeof req.baseVisit === 'object' ? req.baseVisit : {};
-            await updateDoc(doc(db, 'users', req.requesterUid), { [`visited.${safeCafe}`]: { ...baseVisit, loyaltyPending:false } });
+            await updateDoc(userRef, {
+              [`visited.${safeCafe}.loyaltyPending`]: false
+            });
           }
         } else if (accepted) {
           const now = new Date();
@@ -2650,8 +2656,9 @@
         ownerRequests = ownerRequests.filter(r => r.id !== requestId); renderOwnerRequests(); renderOwnerDashboard();
         showToast(accepted ? (req.requestType === 'loyalty' ? `Visita ${req.requestedLoyaltyVisit || ''} cargada ✓` : 'Solicitud aceptada ✓') : 'Solicitud rechazada');
       } catch (e) {
-        console.error(e);
-        showToast('No se pudo procesar la solicitud');
+        console.error('Error al procesar solicitud:', e);
+        const code = e && (e.code || e.message) ? String(e.code || e.message) : '';
+        showToast(code ? `No se pudo procesar: ${code}` : 'No se pudo procesar la solicitud');
       }
     };
 
@@ -3899,6 +3906,7 @@
     function handleLoyaltyUpdate(previousVisited,nextVisited){
       const prev=Number(getAgapeFromVisitedObject(previousVisited).loyaltyCount)||0;
       const next=Number(getAgapeFromVisitedObject(nextVisited).loyaltyCount)||0;
+      renderAgapeLoyaltyCard();
       if(prev<3 && next>=3){ showToast('¡Gorra Ágape desbloqueada! 🧢'); renderCosmeticGrid(); }
       if(prev<6 && next>=6) playGreenBeanReward();
     }

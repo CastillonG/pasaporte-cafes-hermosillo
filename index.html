@@ -1765,8 +1765,8 @@
       animation:rewardGlow 1.6s ease-in-out infinite alternate;
     }
     @keyframes rewardGlow { from{transform:translateX(-50%) scale(1)} to{transform:translateX(-50%) scale(1.12)} }
-    .reward-locked { filter:grayscale(1); opacity:.38; box-shadow:none!important; background:#eeeae5!important; }
-    .reward-unlocked { filter:none; opacity:1; background:#fff8d7!important; border-color:var(--stamp-gold)!important; box-shadow:0 0 0 4px rgba(201,162,39,.22),0 8px 22px rgba(201,162,39,.3)!important; }
+    .reward-locked { filter:grayscale(1); opacity:.42; box-shadow:none!important; background:#e7e3df!important; border-color:#aaa39d!important; }
+    .reward-unlocked { filter:none; opacity:1; background:linear-gradient(145deg,#fffbe8,#ffe89a)!important; border-color:var(--stamp-gold)!important; box-shadow:0 0 0 4px rgba(201,162,39,.24),0 8px 24px rgba(201,162,39,.34)!important; }
     .reward-unlocked .animation-option-icon, .reward-unlocked .cosmetic-preview { filter:none; }
     .reward-locked .animation-option-icon, .reward-locked .cosmetic-preview { filter:grayscale(1); }
     .loyalty-cycle-note { margin:9px 0 0; text-align:center; font-size:10px; color:var(--espresso); opacity:.68; }
@@ -2732,53 +2732,61 @@
         const safeCafe = safeFbKey(req.cafeName);
         const userRef = doc(db, 'users', req.requesterUid);
         if (req.requestType === 'loyalty') {
-          const visitNumber = Math.max(1, Math.min(6, Number(req.requestedLoyaltyVisit) || 1));
+          const requestedVisit = Math.max(1, Math.min(6, Number(req.requestedLoyaltyVisit) || 1));
           const previous = req.baseVisit && typeof req.baseVisit === 'object' ? { ...req.baseVisit } : {};
-          const previousCycles = Number(previous.loyaltyCycles ?? req.loyaltyCycle) || 0;
-          const firstCycle = previousCycles === 0;
+          const previousCount = Math.max(0, Math.min(5, Number(previous.loyaltyCount) || 0));
+          const previousCycles = Math.max(0, Number(previous.loyaltyCycles ?? req.loyaltyCycle) || 0);
+          const previousLifetime = Math.max(
+            Number(previous.loyaltyLifetimeVisits) || 0,
+            previousCycles * 6 + previousCount
+          );
 
           if (accepted) {
+            // The accepted visit always advances from the actual snapshot carried by the request.
+            const acceptedVisit = Math.max(previousCount + 1, requestedVisit);
+            const nextLifetime = previousLifetime + 1;
             const nextVisit = {
               ...previous,
               loyaltyPending: false,
               loyaltyUpdatedAt: new Date().toISOString(),
-              loyaltyLifetimeVisits: (Number(previous.loyaltyLifetimeVisits) || 0) + 1
+              loyaltyLifetimeVisits: nextLifetime
             };
 
-            if (visitNumber === 3 && firstCycle) {
-              nextVisit.agapeCapUnlocked = true;
-            }
+            // Permanent milestone 3: Ágape cap.
+            if (nextLifetime >= 3) nextVisit.agapeCapUnlocked = true;
 
-            if (visitNumber === 6) {
+            if (acceptedVisit >= 6) {
               const nextCycles = previousCycles + 1;
               const discounts = Array.isArray(previous.loyaltyDiscounts)
                 ? previous.loyaltyDiscounts.map(d => ({ ...d }))
                 : (Array.isArray(req.existingDiscounts) ? req.existingDiscounts.map(d => ({ ...d })) : []);
               const newDiscount = {
-                id: `agape50_${Date.now()}`,
+                id: `agape50_${req.requesterUid}_${Date.now()}`,
                 cafeName: 'Ágape Café',
                 title: 'Café con 50 % de descuento',
                 description: 'Válido en Ágape Café. Solicita el canje para que el owner lo confirme.',
                 earnedAt: new Date().toISOString(),
-                pending: false
+                pending: false,
+                status: 'available',
+                sourceCycle: nextCycles
               };
               discounts.push(newDiscount);
+
               nextVisit.loyaltyCount = 0;
               nextVisit.loyaltyCycles = nextCycles;
               nextVisit.lastLoyaltyCompletedAt = new Date().toISOString();
               nextVisit.lastEarnedDiscountId = newDiscount.id;
               nextVisit.loyaltyDiscounts = discounts;
-              // Completar la primera tarjeta siempre conserva ambos premios especiales.
-              if (firstCycle) {
-                nextVisit.agapeCapUnlocked = true;
-                nextVisit.greenBeanAnimationUnlocked = true;
-              }
+              // First and future sixth visits permanently keep the animation unlocked.
+              nextVisit.greenBeanAnimationUnlocked = true;
+              nextVisit.agapeCapUnlocked = true;
             } else {
-              nextVisit.loyaltyCount = visitNumber;
+              nextVisit.loyaltyCount = acceptedVisit;
             }
 
             await updateDoc(userRef, { [`visited.${safeCafe}`]: nextVisit });
           } else {
+            // A rejection immediately enables requesting again.
             await updateDoc(userRef, { [`visited.${safeCafe}.loyaltyPending`]: false });
           }
         } else if (req.requestType === 'discount') {
@@ -3170,12 +3178,29 @@
     }
     window.updateStampAnimationSummary = updateStampAnimationSummary;
 
+    function agapeRewardState(data = agapeVisitData()) {
+      const count = Math.max(0, Number(data.loyaltyCount) || 0);
+      const cycles = Math.max(0, Number(data.loyaltyCycles) || 0);
+      const storedLifetime = Math.max(0, Number(data.loyaltyLifetimeVisits) || 0);
+      const lifetimeVisits = Math.max(storedLifetime, cycles * 6 + count);
+      return {
+        count,
+        cycles,
+        lifetimeVisits,
+        capUnlocked: !!data.agapeCapUnlocked || lifetimeVisits >= 3,
+        animationUnlocked: !!data.greenBeanAnimationUnlocked || lifetimeVisits >= 6,
+        firstCardCompleted: cycles >= 1 || lifetimeVisits >= 6
+      };
+    }
+    window.agapeRewardState = agapeRewardState;
+
     function renderStampAnimationOptions() {
       const wrap = document.getElementById('stamp-animation-options');
       if (!wrap) return;
       wrap.innerHTML = STAMP_ANIMATIONS.map(item => {
         const rewardData = agapeVisitData();
-        const unlocked = item.id !== 'green_bean_rain' || !!rewardData.greenBeanAnimationUnlocked || (Number(rewardData.loyaltyCycles)||0) >= 1;
+        const rewardState = agapeRewardState(rewardData);
+        const unlocked = item.id !== 'green_bean_rain' || rewardState.animationUnlocked;
         const preview = item.preview === 'cup_fill' ? '<div class="mini-cup-preview"></div>' : item.preview === 'green_bean_rain' ? '<span style="font-size:31px;">🫘</span>' : '<span style="font-size:28px;color:var(--espresso);opacity:.7;">—</span>';
         return `<div class="animation-option ${selectedStampAnimation === item.id ? 'selected' : ''} ${unlocked?'reward-unlocked':'reward-locked'}" onclick="${unlocked?`selectStampAnimation('${item.id}')`:'void(0)'}">
           <div class="animation-option-icon">${preview}</div>
@@ -3234,7 +3259,7 @@
       }
     }
     async function selectStampAnimation(animationId) {
-      if (animationId === 'green_bean_rain') { const d=agapeVisitData(); if (!d.greenBeanAnimationUnlocked && (Number(d.loyaltyCycles)||0) < 1) return; }
+      if (animationId === 'green_bean_rain' && !agapeRewardState().animationUnlocked) return;
       selectedStampAnimation = animationId;
       renderStampAnimationOptions();
       updateStampAnimationSummary();
@@ -3569,7 +3594,7 @@
       return (v && typeof v === 'object') ? v : {};
     }
     function agapeLoyaltyCount() { return Math.max(0, Math.min(6, Number(agapeVisitData().loyaltyCount) || 0)); }
-    function agapeCapUnlocked() { const d=agapeVisitData(); return !!d.agapeCapUnlocked || (Number(d.loyaltyCycles)||0) >= 1 || agapeLoyaltyCount() >= 3; }
+    function agapeCapUnlocked() { return agapeRewardState().capUnlocked; }
 
     function renderCosmeticGrid() {
       const grid=document.getElementById('cosmetic-grid'); if(!grid) return;
@@ -4058,13 +4083,14 @@
       if(!currentCafe || normalize(currentCafe.name)!==normalize('Ágape Café') || !hasSeal){ wrap.classList.remove('show'); wrap.style.display='none'; target.innerHTML=''; return; }
       wrap.classList.add('show'); wrap.style.display='block';
       const data=agapeVisitData(), count=agapeLoyaltyCount(), pending=!!data.loyaltyPending, cycles=Number(data.loyaltyCycles)||0;
+      const rewards=agapeRewardState(data);
       const firstCycle=cycles===0;
       const dots=Array.from({length:6},(_,i)=>{
         const n=i+1;
         let reward='';
-        if(firstCycle && n===3) reward=`<span class="loyalty-reward-marker ${data.agapeCapUnlocked?'unlocked':''}" title="Gorra Ágape: dos granos verdes formando un corazón">🧢</span>`;
-        if(n===6) reward=`<span class="loyalty-reward-marker ${(data.greenBeanAnimationUnlocked || cycles>0)?'unlocked':''}" title="${firstCycle?'Animación de granos verdes y ':''}café con 50 % de descuento">${firstCycle?'🫘':'🏷️'}</span>`;
-        return `<div class="loyalty-dot ${i<count?'done':''} ${reward?'has-reward':''}" title="${n===3&&firstCycle?'Visita 3: Gorra Ágape':n===6?(firstCycle?'Visita 6: animación de granos verdes + descuento':'Visita 6: café con 50 % de descuento'):''}">${reward}${i<count?'✓':n}</div>`;
+        if(firstCycle && n===3) reward=`<span class="loyalty-reward-marker ${rewards.capUnlocked?'unlocked':''}" title="Visita 3: Gorra Ágape con dos granos verdes en forma de corazón">🧢</span>`;
+        if(n===6) reward=`<span class="loyalty-reward-marker ${rewards.animationUnlocked?'unlocked':''}" title="${firstCycle?'Visita 6: animación Lluvia de granos verdes + tarjeta de 50 % de descuento':'Visita 6: nueva tarjeta de 50 % de descuento'}">${firstCycle?'🫘🏷️':'🏷️'}</span>`;
+        return `<div class="loyalty-dot ${i<count?'done':''} ${reward?'has-reward':''}" title="${n===3&&firstCycle?'Visita 3: Gorra Ágape':n===6?(firstCycle?'Visita 6: animación + descuento':'Visita 6: descuento'):''}">${reward}${i<count?'✓':n}</div>`;
       }).join('');
       target.innerHTML=`<div class="loyalty-card">
         <div class="loyalty-head"><div class="loyalty-brand">${agapeLogoSvg()}<div><div class="loyalty-title">Ágape Café</div><div style="font-size:10px;color:var(--espresso);opacity:.62;">Tarjeta de lealtad</div></div></div><div class="loyalty-count">${count}/6</div></div>
@@ -4120,9 +4146,9 @@
       showRewardPopup(icon,title,desc);
     }
     function syncUnlockedRewards(data=agapeVisitData()){
-      const completedCycle = (Number(data.loyaltyCycles)||0) >= 1;
-      if(data.agapeCapUnlocked || completedCycle) showPersistentRewardOnce('agape_cap','🧢','Gorra Ágape desbloqueada','Ya es parte de tu perfil. Equípala en Editar personaje → Cosméticos.');
-      if(data.greenBeanAnimationUnlocked || completedCycle) showPersistentRewardOnce('green_bean_rain','🫘','Lluvia de granos desbloqueada','Ya es parte de tu perfil. Encuéntrala en Efectos → Animaciones.');
+      const state = agapeRewardState(data);
+      if(state.capUnlocked) showPersistentRewardOnce('agape_cap_v3','🧢','Gorra Ágape desbloqueada','Ya es parte de tu perfil. Equípala en Editar personaje → Cosméticos.');
+      if(state.animationUnlocked) showPersistentRewardOnce('green_bean_rain_v3','🫘','Lluvia de granos verdes desbloqueada','Ya es parte de tu perfil. Encuéntrala en Efectos → Animaciones.');
       renderCosmeticGrid(); renderStampAnimationOptions();
     }
     window.syncUnlockedRewards=syncUnlockedRewards;
@@ -4133,30 +4159,37 @@
       const entry = findAgapeVisitedEntry();
       if (!entry || !entry.value || typeof entry.value !== 'object') return;
       const data = { ...entry.value };
-      const cycles = Number(data.loyaltyCycles) || 0;
-      if (cycles < 1) return;
-
+      const state = agapeRewardState(data);
       let changed = false;
-      if (!data.agapeCapUnlocked) { data.agapeCapUnlocked = true; changed = true; }
-      if (!data.greenBeanAnimationUnlocked) { data.greenBeanAnimationUnlocked = true; changed = true; }
+
+      if (state.capUnlocked && !data.agapeCapUnlocked) { data.agapeCapUnlocked = true; changed = true; }
+      if (state.animationUnlocked && !data.greenBeanAnimationUnlocked) { data.greenBeanAnimationUnlocked = true; changed = true; }
+      if ((Number(data.loyaltyLifetimeVisits)||0) < state.lifetimeVisits) {
+        data.loyaltyLifetimeVisits = state.lifetimeVisits; changed = true;
+      }
 
       const discounts = Array.isArray(data.loyaltyDiscounts) ? data.loyaltyDiscounts.map(d=>({...d})) : [];
-      // Cada tarjeta completada debe producir un descuento. Si una versión anterior no lo creó, se recupera aquí.
-      if (discounts.length < cycles) {
-        for (let i=discounts.length; i<cycles; i++) {
+      const cycles = Math.max(Number(data.loyaltyCycles)||0, Math.floor(state.lifetimeVisits/6));
+      if ((Number(data.loyaltyCycles)||0) < cycles) { data.loyaltyCycles = cycles; changed = true; }
+      // One persistent discount per completed card. Reconstruct missing rewards without duplicates.
+      const sourceCycles = new Set(discounts.map(d=>Number(d.sourceCycle)||0).filter(Boolean));
+      for (let cycle=1; cycle<=cycles; cycle++) {
+        if (!sourceCycles.has(cycle)) {
           discounts.push({
-            id:`agape50_recovered_${i+1}_${Date.now()}`,
+            id:`agape50_recovered_${cycle}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,
             cafeName:'Ágape Café',
             title:'Café con 50 % de descuento',
             description:'Válido en Ágape Café. Solicita el canje para que el owner lo confirme.',
             earnedAt:data.lastLoyaltyCompletedAt || new Date().toISOString(),
             pending:false,
+            status:'available',
+            sourceCycle:cycle,
             recovered:true
           });
+          changed = true;
         }
-        data.loyaltyDiscounts = discounts;
-        changed = true;
       }
+      if (changed) data.loyaltyDiscounts = discounts;
       if (!changed) return;
 
       agapeRewardRepairRunning = true;
@@ -4172,20 +4205,25 @@
 
     function handleLoyaltyUpdate(previousVisited,nextVisited){
       const prevData=getAgapeFromVisitedObject(previousVisited), nextData=getAgapeFromVisitedObject(nextVisited);
-      const prev=Number(prevData.loyaltyCount)||0, next=Number(nextData.loyaltyCount)||0;
-      const prevCycles=Number(prevData.loyaltyCycles)||0, nextCycles=Number(nextData.loyaltyCycles)||0;
+      const prevState=agapeRewardState(prevData), nextState=agapeRewardState(nextData);
       renderAgapeLoyaltyCard(); renderDiscounts(); syncUnlockedRewards(nextData); repairAgapeRewardsIfNeeded();
-      if(!prevData.agapeCapUnlocked && nextData.agapeCapUnlocked){ showPersistentRewardOnce('agape_cap','🧢','Gorra Ágape desbloqueada','Ya es parte de tu perfil. Equípala en Editar personaje → Cosméticos.'); }
-      if(!prevData.greenBeanAnimationUnlocked && nextData.greenBeanAnimationUnlocked){ showPersistentRewardOnce('green_bean_rain','🫘','Lluvia de granos desbloqueada','Ya es parte de tu perfil. Encuéntrala en Efectos → Animaciones.'); }
+
+      if(!prevState.capUnlocked && nextState.capUnlocked){
+        showRewardPopup('🧢','Gorra Ágape desbloqueada','Llegaste a 3 visitas. Ya puedes equiparla en Editar personaje → Cosméticos.');
+      }
+      if(!prevState.animationUnlocked && nextState.animationUnlocked){
+        showRewardPopup('🫘','Lluvia de granos verdes desbloqueada','Llegaste a 6 visitas. Ya puedes elegirla en Efectos → Animaciones.');
+      }
+
       const prevDiscountIds=new Set((Array.isArray(prevData.loyaltyDiscounts)?prevData.loyaltyDiscounts:[]).map(d=>d.id));
       const newDiscount=(Array.isArray(nextData.loyaltyDiscounts)?nextData.loyaltyDiscounts:[]).find(d=>!prevDiscountIds.has(d.id));
-      if(newDiscount || nextCycles>prevCycles){
-        const id=newDiscount?.id || `cycle_${nextCycles}`;
-        showPersistentRewardOnce('discount_'+id,'🏷️','Café con 50 % de descuento','Se guardó en tu cuenta y ya aparece en Descuentos. No desaparecerá hasta que el owner acepte su canje.');
-        playGreenBeanReward('¡Tarjeta completada!<br><span style="font-size:18px;">Nuevo descuento desbloqueado</span>');
+      if(newDiscount){
+        showRewardPopup('🏷️','Café con 50 % de descuento','Tu tarjeta quedó guardada en Descuentos y permanecerá ahí hasta que el owner acepte el canje.');
+        playGreenBeanReward('¡6 visitas completadas!<br><span style="font-size:18px;">Animación y descuento desbloqueados</span>');
       }
     }
     window.handleLoyaltyUpdate=handleLoyaltyUpdate;
+
 
     // ──────────────────────────────────────────────
     // CAFE DETAIL SHEET

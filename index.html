@@ -2245,10 +2245,10 @@
     window.createCheckinRequest = async function(cafe) {
       if (!CONFIGURED || !currentUser) throw new Error('Necesitas iniciar sesión.');
       if (!cafe.ownerEmail) throw new Error('Este café todavía no tiene owner asignado.');
-      const requestId = `${currentUser.uid}_${safeFbKey(cafe.name)}`;
+      // Cada intento genera una solicitud nueva. Así no dependemos de leer
+      // un documento anterior que pudo haber sido eliminado manualmente.
+      const requestId = `${currentUser.uid}_${safeFbKey(cafe.name)}_${Date.now()}`;
       const ref = doc(db, 'checkinRequests', requestId);
-      const previous = await getDoc(ref);
-      if (previous.exists() && previous.data().status === 'pending') return 'pending';
       await setDoc(ref, {
         cafeName: cafe.name,
         ownerEmail: cafe.ownerEmail.toLowerCase(),

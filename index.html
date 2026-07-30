@@ -1713,9 +1713,12 @@
     .agape-heart-logo { width:46px; height:40px; flex-shrink:0; }
     .loyalty-title { font-family:'Playfair Display',serif; font-size:16px; color:var(--dark); }
     .loyalty-count { font-size:12px; font-weight:800; color:var(--green); }
-    .loyalty-stamps { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; max-width:270px; margin:0 auto; }
+    .loyalty-stamps { display:grid; grid-template-columns:repeat(3,42px); grid-auto-rows:42px; justify-content:center; gap:24px 12px; width:100%; margin:0 auto; padding-top:18px; }
     .loyalty-dot {
-      aspect-ratio:1;
+      width:42px;
+      height:42px;
+      min-width:42px;
+      min-height:42px;
       border-radius:50%;
       border:2px dashed rgba(56,117,69,.35);
       display:flex;
@@ -1750,7 +1753,7 @@
       display:flex; align-items:center; justify-content:center; font-size:13px;
       box-shadow:0 3px 8px rgba(62,31,14,.14); z-index:2;
     }
-    .loyalty-dot.has-reward { margin-top:18px; }
+    .loyalty-dot.has-reward { margin-top:0; }
     .loyalty-reward-marker {
       font-size:22px !important;
       width:34px; height:34px;
@@ -2516,6 +2519,7 @@
       selectedStampStyle = 'coffee';
       ownerRequests = [];
       currentUser = null;
+      nearestCafeOfferAttempted = false;
       updateUserUI(null);
       if (window.resetVisitedAnimationState) window.resetVisitedAnimationState();
       refreshMarkers();
@@ -2537,9 +2541,9 @@
           setupFriendsSystem();
           initMap();
           setTimeout(() => { if (window.maybeShowNearestCafePopup) window.maybeShowNearestCafePopup(); }, 1200);
-          setTimeout(() => localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now())), 2500);
         } else {
           currentUser = null;
+          nearestCafeOfferAttempted = false;
           updateUserUI(null);
           document.getElementById('auth-screen').classList.remove('hidden');
         }
@@ -2963,9 +2967,18 @@
 
     // ── Public profiles and friends ──
     let publicProfileSyncTimer = null;
+    function cleanFirestoreValue(value) {
+      if (Array.isArray(value)) return value.map(cleanFirestoreValue).filter(v => v !== undefined);
+      if (value && typeof value === 'object') {
+        return Object.fromEntries(Object.entries(value)
+          .filter(([,v]) => v !== undefined)
+          .map(([k,v]) => [k, cleanFirestoreValue(v)]));
+      }
+      return value;
+    }
     async function upsertPublicProfile() {
       if (!CONFIGURED || !currentUser) return;
-      const publicData = {
+      const publicData = cleanFirestoreValue({
         uid: currentUser.uid,
         displayName: window.currentDisplayName || currentUser.displayName || 'Usuario',
         email: (currentUser.email || '').toLowerCase(),
@@ -2978,16 +2991,21 @@
         visitedCount: Object.keys(visited || {}).length,
         medals: {},
         updatedAt: new Date().toISOString()
-      };
+      });
       await setDoc(doc(db,'publicProfiles',currentUser.uid), publicData, {merge:true});
     }
     window.schedulePublicProfileSync = function(){ clearTimeout(publicProfileSyncTimer); publicProfileSyncTimer=setTimeout(()=>upsertPublicProfile().catch(console.error),500); };
     window.friendApi = {
       searchPeople: async (term) => {
-        if (!CONFIGURED || !currentUser) return [];
+        if (!CONFIGURED || !currentUser) throw new Error('Debes iniciar sesión.');
+        await upsertPublicProfile();
         const snap = await getDocs(collection(db,'publicProfiles'));
         const q=(term||'').trim().toLowerCase();
-        return snap.docs.map(d=>d.data()).filter(x=>x.uid!==currentUser.uid && (!q || (x.displayName||'').toLowerCase().includes(q) || (x.email||'').toLowerCase().includes(q))).slice(0,20);
+        return snap.docs
+          .map(d=>({uid:d.id,...d.data()}))
+          .filter(x=>x.uid!==currentUser.uid && (!q || (x.displayName||'').toLowerCase().includes(q) || (x.email||'').toLowerCase().includes(q)))
+          .sort((a,b)=>(a.displayName||'').localeCompare(b.displayName||'', 'es'))
+          .slice(0,30);
       },
       sendRequest: async (toUid) => {
         const id=`${currentUser.uid}_${toUid}`;
@@ -3275,15 +3293,9 @@
     let selectedPet = '';
     let selectedStampStyle = 'coffee';
     let nearestCafeEnabled = true;
-    const NEAREST_INACTIVITY_MS = 24 * 60 * 60 * 1000;
-    const LAST_ACTIVE_KEY = 'cafePassportLastActiveAt';
-    const previousAppActivity = Number(localStorage.getItem(LAST_ACTIVE_KEY) || 0);
-    let shouldOfferNearestCafe = previousAppActivity > 0 && (Date.now() - previousAppActivity) >= NEAREST_INACTIVITY_MS;
+    // En cada carga nueva de la página puede mostrarse una sola vez,
+    // siempre que el usuario lo tenga activado y no sea una cuenta owner.
     let nearestCafeOfferAttempted = false;
-    window.addEventListener('pagehide', () => localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now())));
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now()));
-    });
     let activeStoreCategory = 'cosmetics';
     let ownerRequests = [];
     let ownerRequestHistory = [];
@@ -3512,9 +3524,11 @@
       return 2 * R * Math.asin(Math.sqrt(a));
     }
     function maybeShowNearestCafePopup() {
-      if (nearestCafeOfferAttempted || !shouldOfferNearestCafe || !nearestCafeEnabled) return;
+      if (nearestCafeOfferAttempted || !nearestCafeEnabled) return;
+      const email = (window.currentUserEmail || '').toLowerCase();
+      const isOwnerAccount = cafes.some(c => (c.ownerEmail || '').toLowerCase() === email);
+      if (isOwnerAccount) return;
       nearestCafeOfferAttempted = true;
-      shouldOfferNearestCafe = false;
       if (!navigator.geolocation) { showToast('Tu navegador no permite obtener la ubicación'); return; }
       navigator.geolocation.getCurrentPosition(pos => {
         const lat = pos.coords.latitude, lon = pos.coords.longitude;
@@ -4487,7 +4501,23 @@ window.doCheckin = function() {
     async function respondFriendRequest(id,accepted,fromUid){ try{await window.friendApi.respondRequest(id,accepted,fromUid);showToast(accepted?'Amistad aceptada ✓':'Solicitud rechazada');}catch(e){console.error(e);showToast('No se pudo procesar la solicitud');} }
     function openFriendSearch(){ closeFriendsDrawer(); document.getElementById('friend-search-overlay').classList.add('open'); document.getElementById('friend-search-results').innerHTML=''; }
     function closeFriendSearch(e){ if(!e||e.target===document.getElementById('friend-search-overlay'))document.getElementById('friend-search-overlay').classList.remove('open'); }
-    async function searchPeople(){ const term=document.getElementById('friend-search-input').value; const root=document.getElementById('friend-search-results'); root.innerHTML='<div class="owner-empty">Buscando…</div>'; try{const people=await window.friendApi.searchPeople(term); root.innerHTML=people.length?people.map(p=>`<div class="friend-result"><div class="friend-result-avatar">${avatarSvg(p.selectedAvatar||'classic',true,false,{cosmetic:p.equippedCosmetic||'',pet:p.selectedPet||''})}</div><div class="friend-result-info"><div class="friend-result-name">${p.displayName||'Usuario'}</div><div class="friend-result-email">${p.email||''}</div></div><button class="friend-action-btn" onclick="sendFriendRequest('${p.uid}',this)">Agregar</button></div>`).join(''):'<div class="owner-empty">No se encontraron personas.</div>'; }catch(e){console.error(e);root.innerHTML='<div class="owner-empty">No se pudo buscar. Revisa las reglas de Firestore.</div>';} }
+    async function searchPeople(){
+      const input=document.getElementById('friend-search-input');
+      const term=input.value.trim();
+      const root=document.getElementById('friend-search-results');
+      root.innerHTML='<div class="owner-empty">Buscando…</div>';
+      try{
+        const people=await window.friendApi.searchPeople(term);
+        root.innerHTML=people.length?people.map(p=>`<div class="friend-result"><div class="friend-result-avatar">${avatarSvg(p.selectedAvatar||'classic',true,false,{cosmetic:p.equippedCosmetic||'',pet:p.selectedPet||''})}</div><div class="friend-result-info"><div class="friend-result-name">${p.displayName||'Usuario'}</div><div class="friend-result-email">${p.email||''}</div></div><button class="friend-action-btn" onclick="sendFriendRequest('${p.uid}',this)">Agregar</button></div>`).join(''):'<div class="owner-empty">No hay coincidencias. Para aparecer aquí, la otra persona debe abrir esta versión e iniciar sesión al menos una vez.</div>';
+      }catch(e){
+        console.error('Búsqueda de personas:',e);
+        const code=e?.code||e?.message||'error desconocido';
+        root.innerHTML=`<div class="owner-empty">No se pudo buscar.<br><small>${code}</small></div>`;
+      }
+    }
+    document.addEventListener('keydown',e=>{
+      if(e.key==='Enter' && document.activeElement?.id==='friend-search-input') searchPeople();
+    });
     async function sendFriendRequest(uid,btn){ try{btn.disabled=true;await window.friendApi.sendRequest(uid);btn.textContent='Enviada ✓';}catch(e){console.error(e);btn.disabled=false;showToast('No se pudo enviar la solicitud');} }
     async function openFriendPassport(uid){ try{const p=await window.friendApi.getPublicProfile(uid); if(!p)return; window.currentFriendProfile=p; const age=p.profile?.birthYear?Math.max(0,new Date().getFullYear()-Number(p.profile.birthYear)):'—'; document.getElementById('friend-passport-content').innerHTML=`<div class="friend-passport-view"><div class="friend-passport-card ${p.selectedPassportBackground&&p.selectedPassportBackground!=='empty'?'bg-'+p.selectedPassportBackground:''}"><div class="id-card-header"><span class="id-card-country">PASAPORTE · HERMOSILLO</span><span class="id-card-type">AMIGO</span></div><div class="friend-passport-body"><div class="friend-passport-avatar">${avatarSvg(p.selectedAvatar||'classic',false,false,{cosmetic:p.equippedCosmetic||'',pet:p.selectedPet||''})}</div><div class="friend-passport-fields"><div><div class="friend-passport-label">Nombre</div><div class="friend-passport-value">${p.displayName||'Usuario'}</div></div><div><div class="friend-passport-label">Edad</div><div class="friend-passport-value">${age}</div></div><div><div class="friend-passport-label">Cafés visitados</div><div class="friend-passport-value">${p.visitedCount||0}</div></div></div></div><button class="friend-medals-circle" onclick="openFriendMedals()">🏅</button></div></div>`; document.getElementById('friend-passport-overlay').classList.add('open'); }catch(e){console.error(e);showToast('No se pudo abrir el pasaporte');} }
     function closeFriendPassport(e){if(!e||e.target===document.getElementById('friend-passport-overlay'))document.getElementById('friend-passport-overlay').classList.remove('open');}

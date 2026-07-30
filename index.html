@@ -1327,6 +1327,28 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cg fill='none' stroke='%237a3f25' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 17h20v13c0 5-4 9-9 9h-2c-5 0-9-4-9-9z'/%3E%3Cpath d='M30 21h4c5 0 5 8 0 8h-4'/%3E%3Cpath d='M14 13c-2-3 2-4 0-7M20 13c-2-3 2-4 0-7M26 13c-2-3 2-4 0-7'/%3E%3Cpath d='M8 40h28'/%3E%3C/g%3E%3C/svg%3E");
 }
 
+    .passport-id-card.bg-purple-trapezoids {
+      background: linear-gradient(145deg,#8558d8,#5f3ab0 60%,#4d2c90);
+    }
+    .passport-id-card.bg-purple-trapezoids .id-value,
+    .passport-id-card.bg-purple-trapezoids .id-card-country { color:#fffaf0; }
+    .passport-id-card.bg-purple-trapezoids .id-label,
+    .passport-id-card.bg-purple-trapezoids .id-card-mrz { color:rgba(255,250,240,.72); }
+    .passport-id-card.bg-purple-trapezoids::before {
+      opacity: .22;
+      background-size: 86px 86px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='86' height='86' viewBox='0 0 86 86'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M10 23 L31 33 L31 53 L10 63 L16 43 Z'/%3E%3Cpath d='M76 23 L55 33 L55 53 L76 63 L70 43 Z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .background-preview.purple-trapezoids {
+      background: linear-gradient(145deg,#8558d8,#5f3ab0 60%,#4d2c90);
+    }
+    .background-preview.purple-trapezoids::after {
+      opacity: .34;
+      background-size: 62px 62px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='62' height='62' viewBox='0 0 62 62'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M7 16 L23 24 L23 38 L7 46 L12 31 Z'/%3E%3Cpath d='M55 16 L39 24 L39 38 L55 46 L50 31 Z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
     .id-card-header {
       display: flex;
       justify-content: space-between;
@@ -1904,6 +1926,7 @@
     .friend-mini-avatar { width:72px; height:78px; margin:0 auto 6px; overflow:hidden; border-radius:12px; background:#ddd4c7; }
     .friend-mini-avatar svg { width:100%; height:100%; }
     .friend-name { font-weight:800; font-size:12px; line-height:1.25; }
+    .friend-progress { margin-top:4px; font-size:11px; font-weight:800; color:var(--green); }
     .friend-search { display:flex; gap:8px; margin:14px 0; }
     .friend-search input { flex:1; padding:12px 13px; border:2px solid rgba(122,63,37,.2); border-radius:12px; font:14px 'DM Sans',sans-serif; }
     .friend-search button { border:0; border-radius:12px; background:var(--espresso); color:var(--cream); padding:0 15px; font-weight:800; }
@@ -1922,6 +1945,7 @@
     .friend-passport-body { display:flex; gap:15px; align-items:center; }
     .friend-passport-avatar { width:92px; height:112px; border-radius:12px; overflow:hidden; flex-shrink:0; background:#d9d1c2; }
     .friend-passport-avatar svg{width:100%;height:100%}.friend-passport-fields{display:grid;gap:8px}.friend-passport-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--espresso);opacity:.55}.friend-passport-value{font-weight:800;color:var(--dark)}
+    .friend-passport-progress { display:inline-flex; align-items:center; gap:7px; margin-top:6px; padding:7px 11px; border-radius:999px; background:rgba(74,124,89,.12); color:var(--green); font-weight:800; font-size:12px; }
     .friend-medals-circle { position:absolute; right:13px; bottom:13px; width:44px; height:44px; border-radius:50%; border:2px solid var(--stamp-gold); background:#fff8d8; cursor:pointer; font-size:20px; }
 
     /* Store personality */
@@ -3274,7 +3298,8 @@
   { id:'coffee', name:'Granos de café', preview:'coffee' },
   { id:'cups', name:'Tazas de café', preview:'cups' },
   { id:'cactus', name:'Cactus', preview:'cactus' },
-  { id:'desert_night', name:'Noche Sonorense', preview:'desert-night' }
+  { id:'desert_night', name:'Noche Sonorense', preview:'desert-night' },
+  { id:'purple_trapezoids', name:'Trapecios morados', preview:'purple-trapezoids' }
 ];
 
     const STAMP_ANIMATIONS = [
@@ -3286,6 +3311,7 @@
     const STORE_ITEMS = [
       { id:'scarf_red', category:'cosmetics', name:'Pañuelo Cafetero', desc:'Un pañuelo rojo para tu personaje.', price:29 },
       { id:'desert_night', category:'backgrounds', name:'Noche Sonorense', desc:'Fondo nocturno inspirado en el desierto.', price:39 },
+      { id:'purple_trapezoids', category:'backgrounds', name:'Trapecios morados', desc:'Fondo morado con figuras blancas de trapecios encontrados.', price:42 },
       { id:'gold_star_stamp', category:'stamps', name:'Sello Estrella', desc:'Cambia tus sellos visitados por una estrella dorada.', price:25 },
       { id:'coffee_bean_stamp', category:'stamps', name:'Sello Grano de Café', desc:'Un sello con forma de grano de café.', price:20 },
       { id:'lightning_stamp', category:'stamps', name:'Sello Rayo', desc:'Un sello eléctrico para tus visitas.', price:25 },
@@ -3695,12 +3721,14 @@
 
   if (selectedPassportBackground === 'cactus') card.classList.add('bg-cactus');
   if (selectedPassportBackground === 'desert_night') card.classList.add('bg-desert-night');
+  if (selectedPassportBackground === 'purple_trapezoids') card.classList.add('bg-purple-trapezoids');
 }
 
     function renderBackgroundGrid() {
       const grid = document.getElementById('background-grid');
       if (!grid) return;
-      grid.innerHTML = PASSPORT_BACKGROUNDS.filter(bg => bg.id !== 'desert_night' || ownedStoreItems.desert_night).map(bg => `
+      const premiumBackgroundIds = new Set(['desert_night','purple_trapezoids']);
+      grid.innerHTML = PASSPORT_BACKGROUNDS.filter(bg => !premiumBackgroundIds.has(bg.id) || ownedStoreItems[bg.id]).map(bg => `
         <button class="background-option ${selectedPassportBackground === bg.id ? 'selected' : ''}" onclick="selectPassportBackground('${bg.id}')">
           <div class="background-preview ${bg.preview}"></div>
           ${bg.name}
@@ -4546,7 +4574,7 @@ window.doCheckin = function() {
       const reqRoot=document.getElementById('friend-requests-section');
       reqRoot.innerHTML=reqs.length?`<div class="sheet-section-title">Solicitudes</div>${reqs.map(r=>`<div class="friend-request-card"><strong>${r.profile?.displayName||'Usuario'}</strong><div class="request-meta">quiere ser tu amigo</div><div class="friend-request-actions"><button class="accept" onclick="respondFriendRequest('${r.id}',true,'${r.fromUid}')">Aceptar</button><button class="reject" onclick="respondFriendRequest('${r.id}',false,'${r.fromUid}')">Rechazar</button></div></div>`).join('')}`:'';
       const capacity=Math.max(4,Math.ceil(Math.max(friends.length,1)/2)*2);
-      let slots=''; for(let i=0;i<capacity;i++){ const f=friends[i]; slots+=f?`<div class="friend-slot filled" onclick="openFriendPassport('${f.uid}')"><div><div class="friend-mini-avatar">${avatarSvg(f.selectedAvatar||'classic',true,false,{cosmetic:f.equippedCosmetic||'',pet:f.selectedPet||''})}</div><div class="friend-name">${f.displayName||'Usuario'}</div></div></div>`:`<div class="friend-slot"><span>Pasaporte disponible</span></div>`; }
+      let slots=''; for(let i=0;i<capacity;i++){ const f=friends[i]; const pct=f?Math.round(((f.visitedCount||0)/cafes.length)*100):0; slots+=f?`<div class="friend-slot filled" onclick="openFriendPassport('${f.uid}')"><div><div class="friend-mini-avatar">${avatarSvg(f.selectedAvatar||'classic',true,false,{cosmetic:f.equippedCosmetic||'',pet:f.selectedPet||''})}</div><div class="friend-name">${f.displayName||'Usuario'}</div><div class="friend-progress">${pct}% completado</div></div></div>`:`<div class="friend-slot"><span>Pasaporte disponible</span></div>`; }
       slots+=`<div class="friend-slot add" onclick="openFriendSearch()">＋</div>`;
       document.getElementById('friends-grid').innerHTML=slots;
     }
@@ -4571,7 +4599,7 @@ window.doCheckin = function() {
       if(e.key==='Enter' && document.activeElement?.id==='friend-search-input') searchPeople();
     });
     async function sendFriendRequest(uid,btn){ try{btn.disabled=true;await window.friendApi.sendRequest(uid);btn.textContent='Enviada ✓';}catch(e){console.error(e);btn.disabled=false;showToast('No se pudo enviar la solicitud');} }
-    async function openFriendPassport(uid){ try{const p=await window.friendApi.getPublicProfile(uid); if(!p)return; window.currentFriendProfile=p; const age=p.profile?.birthYear?Math.max(0,new Date().getFullYear()-Number(p.profile.birthYear)):'—'; document.getElementById('friend-passport-content').innerHTML=`<div class="friend-passport-view"><div class="friend-passport-card ${p.selectedPassportBackground&&p.selectedPassportBackground!=='empty'?'bg-'+p.selectedPassportBackground:''}"><div class="id-card-header"><span class="id-card-country">PASAPORTE · HERMOSILLO</span><span class="id-card-type">AMIGO</span></div><div class="friend-passport-body"><div class="friend-passport-avatar">${avatarSvg(p.selectedAvatar||'classic',false,false,{cosmetic:p.equippedCosmetic||'',pet:p.selectedPet||''})}</div><div class="friend-passport-fields"><div><div class="friend-passport-label">Nombre</div><div class="friend-passport-value">${p.displayName||'Usuario'}</div></div><div><div class="friend-passport-label">Edad</div><div class="friend-passport-value">${age}</div></div><div><div class="friend-passport-label">Cafés visitados</div><div class="friend-passport-value">${p.visitedCount||0}</div></div></div></div><button class="friend-medals-circle" onclick="openFriendMedals()">🏅</button></div></div>`; document.getElementById('friend-passport-overlay').classList.add('open'); }catch(e){console.error(e);showToast('No se pudo abrir el pasaporte');} }
+    async function openFriendPassport(uid){ try{const p=await window.friendApi.getPublicProfile(uid); if(!p)return; window.currentFriendProfile=p; const age=p.profile?.birthYear?Math.max(0,new Date().getFullYear()-Number(p.profile.birthYear)):'—'; const pct=Math.round(((p.visitedCount||0)/cafes.length)*100); const bgClass=p.selectedPassportBackground&&p.selectedPassportBackground!=='empty'?'bg-'+String(p.selectedPassportBackground).replace(/_/g,'-'):''; document.getElementById('friend-passport-content').innerHTML=`<div class="friend-passport-view"><div class="friend-passport-card ${bgClass}"><div class="id-card-header"><span class="id-card-country">PASAPORTE · HERMOSILLO</span><span class="id-card-type">AMIGO</span></div><div class="friend-passport-body"><div class="friend-passport-avatar">${avatarSvg(p.selectedAvatar||'classic',false,false,{cosmetic:p.equippedCosmetic||'',pet:p.selectedPet||''})}</div><div class="friend-passport-fields"><div><div class="friend-passport-label">Nombre</div><div class="friend-passport-value">${p.displayName||'Usuario'}</div></div><div><div class="friend-passport-label">Edad</div><div class="friend-passport-value">${age}</div></div><div><div class="friend-passport-label">Cafés visitados</div><div class="friend-passport-value">${p.visitedCount||0}</div></div><div><div class="friend-passport-label">Porcentaje</div><div class="friend-passport-progress">${pct}% completado</div></div></div></div><button class="friend-medals-circle" onclick="openFriendMedals()">🏅</button></div></div>`; document.getElementById('friend-passport-overlay').classList.add('open'); }catch(e){console.error(e);showToast('No se pudo abrir el pasaporte');} }
     function closeFriendPassport(e){if(!e||e.target===document.getElementById('friend-passport-overlay'))document.getElementById('friend-passport-overlay').classList.remove('open');}
     function openFriendMedals(){const slots=Array.from({length:20},(_,i)=>`<div class="medal-slot locked" title="Espacio de medalla ${i+1}"></div>`).join('');document.getElementById('friend-medals-content').innerHTML=`<div class="medals-slots">${slots}</div><div class="medals-help">Aún no hay medallas disponibles.</div>`;document.getElementById('friend-medals-overlay').classList.add('open');}
     function closeFriendMedals(e){if(!e||e.target===document.getElementById('friend-medals-overlay'))document.getElementById('friend-medals-overlay').classList.remove('open');}

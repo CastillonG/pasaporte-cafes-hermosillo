@@ -1849,6 +1849,78 @@
       .account-character { width:32px; height:32px; }
       .menu-toggle { width:36px; height:36px; }
     }
+
+
+    /* Dark right drawer */
+    .main-menu {
+      top:0!important; right:0!important; bottom:0!important; width:min(82vw,330px)!important;
+      padding:86px 18px 24px!important; border-radius:0!important;
+      background:#2b160d!important; border-left:1px solid rgba(255,255,255,.08)!important;
+      box-shadow:-18px 0 50px rgba(35,18,9,.35)!important;
+      display:flex!important; flex-direction:column!important; gap:10px!important;
+    }
+    .main-menu-item {
+      width:100%; border:1px solid rgba(245,234,216,.14)!important;
+      border-radius:16px!important; background:rgba(245,234,216,.075)!important;
+      color:var(--cream)!important; padding:14px 16px!important; font-weight:700!important;
+    }
+    .main-menu-item:hover { background:rgba(245,234,216,.16)!important; transform:translateX(-2px); }
+    .main-menu-separator { display:none!important; }
+
+    /* Friends floating button and drawer */
+    .friends-fab {
+      position:fixed; left:16px; top:70px; z-index:1340; width:48px; height:48px;
+      border-radius:50%; border:2px solid rgba(122,63,37,.16); background:var(--foam);
+      color:#8f8984; font-size:22px; display:flex; align-items:center; justify-content:center;
+      cursor:pointer; box-shadow:0 8px 24px rgba(62,31,14,.18);
+    }
+    .friends-count { position:absolute; right:-4px; top:-5px; min-width:20px; height:20px; padding:0 5px; border-radius:99px; background:#c0392b; color:white; font-size:10px; font-weight:900; display:none; align-items:center; justify-content:center; border:2px solid var(--foam); }
+    .friends-count.show { display:flex; }
+    .friends-drawer-backdrop { position:fixed; inset:0; z-index:5000; background:rgba(35,18,9,.28); opacity:0; pointer-events:none; transition:.25s; }
+    .friends-drawer-backdrop.open { opacity:1; pointer-events:all; }
+    .friends-drawer { position:absolute; left:0; top:0; bottom:0; width:min(88vw,390px); background:var(--foam); padding:24px 18px 30px; transform:translateX(-100%); transition:.28s ease; overflow-y:auto; box-shadow:18px 0 45px rgba(35,18,9,.24); }
+    .friends-drawer-backdrop.open .friends-drawer { transform:translateX(0); }
+    .friends-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .friends-header h2 { font-family:'Playfair Display',serif; color:var(--dark); }
+    .friends-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .friend-slot { min-height:154px; border:2px dashed #b1aaa4; border-radius:18px; background:rgba(190,186,181,.1); display:flex; align-items:center; justify-content:center; text-align:center; color:#8f8984; padding:10px; cursor:pointer; }
+    .friend-slot.filled { border-style:solid; border-color:rgba(122,63,37,.18); background:white; color:var(--dark); }
+    .friend-slot.add { font-size:34px; }
+    .friend-mini-avatar { width:72px; height:78px; margin:0 auto 6px; overflow:hidden; border-radius:12px; background:#ddd4c7; }
+    .friend-mini-avatar svg { width:100%; height:100%; }
+    .friend-name { font-weight:800; font-size:12px; line-height:1.25; }
+    .friend-search { display:flex; gap:8px; margin:14px 0; }
+    .friend-search input { flex:1; padding:12px 13px; border:2px solid rgba(122,63,37,.2); border-radius:12px; font:14px 'DM Sans',sans-serif; }
+    .friend-search button { border:0; border-radius:12px; background:var(--espresso); color:var(--cream); padding:0 15px; font-weight:800; }
+    .friend-results { display:grid; gap:9px; }
+    .friend-result { display:flex; align-items:center; gap:10px; background:white; border:1.5px solid rgba(122,63,37,.13); border-radius:14px; padding:10px; }
+    .friend-result-avatar { width:46px; height:50px; overflow:hidden; border-radius:10px; background:#ddd4c7; flex-shrink:0; }
+    .friend-result-avatar svg{width:100%;height:100%;}
+    .friend-result-info{flex:1;min-width:0}.friend-result-name{font-weight:800;color:var(--dark);font-size:13px}.friend-result-email{font-size:10px;color:var(--espresso);opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .friend-action-btn { border:0; border-radius:10px; background:var(--green); color:white; padding:9px 10px; font-size:11px; font-weight:800; cursor:pointer; }
+    .friend-request-card { background:white; border:1.5px solid rgba(122,63,37,.14); border-radius:14px; padding:12px; margin-bottom:9px; }
+    .friend-request-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.friend-request-actions button{border:0;border-radius:10px;padding:9px;font-weight:800;cursor:pointer}.friend-request-actions .accept{background:var(--green);color:white}.friend-request-actions .reject{background:#f3dfdc;color:#9b3028}
+
+    /* Friend passport viewer */
+    .friend-passport-view { max-width:520px; margin:0 auto; }
+    .friend-passport-card { position:relative; border:2px solid var(--espresso); border-radius:20px; padding:18px; background:linear-gradient(135deg,var(--foam),var(--warm)); overflow:hidden; }
+    .friend-passport-body { display:flex; gap:15px; align-items:center; }
+    .friend-passport-avatar { width:92px; height:112px; border-radius:12px; overflow:hidden; flex-shrink:0; background:#d9d1c2; }
+    .friend-passport-avatar svg{width:100%;height:100%}.friend-passport-fields{display:grid;gap:8px}.friend-passport-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--espresso);opacity:.55}.friend-passport-value{font-weight:800;color:var(--dark)}
+    .friend-medals-circle { position:absolute; right:13px; bottom:13px; width:44px; height:44px; border-radius:50%; border:2px solid var(--stamp-gold); background:#fff8d8; cursor:pointer; font-size:20px; }
+
+    /* Store personality */
+    #store-overlay { background:linear-gradient(180deg,#f8ecda 0%,#f5ead8 55%,#ead4bc 100%)!important; }
+    #store-overlay .cafe-sheet { background:transparent!important; }
+    .store-hero { max-width:900px; margin:0 auto 28px; padding:24px; border-radius:24px; background:linear-gradient(135deg,#3e1f0e,#7a3f25); color:var(--cream); box-shadow:0 14px 32px rgba(62,31,14,.22); }
+    .store-hero h2 { font-family:'Playfair Display',serif; font-size:30px; }
+    .store-hero p { color:var(--sand); margin-top:6px; }
+    .store-section { padding:20px; border-radius:24px; background:rgba(253,246,237,.72); box-shadow:0 8px 24px rgba(62,31,14,.08); }
+    .store-section-title { display:flex; align-items:center; gap:10px; font-size:24px!important; border:0!important; }
+    .store-section-title::after { content:''; height:2px; flex:1; background:linear-gradient(90deg,rgba(122,63,37,.28),transparent); }
+    .store-card { transition:.2s; box-shadow:0 5px 15px rgba(62,31,14,.07); }
+    .store-card:hover { transform:translateY(-3px); box-shadow:0 11px 24px rgba(62,31,14,.13); }
+
     @media (max-width: 480px) {
       .medals-slots { grid-template-columns: repeat(4, 1fr); gap: 9px; }
       .topbar h1 { font-size: 14px; }
@@ -1949,6 +2021,17 @@
         <span class="sync-dot synced" id="sync-dot" title="Progreso guardado"></span>
       </button>
     </div>
+  </div>
+
+
+  <button class="friends-fab" id="friends-fab" onclick="openFriendsDrawer()" aria-label="Amigos">👥<span class="friends-count" id="friends-count">0</span></button>
+
+  <div class="friends-drawer-backdrop" id="friends-drawer-backdrop" onclick="closeFriendsDrawer(event)">
+    <aside class="friends-drawer">
+      <div class="friends-header"><div><h2>Amigos</h2><div class="sheet-address" style="margin:3px 0 0;">Explora sus pasaportes.</div></div><button class="sheet-close" onclick="closeFriendsDrawer()">✕</button></div>
+      <div id="friend-requests-section"></div>
+      <div class="friends-grid" id="friends-grid"></div>
+    </aside>
   </div>
 
   <!-- USER DROPDOWN -->
@@ -2248,6 +2331,31 @@
     </div>
   </div>
 
+
+  <!-- FRIEND SEARCH -->
+  <div class="overlay" id="friend-search-overlay" onclick="closeFriendSearch(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><div><h2>Buscar personas</h2><div class="sheet-address" style="margin:5px 0 0;">Busca por nombre o correo.</div></div><button class="sheet-close" onclick="closeFriendSearch()">✕</button></div>
+      <div class="friend-search"><input id="friend-search-input" type="text" placeholder="Nombre o correo"><button onclick="searchPeople()">Buscar</button></div>
+      <div class="friend-results" id="friend-search-results"></div>
+    </div>
+  </div>
+
+  <!-- FRIEND PASSPORT -->
+  <div class="overlay" id="friend-passport-overlay" onclick="closeFriendPassport(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><h2>Pasaporte de amigo</h2><button class="sheet-close" onclick="closeFriendPassport()">✕</button></div>
+      <div id="friend-passport-content"></div>
+    </div>
+  </div>
+
+  <!-- FRIEND MEDALS -->
+  <div class="overlay" id="friend-medals-overlay" onclick="closeFriendMedals(event)">
+    <div class="cafe-sheet modal-sheet"><div class="sheet-handle"></div><div class="sheet-header"><h2>Medallas</h2><button class="sheet-close" onclick="closeFriendMedals()">✕</button></div><div id="friend-medals-content"></div></div>
+  </div>
+
   <!-- SETTINGS -->
   <div class="overlay" id="settings-overlay" onclick="closeSettings(event)">
     <div class="cafe-sheet modal-sheet">
@@ -2266,7 +2374,6 @@
           <span class="settings-slider"></span>
         </label>
       </div>
-      <button class="checkin-btn unstamped" style="max-width:420px;margin:18px auto 0;display:block;" onclick="testNearestCafeNow()">Probar café más cercano ahora</button>
     </div>
   </div>
 
@@ -2286,10 +2393,8 @@
   <div class="overlay" id="store-overlay" onclick="closeStore(event)">
     <div class="cafe-sheet modal-sheet">
       <div class="sheet-handle"></div>
-      <div class="sheet-header">
-        <div><h2>Tienda</h2><div class="sheet-address" style="margin:5px 0 0;">Personaliza tu pasaporte.</div></div>
-        <button class="sheet-close" onclick="closeStore()">✕</button>
-      </div>
+      <div class="sheet-header"><div></div><button class="sheet-close" onclick="closeStore()">✕</button></div>
+      <div class="store-hero"><h2>La Tiendita del Pasaporte</h2><p>Haz que tu pasaporte se sienta completamente tuyo.</p></div>
       <div id="store-all-sections"></div>
       <div class="store-note">Prototipo: los artículos se desbloquean sin realizar un cobro real.</div>
     </div>
@@ -2357,10 +2462,10 @@
     import { initializeApp }                      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, addDoc, query, where, deleteDoc }
+    import { getFirestore, doc, getDoc, getDocs, setDoc, updateDoc, onSnapshot, collection, addDoc, query, where, deleteDoc }
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    let app, auth, db, provider, currentUser = null, unsubscribeSnapshot = null, unsubscribeOwnerRequests = null, unsubscribeCafeProfiles = null;
+    let app, auth, db, provider, currentUser = null, unsubscribeSnapshot = null, unsubscribeOwnerRequests = null, unsubscribeCafeProfiles = null, unsubscribeFriendRequests = null, unsubscribeFriendships = null;
 
     if (CONFIGURED) {
       app      = initializeApp(FIREBASE_CONFIG);
@@ -2395,11 +2500,12 @@
       if (unsubscribeSnapshot) unsubscribeSnapshot();
       if (unsubscribeCafeProfiles) unsubscribeCafeProfiles();
       if (unsubscribeOwnerRequests) unsubscribeOwnerRequests();
+      if (unsubscribeFriendRequests) unsubscribeFriendRequests();
+      if (unsubscribeFriendships) unsubscribeFriendships();
       if (unsubscribeCafeProfiles) unsubscribeCafeProfiles();
       if (CONFIGURED && auth) await fbSignOut(auth);
-      else { localStorage.removeItem('cafeVisited'); localStorage.removeItem('cafeMedals'); localStorage.removeItem('cafeAvatar'); localStorage.removeItem('cafePassportBackground'); localStorage.removeItem('cafeStampAnimation'); }
+      else { localStorage.removeItem('cafeVisited'); localStorage.removeItem('cafeAvatar'); localStorage.removeItem('cafePassportBackground'); localStorage.removeItem('cafeStampAnimation'); }
       visited = {};
-      medals = {};
       selectedAvatar = 'classic';
       selectedPassportBackground = 'empty';
       selectedFounderCrown = false;
@@ -2427,6 +2533,8 @@
           setupRealtimeSync(user.uid);
           setupCafeProfilesSync();
           setupOwnerInbox();
+          await upsertPublicProfile();
+          setupFriendsSystem();
           initMap();
           setTimeout(() => { if (window.maybeShowNearestCafePopup) window.maybeShowNearestCafePopup(); }, 1200);
           setTimeout(() => localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now())), 2500);
@@ -2447,7 +2555,6 @@
         if (snap.exists()) {
           visited = snap.data().visited || {};
           profile = snap.data().profile || null;
-          medals = snap.data().medals || {};
           selectedAvatar = snap.data().selectedAvatar || 'classic';
           selectedPassportBackground = snap.data().selectedPassportBackground || 'empty';
           selectedFounderCrown = !!snap.data().selectedFounderCrown;
@@ -2461,15 +2568,13 @@
           // New user — always start at zero
           visited = {};
           profile = null;
-          medals = {};
-          selectedAvatar = 'classic';
+              selectedAvatar = 'classic';
           selectedPassportBackground = 'empty';
-          await setDoc(ref, { visited: {}, profile: null, medals: {}, selectedAvatar: 'classic', selectedPassportBackground: 'empty', selectedFounderCrown: false, selectedStampAnimation: 'cup_fill', ownedStoreItems: {}, equippedCosmetic: '', selectedPet: '', selectedStampStyle: 'coffee', nearestCafeEnabled: true, email: currentUser.email, name: currentUser.displayName });
+          await setDoc(ref, { visited: {}, profile: null, selectedAvatar: 'classic', selectedPassportBackground: 'empty', selectedFounderCrown: false, selectedStampAnimation: 'cup_fill', ownedStoreItems: {}, equippedCosmetic: '', selectedPet: '', selectedStampStyle: 'coffee', nearestCafeEnabled: true, email: currentUser.email, name: currentUser.displayName });
         }
         if (window.setSyncDot) window.setSyncDot('synced');
         if (window.handleVisitedUpdateForAnimation) window.handleVisitedUpdateForAnimation({}, visited, true);
         if (window.updateStampAnimationSummary) window.updateStampAnimationSummary();
-        if (window.syncUnlockedRewards) setTimeout(() => window.syncUnlockedRewards(), 350);
         refreshMarkers();
         if (window.checkProfileScreen) window.checkProfileScreen();
       } catch (e) {
@@ -2488,7 +2593,6 @@
           const previousVisited = { ...visited };
           visited = snap.data().visited || {};
           profile = snap.data().profile || null;
-          medals = snap.data().medals || {};
           selectedAvatar = snap.data().selectedAvatar || 'classic';
           selectedPassportBackground = snap.data().selectedPassportBackground || 'empty';
           selectedFounderCrown = !!snap.data().selectedFounderCrown;
@@ -2505,6 +2609,7 @@
           if (window.handleLoyaltyUpdate) window.handleLoyaltyUpdate(previousVisited, visited);
           if (window.repairAgapeRewardsIfNeeded) setTimeout(() => window.repairAgapeRewardsIfNeeded(), 0);
           refreshMarkers();
+          if (window.schedulePublicProfileSync) window.schedulePublicProfileSync();
           if (currentCafe && currentCafe.name === 'Ágape Café' && document.getElementById('overlay').classList.contains('open')) renderAgapeLoyaltyCard();
           const activePage = document.querySelector('.nav-tab.active');
           if (activePage && activePage.textContent === 'Mi Pasaporte') renderPassport();
@@ -2551,20 +2656,6 @@
           setSyncDot('synced');
         } catch (e2) { console.error(e2); setSyncDot(''); }
       }
-    };
-
-    // ── Firestore: save medals ──
-    window.saveMedals = async function() {
-      setSyncDot('syncing');
-      try {
-        if (CONFIGURED && currentUser) {
-          const ref = doc(db, 'users', currentUser.uid);
-          await setDoc(ref, { medals }, { merge: true });
-        } else {
-          localStorage.setItem('cafeMedals', JSON.stringify(medals));
-        }
-        setSyncDot('synced');
-      } catch (e) { console.error(e); setSyncDot(''); }
     };
 
     // ── Firestore: save selected avatar ──
@@ -2869,6 +2960,58 @@
       await updateDoc(doc(db, 'users', currentUser.uid), { [`visited.${safeFbKey(cafeKey)}`]: visitData });
     };
 
+
+    // ── Public profiles and friends ──
+    let publicProfileSyncTimer = null;
+    async function upsertPublicProfile() {
+      if (!CONFIGURED || !currentUser) return;
+      const publicData = {
+        uid: currentUser.uid,
+        displayName: window.currentDisplayName || currentUser.displayName || 'Usuario',
+        email: (currentUser.email || '').toLowerCase(),
+        profile: profile || {},
+        selectedAvatar,
+        selectedPassportBackground,
+        selectedFounderCrown: !!selectedFounderCrown,
+        equippedCosmetic,
+        selectedPet,
+        visitedCount: Object.keys(visited || {}).length,
+        medals: {},
+        updatedAt: new Date().toISOString()
+      };
+      await setDoc(doc(db,'publicProfiles',currentUser.uid), publicData, {merge:true});
+    }
+    window.schedulePublicProfileSync = function(){ clearTimeout(publicProfileSyncTimer); publicProfileSyncTimer=setTimeout(()=>upsertPublicProfile().catch(console.error),500); };
+    window.friendApi = {
+      searchPeople: async (term) => {
+        if (!CONFIGURED || !currentUser) return [];
+        const snap = await getDocs(collection(db,'publicProfiles'));
+        const q=(term||'').trim().toLowerCase();
+        return snap.docs.map(d=>d.data()).filter(x=>x.uid!==currentUser.uid && (!q || (x.displayName||'').toLowerCase().includes(q) || (x.email||'').toLowerCase().includes(q))).slice(0,20);
+      },
+      sendRequest: async (toUid) => {
+        const id=`${currentUser.uid}_${toUid}`;
+        await setDoc(doc(db,'friendRequests',id),{fromUid:currentUser.uid,toUid,status:'pending',createdAt:new Date().toISOString()});
+      },
+      respondRequest: async (requestId, accepted, fromUid) => {
+        await updateDoc(doc(db,'friendRequests',requestId),{status:accepted?'accepted':'rejected',resolvedAt:new Date().toISOString()});
+        if(accepted){ const members=[currentUser.uid,fromUid].sort(); await setDoc(doc(db,'friendships',members.join('_')),{members,createdAt:new Date().toISOString()}); }
+      },
+      getPublicProfile: async (uid) => { const s=await getDoc(doc(db,'publicProfiles',uid)); return s.exists()?s.data():null; }
+    };
+    function setupFriendsSystem(){
+      if(!CONFIGURED||!currentUser)return;
+      if(unsubscribeFriendRequests)unsubscribeFriendRequests();
+      if(unsubscribeFriendships)unsubscribeFriendships();
+      unsubscribeFriendRequests=onSnapshot(query(collection(db,'friendRequests'),where('toUid','==',currentUser.uid),where('status','==','pending')),snap=>{
+        Promise.all(snap.docs.map(async d=>({id:d.id,...d.data(),profile:await window.friendApi.getPublicProfile(d.data().fromUid)}))).then(list=>{window.friendRequestsState=list;if(window.renderFriendsDrawer)window.renderFriendsDrawer();});
+      });
+      unsubscribeFriendships=onSnapshot(query(collection(db,'friendships'),where('members','array-contains',currentUser.uid)),snap=>{
+        const ids=snap.docs.map(d=>d.data().members.find(x=>x!==currentUser.uid)).filter(Boolean);
+        Promise.all(ids.map(uid=>window.friendApi.getPublicProfile(uid))).then(list=>{window.friendsState=list.filter(Boolean);if(window.renderFriendsDrawer)window.renderFriendsDrawer();});
+      });
+    }
+
     // ── Firestore: save passport background ──
     window.savePassportBackground = async function(backgroundId) {
       selectedPassportBackground = backgroundId;
@@ -2891,7 +3034,6 @@
     function setupUIWithLocalStorage() {
       visited = JSON.parse(localStorage.getItem('cafeVisited') || '{}');
       profile = JSON.parse(localStorage.getItem('cafeProfile') || 'null');
-      medals = JSON.parse(localStorage.getItem('cafeMedals') || '{}');
       selectedAvatar = localStorage.getItem('cafeAvatar') || 'classic';
       selectedPassportBackground = localStorage.getItem('cafePassportBackground') || 'empty';
       selectedFounderCrown = localStorage.getItem('cafeFounderCrown') === 'true';
@@ -2908,7 +3050,6 @@
         profile = profileData;
         localStorage.setItem('cafeProfile', JSON.stringify(profileData));
       };
-      window.saveMedals = function() { localStorage.setItem('cafeMedals', JSON.stringify(medals)); };
       window.saveAvatar = function(avatarId) {
         selectedAvatar = avatarId;
         localStorage.setItem('cafeAvatar', avatarId);
@@ -3125,7 +3266,6 @@
     // ──────────────────────────────────────────────
     let visited = {};
     let profile = null;
-    let medals = {};
     let selectedAvatar = 'classic';
     let selectedPassportBackground = 'empty';
     let selectedFounderCrown = false;
@@ -3135,7 +3275,7 @@
     let selectedPet = '';
     let selectedStampStyle = 'coffee';
     let nearestCafeEnabled = true;
-    const NEAREST_INACTIVITY_MS = 3 * 24 * 60 * 60 * 1000;
+    const NEAREST_INACTIVITY_MS = 24 * 60 * 60 * 1000;
     const LAST_ACTIVE_KEY = 'cafePassportLastActiveAt';
     const previousAppActivity = Number(localStorage.getItem(LAST_ACTIVE_KEY) || 0);
     let shouldOfferNearestCafe = previousAppActivity > 0 && (Date.now() - previousAppActivity) >= NEAREST_INACTIVITY_MS;
@@ -3364,14 +3504,6 @@
     window.closeSettings = closeSettings;
     window.toggleNearestCafeSetting = toggleNearestCafeSetting;
 
-    function testNearestCafeNow() {
-      shouldOfferNearestCafe = true;
-      nearestCafeOfferAttempted = false;
-      closeSettings();
-      maybeShowNearestCafePopup();
-    }
-    window.testNearestCafeNow = testNearestCafeNow;
-
     function distanceKm(lat1, lon1, lat2, lon2) {
       const R = 6371;
       const dLat = (lat2-lat1) * Math.PI/180;
@@ -3408,7 +3540,7 @@
       const root=document.getElementById('store-all-sections'); if(!root) return;
       root.innerHTML=STORE_CATEGORIES.map(category=>{
         const items=STORE_ITEMS.filter(i=>i.category===category.id);
-        return `<section class="store-section" id="store-section-${category.id}"><h3 class="store-section-title">${category.name}</h3><div class="store-grid">${items.map(item=>{
+        return `<section class="store-section" id="store-section-${category.id}"><h3 class="store-section-title">${category.id==='cosmetics'?'🧢':category.id==='backgrounds'?'🌵':category.id==='stamps'?'☕':'🐾'} ${category.name}</h3><div class="store-grid">${items.map(item=>{
           const owned=!!ownedStoreItems[item.id], equipped=isStoreItemEquipped(item.id);
           const label=equipped?'Equipado':owned?'Equipar':`Comprar · $${item.price} MXN`;
           return `<div class="store-card" id="store-item-${item.id}"><div class="store-preview">${storePreview(item)}</div><div class="store-title">${item.name}</div><div class="store-desc">${item.desc}</div><button class="store-buy ${equipped?'equipped':owned?'owned':''}" onclick="buyOrEquipStoreItem('${item.id}')">${label}</button></div>`;
@@ -4197,7 +4329,7 @@
         const key = entry.key || 'Ágape Café';
         visited[key] = data;
         if (window.saveAgapeRewardRepair) await window.saveAgapeRewardRepair(key, data);
-        renderAgapeLoyaltyCard(); renderDiscounts(); syncUnlockedRewards(data);
+        renderAgapeLoyaltyCard(); renderDiscounts(); renderCosmeticGrid(); renderStampAnimationOptions();
       } catch(e) { console.error('No se pudieron reparar recompensas:', e); }
       finally { agapeRewardRepairRunning = false; }
     }
@@ -4206,7 +4338,7 @@
     function handleLoyaltyUpdate(previousVisited,nextVisited){
       const prevData=getAgapeFromVisitedObject(previousVisited), nextData=getAgapeFromVisitedObject(nextVisited);
       const prevState=agapeRewardState(prevData), nextState=agapeRewardState(nextData);
-      renderAgapeLoyaltyCard(); renderDiscounts(); syncUnlockedRewards(nextData); repairAgapeRewardsIfNeeded();
+      renderAgapeLoyaltyCard(); renderDiscounts(); renderCosmeticGrid(); renderStampAnimationOptions(); repairAgapeRewardsIfNeeded();
 
       if(!prevState.capUnlocked && nextState.capUnlocked){
         showRewardPopup('🧢','Gorra Ágape desbloqueada','Llegaste a 3 visitas. Ya puedes equiparla en Editar personaje → Cosméticos.');
@@ -4337,6 +4469,31 @@ window.doCheckin = function() {
           </div>`;
       }).join('');
     }
+
+
+    window.friendsState=[]; window.friendRequestsState=[];
+    function openFriendsDrawer(){ renderFriendsDrawer(); document.getElementById('friends-drawer-backdrop').classList.add('open'); }
+    function closeFriendsDrawer(e){ if(!e || e.target===document.getElementById('friends-drawer-backdrop')) document.getElementById('friends-drawer-backdrop').classList.remove('open'); }
+    function renderFriendsDrawer(){
+      const friends=window.friendsState||[], reqs=window.friendRequestsState||[];
+      const badge=document.getElementById('friends-count'); if(badge){badge.textContent=reqs.length;badge.classList.toggle('show',reqs.length>0);}
+      const reqRoot=document.getElementById('friend-requests-section');
+      reqRoot.innerHTML=reqs.length?`<div class="sheet-section-title">Solicitudes</div>${reqs.map(r=>`<div class="friend-request-card"><strong>${r.profile?.displayName||'Usuario'}</strong><div class="request-meta">quiere ser tu amigo</div><div class="friend-request-actions"><button class="accept" onclick="respondFriendRequest('${r.id}',true,'${r.fromUid}')">Aceptar</button><button class="reject" onclick="respondFriendRequest('${r.id}',false,'${r.fromUid}')">Rechazar</button></div></div>`).join('')}`:'';
+      const capacity=Math.max(4,Math.ceil(Math.max(friends.length,1)/2)*2);
+      let slots=''; for(let i=0;i<capacity;i++){ const f=friends[i]; slots+=f?`<div class="friend-slot filled" onclick="openFriendPassport('${f.uid}')"><div><div class="friend-mini-avatar">${avatarSvg(f.selectedAvatar||'classic',true,false,{cosmetic:f.equippedCosmetic||'',pet:f.selectedPet||''})}</div><div class="friend-name">${f.displayName||'Usuario'}</div></div></div>`:`<div class="friend-slot"><span>Pasaporte disponible</span></div>`; }
+      slots+=`<div class="friend-slot add" onclick="openFriendSearch()">＋</div>`;
+      document.getElementById('friends-grid').innerHTML=slots;
+    }
+    async function respondFriendRequest(id,accepted,fromUid){ try{await window.friendApi.respondRequest(id,accepted,fromUid);showToast(accepted?'Amistad aceptada ✓':'Solicitud rechazada');}catch(e){console.error(e);showToast('No se pudo procesar la solicitud');} }
+    function openFriendSearch(){ closeFriendsDrawer(); document.getElementById('friend-search-overlay').classList.add('open'); document.getElementById('friend-search-results').innerHTML=''; }
+    function closeFriendSearch(e){ if(!e||e.target===document.getElementById('friend-search-overlay'))document.getElementById('friend-search-overlay').classList.remove('open'); }
+    async function searchPeople(){ const term=document.getElementById('friend-search-input').value; const root=document.getElementById('friend-search-results'); root.innerHTML='<div class="owner-empty">Buscando…</div>'; try{const people=await window.friendApi.searchPeople(term); root.innerHTML=people.length?people.map(p=>`<div class="friend-result"><div class="friend-result-avatar">${avatarSvg(p.selectedAvatar||'classic',true,false,{cosmetic:p.equippedCosmetic||'',pet:p.selectedPet||''})}</div><div class="friend-result-info"><div class="friend-result-name">${p.displayName||'Usuario'}</div><div class="friend-result-email">${p.email||''}</div></div><button class="friend-action-btn" onclick="sendFriendRequest('${p.uid}',this)">Agregar</button></div>`).join(''):'<div class="owner-empty">No se encontraron personas.</div>'; }catch(e){console.error(e);root.innerHTML='<div class="owner-empty">No se pudo buscar. Revisa las reglas de Firestore.</div>';} }
+    async function sendFriendRequest(uid,btn){ try{btn.disabled=true;await window.friendApi.sendRequest(uid);btn.textContent='Enviada ✓';}catch(e){console.error(e);btn.disabled=false;showToast('No se pudo enviar la solicitud');} }
+    async function openFriendPassport(uid){ try{const p=await window.friendApi.getPublicProfile(uid); if(!p)return; window.currentFriendProfile=p; const age=p.profile?.birthYear?Math.max(0,new Date().getFullYear()-Number(p.profile.birthYear)):'—'; document.getElementById('friend-passport-content').innerHTML=`<div class="friend-passport-view"><div class="friend-passport-card ${p.selectedPassportBackground&&p.selectedPassportBackground!=='empty'?'bg-'+p.selectedPassportBackground:''}"><div class="id-card-header"><span class="id-card-country">PASAPORTE · HERMOSILLO</span><span class="id-card-type">AMIGO</span></div><div class="friend-passport-body"><div class="friend-passport-avatar">${avatarSvg(p.selectedAvatar||'classic',false,false,{cosmetic:p.equippedCosmetic||'',pet:p.selectedPet||''})}</div><div class="friend-passport-fields"><div><div class="friend-passport-label">Nombre</div><div class="friend-passport-value">${p.displayName||'Usuario'}</div></div><div><div class="friend-passport-label">Edad</div><div class="friend-passport-value">${age}</div></div><div><div class="friend-passport-label">Cafés visitados</div><div class="friend-passport-value">${p.visitedCount||0}</div></div></div></div><button class="friend-medals-circle" onclick="openFriendMedals()">🏅</button></div></div>`; document.getElementById('friend-passport-overlay').classList.add('open'); }catch(e){console.error(e);showToast('No se pudo abrir el pasaporte');} }
+    function closeFriendPassport(e){if(!e||e.target===document.getElementById('friend-passport-overlay'))document.getElementById('friend-passport-overlay').classList.remove('open');}
+    function openFriendMedals(){const slots=Array.from({length:20},(_,i)=>`<div class="medal-slot locked" title="Espacio de medalla ${i+1}"></div>`).join('');document.getElementById('friend-medals-content').innerHTML=`<div class="medals-slots">${slots}</div><div class="medals-help">Aún no hay medallas disponibles.</div>`;document.getElementById('friend-medals-overlay').classList.add('open');}
+    function closeFriendMedals(e){if(!e||e.target===document.getElementById('friend-medals-overlay'))document.getElementById('friend-medals-overlay').classList.remove('open');}
+    Object.assign(window,{openFriendsDrawer,closeFriendsDrawer,renderFriendsDrawer,respondFriendRequest,openFriendSearch,closeFriendSearch,searchPeople,sendFriendRequest,openFriendPassport,closeFriendPassport,openFriendMedals,closeFriendMedals});
 
     // ──────────────────────────────────────────────
     // UTILS

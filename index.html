@@ -1772,6 +1772,18 @@
     .reward-unlocked { filter:none; opacity:1; background:linear-gradient(145deg,#fffbe8,#ffe89a)!important; border-color:var(--stamp-gold)!important; box-shadow:0 0 0 4px rgba(201,162,39,.24),0 8px 24px rgba(201,162,39,.34)!important; }
     .reward-unlocked .animation-option-icon, .reward-unlocked .cosmetic-preview { filter:none; }
     .reward-locked .animation-option-icon, .reward-locked .cosmetic-preview { filter:grayscale(1); }
+
+    /* En Efectos, solo la opción elegida tiene brillo amarillo. */
+    .animation-option.reward-unlocked:not(.selected) {
+      background:#fff!important;
+      border-color:rgba(122,63,37,.16)!important;
+      box-shadow:none!important;
+    }
+    .animation-option.reward-unlocked.selected {
+      background:#fff9df!important;
+      border-color:var(--stamp-gold)!important;
+      box-shadow:0 0 0 3px rgba(201,162,39,.16)!important;
+    }
     .loyalty-cycle-note { margin:9px 0 0; text-align:center; font-size:10px; color:var(--espresso); opacity:.68; }
 
     #discounts-overlay { align-items:stretch; padding:0; background:var(--cream); backdrop-filter:none; }
@@ -3263,7 +3275,8 @@
       { id:'gold_star_stamp', category:'stamps', name:'Sello Estrella', desc:'Cambia tus sellos visitados por una estrella dorada.', price:25 },
       { id:'coffee_bean_stamp', category:'stamps', name:'Sello Grano de Café', desc:'Un sello con forma de grano de café.', price:20 },
       { id:'lightning_stamp', category:'stamps', name:'Sello Rayo', desc:'Un sello eléctrico para tus visitas.', price:25 },
-      { id:'coffee_bean_dog', category:'pets', name:'Perro Grano de Café', desc:'Un compañero con forma de grano de café.', price:49 }
+      { id:'coffee_bean_dog', category:'pets', name:'Perro Grano de Café', desc:'Un compañero con forma de grano de café.', price:49 },
+      { id:'heart_head_friend', category:'pets', name:'Amigo Corazón', desc:'Mascota de cabeza roja en forma de corazón, cuerpo azul y estilo garabato.', price:45 }
     ];
     const STORE_CATEGORIES = [
       { id:'cosmetics', name:'Cosméticos' }, { id:'backgrounds', name:'Fondos' },
@@ -3273,6 +3286,7 @@
     const AVATARS = [
       { id:'classic', name:'Clásico' },
       { id:'glasses', name:'Con lentes' },
+      { id:'pink_glasses', name:'Lentes rosas' },
       { id:'cap', name:'Con gorra' },
       { id:'coffee', name:'Con cafecito' },
       { id:'glasses_coffee', name:'Lentes y café' },
@@ -3477,6 +3491,21 @@
       </svg>`;
     }
 
+
+    function heartHeadFriendSvg() {
+      return `<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M45 34 C18 18 10 42 45 62 C80 42 72 18 45 34 Z" fill="#e23a3a" stroke="#9e2020" stroke-width="2.4"/>
+        <circle cx="34" cy="42" r="3.5" fill="#111"/>
+        <circle cx="56" cy="42" r="3.5" fill="#111"/>
+        <ellipse cx="45" cy="52" rx="8" ry="4.8" fill="#ffd447"/>
+        <path d="M32 61 Q45 55 58 61 L57 77 Q45 84 33 77 Z" fill="#3d78d8" stroke="#2453a1" stroke-width="2.2"/>
+        <path d="M34 65 Q24 68 23 76" fill="none" stroke="#3d78d8" stroke-width="7" stroke-linecap="round"/>
+        <path d="M56 65 Q66 68 67 76" fill="none" stroke="#3d78d8" stroke-width="7" stroke-linecap="round"/>
+        <path d="M38 77 L37 85" fill="none" stroke="#3d78d8" stroke-width="8" stroke-linecap="round"/>
+        <path d="M52 77 L53 85" fill="none" stroke="#3d78d8" stroke-width="8" stroke-linecap="round"/>
+      </svg>`;
+    }
+
     function storePreview(item) {
       if (item.id === 'scarf_red') return avatarSvg('classic', false, false, { cosmetic:'scarf_red', pet:'' });
       if (item.id === 'desert_night') return '<div class="desert-night-preview"></div>';
@@ -3484,6 +3513,7 @@
       if (item.id === 'coffee_bean_stamp') return '<div class="stamp-star-preview" style="background:#7a3f25;transform:rotate(12deg);">◒</div>';
       if (item.id === 'lightning_stamp') return '<div class="stamp-star-preview" style="background:#e2b52d;">⚡</div>';
       if (item.id === 'coffee_bean_dog') return coffeeBeanDogSvg();
+      if (item.id === 'heart_head_friend') return heartHeadFriendSvg();
       return '';
     }
     function isStoreItemEquipped(id) {
@@ -3575,13 +3605,18 @@
 
     function avatarSvg(id, compact = false, allowFounderCrown = false, overrides = null) {
       const glasses = id.includes('glasses');
+      const pinkGlasses = id.includes('pink_glasses');
       const cap = id.includes('cap');
       const coffee = id.includes('coffee');
       const cosmetic = overrides ? overrides.cosmetic : equippedCosmetic;
       const pet = overrides ? overrides.pet : selectedPet;
       const showCrown = allowFounderCrown && window.currentUserEmail === FOUNDER_EMAIL && selectedFounderCrown;
       const scarfLayer = cosmetic === 'scarf_red' ? '<g transform="translate(24 61)"><path d="M3 6 Q19 17 38 5 L34 18 Q19 25 7 18 Z" fill="#b94335" stroke="#7a261f" stroke-width="1.5"/><path d="M29 15 L40 32 L28 28 Z" fill="#a33429"/></g>' : '';
-      const petLayer = pet === 'coffee_bean_dog' ? `<g transform="translate(-2 66) scale(.48)">${coffeeBeanDogSvg().replace(/<svg[^>]*>|<\/svg>/g,'')}</g>` : '';
+      const petLayer = pet === 'coffee_bean_dog'
+        ? `<g transform="translate(-2 66) scale(.48)">${coffeeBeanDogSvg().replace(/<svg[^>]*>|<\/svg>/g,'')}</g>`
+        : pet === 'heart_head_friend'
+          ? `<g transform="translate(-3 67) scale(.46)">${heartHeadFriendSvg().replace(/<svg[^>]*>|<\/svg>/g,'')}</g>`
+          : '';
       const agapeCapLayer = cosmetic === 'agape_cap' ? `<g>
         <path d="M23 29 Q45 6 68 29 L65 37 H27 Z" fill="#f3efe4" stroke="#315f38" stroke-width="1.7"/>
         <path d="M59 31 Q77 29 82 36 Q69 42 58 37 Z" fill="#f3efe4" stroke="#315f38" stroke-width="1.7"/>
@@ -3604,7 +3639,7 @@
           <rect width="90" height="110" rx="8" fill="#d9d1c2"/>
           <path d="M8 110 C8 78 24 65 43 65 C62 65 78 78 78 110 Z" fill="#9b8a72"/>
           <circle cx="43" cy="43" r="19" fill="#9b8a72"/>
-          ${glasses ? '<g fill="none" stroke="#4b443c" stroke-width="3"><circle cx="35" cy="42" r="7"/><circle cx="51" cy="42" r="7"/><path d="M42 42h2"/></g>' : ''}
+          ${glasses ? `<g fill="none" stroke="${pinkGlasses ? '#e978a8' : '#4b443c'}" stroke-width="3"><circle cx="35" cy="42" r="7"/><circle cx="51" cy="42" r="7"/><path d="M42 42h2"/></g>` : ''}
           ${capLayer}
           ${crownLayer}
           ${scarfLayer}
@@ -3763,9 +3798,11 @@
     function renderPetGrid() {
       const grid=document.getElementById('pet-grid'); if(!grid) return;
       const owned=!!ownedStoreItems.coffee_bean_dog;
+      const heartOwned=!!ownedStoreItems.heart_head_friend;
       grid.innerHTML=`
         <button class="pet-option ${selectedPet===''?'selected':''}" onclick="selectPet('')"><div class="pet-preview" style="font-size:34px;opacity:.5;">—</div>Sin mascota</button>
-        <button class="pet-option ${selectedPet==='coffee_bean_dog'?'selected':''} ${owned?'':'locked'}" onclick="${owned?"selectPet('coffee_bean_dog')":"openStoreFromPets()"}"><div class="pet-preview">${coffeeBeanDogSvg()}</div>Perro Grano de Café${owned?'':' · Tienda'}</button>`;
+        <button class="pet-option ${selectedPet==='coffee_bean_dog'?'selected':''} ${owned?'':'locked'}" onclick="${owned?"selectPet('coffee_bean_dog')":"openStoreFromPets()"}"><div class="pet-preview">${coffeeBeanDogSvg()}</div>Perro Grano de Café${owned?'':' · Tienda'}</button>
+        <button class="pet-option ${selectedPet==='heart_head_friend'?'selected':''} ${heartOwned?'':'locked'}" onclick="${heartOwned?"selectPet('heart_head_friend')":"openStoreFromPets()"}"><div class="pet-preview">${heartHeadFriendSvg()}</div>Amigo Corazón${heartOwned?'':' · Tienda'}</button>`;
     }
     function openEditorTab(tab,btn) {
       document.querySelectorAll('.editor-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');

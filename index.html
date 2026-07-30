@@ -2795,7 +2795,7 @@
         requestType:'discount', cafeName:cafe.name, ownerEmail:(cafe.ownerEmail||'').toLowerCase(),
         requesterUid:currentUser.uid, requesterEmail:currentUser.email||'', requesterName:window.currentDisplayName||currentUser.displayName||'Usuario',
         username:(profile&&profile.username)||window.currentDisplayName||currentUser.displayName||'Usuario',
-        discountId, discountTitle:discount.title||'Café con 50 % de descuento', discountSnapshot:discounts.map(d=>({...d,pending:d.id===discountId?true:!!d.pending})), status:'pending', requestedAt:new Date().toISOString()
+        discountId, discountTitle:discount.title||'Café con 50 % de descuento', discountSnapshot:discounts.map(d=>({...d,pending:d.id===discountId?true:!!d.pending})), redeemedCyclesSnapshot:Array.isArray(data.loyaltyRedeemedCycles)?data.loyaltyRedeemedCycles:[], status:'pending', requestedAt:new Date().toISOString()
       });
       const updated = discounts.map(d => d.id === discountId ? {...d,pending:true} : d);
       await updateDoc(doc(db,'users',currentUser.uid), { [`visited.${safeFbKey(cafe.name)}.loyaltyDiscounts`]: updated });
@@ -2905,9 +2905,23 @@
           // Para evitar lectura del documento de otro usuario, el request guarda la lista al crearla.
           let discounts = Array.isArray(req.discountSnapshot) ? req.discountSnapshot : requesterDiscounts;
           if (!discounts.length && req.discountData) discounts = [req.discountData];
-          if (accepted) discounts = discounts.filter(d => d.id !== req.discountId);
-          else discounts = discounts.map(d => d.id === req.discountId ? {...d,pending:false} : d);
-          await updateDoc(userRef, { [`visited.${safeCafe}.loyaltyDiscounts`]: discounts });
+          if (accepted) {
+            const redeemedDiscount = discounts.find(d => d.id === req.discountId) || null;
+            discounts = discounts.filter(d => d.id !== req.discountId);
+            const redeemedCycles = Array.isArray(req.redeemedCyclesSnapshot)
+              ? req.redeemedCyclesSnapshot.map(Number).filter(Boolean)
+              : [];
+            const sourceCycle = Number(redeemedDiscount && redeemedDiscount.sourceCycle) || 0;
+            if (sourceCycle && !redeemedCycles.includes(sourceCycle)) redeemedCycles.push(sourceCycle);
+            await updateDoc(userRef, {
+              [`visited.${safeCafe}.loyaltyDiscounts`]: discounts,
+              [`visited.${safeCafe}.loyaltyRedeemedCycles`]: redeemedCycles,
+              [`visited.${safeCafe}.lastDiscountRedeemedAt`]: new Date().toISOString()
+            });
+          } else {
+            discounts = discounts.map(d => d.id === req.discountId ? {...d,pending:false,status:'available'} : d);
+            await updateDoc(userRef, { [`visited.${safeCafe}.loyaltyDiscounts`]: discounts });
+          }
         } else if (accepted) {
           const now = new Date();
           const visitData = { timestamp: now.toISOString(), label: now.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' }), loyaltyCount:0, loyaltyPending:false };
@@ -4356,8 +4370,9 @@
       if ((Number(data.loyaltyCycles)||0) < cycles) { data.loyaltyCycles = cycles; changed = true; }
       // One persistent discount per completed card. Reconstruct missing rewards without duplicates.
       const sourceCycles = new Set(discounts.map(d=>Number(d.sourceCycle)||0).filter(Boolean));
+      const redeemedCycles = new Set((Array.isArray(data.loyaltyRedeemedCycles) ? data.loyaltyRedeemedCycles : []).map(Number).filter(Boolean));
       for (let cycle=1; cycle<=cycles; cycle++) {
-        if (!sourceCycles.has(cycle)) {
+        if (!sourceCycles.has(cycle) && !redeemedCycles.has(cycle)) {
           discounts.push({
             id:`agape50_recovered_${cycle}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,
             cafeName:'Ágape Café',

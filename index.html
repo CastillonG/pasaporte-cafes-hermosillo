@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
   <title>Pasaporte del Café — Hermosillo</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,6 +29,7 @@
       font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
+      touch-action: manipulation;
     }
 
     /* ── AUTH SCREEN ── */
@@ -415,6 +416,7 @@
       height: 70vh;
       border-radius: 16px;
       border: 2px solid rgba(122,63,37,.25);
+      touch-action: none;
     }
 
     /* ── PASSPORT PAGE ── */
@@ -4480,6 +4482,32 @@
         closeDropdown();
       }
     });
+
+    // Impide ampliar o reducir la interfaz. Leaflet conserva el zoom dentro del mapa.
+    function zoomGestureIsInsideMap(target) {
+      return target instanceof Element && !!target.closest('#map');
+    }
+
+    document.addEventListener('wheel', e => {
+      if (e.ctrlKey || e.metaKey) e.preventDefault();
+    }, { passive:false, capture:true });
+
+    document.addEventListener('touchmove', e => {
+      if (e.touches.length > 1 && !zoomGestureIsInsideMap(e.target)) e.preventDefault();
+    }, { passive:false, capture:true });
+
+    document.addEventListener('gesturestart', e => {
+      if (!zoomGestureIsInsideMap(e.target)) e.preventDefault();
+    }, { passive:false, capture:true });
+
+    document.addEventListener('dblclick', e => {
+      if (!zoomGestureIsInsideMap(e.target)) e.preventDefault();
+    }, { passive:false, capture:true });
+
+    document.addEventListener('keydown', e => {
+      const zoomKey = e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0';
+      if (zoomKey && (e.ctrlKey || e.metaKey)) e.preventDefault();
+    }, { capture:true });
 
     // ──────────────────────────────────────────────
     // MAP

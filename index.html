@@ -3648,21 +3648,31 @@
 
     function novaDogSvg() {
       return `<svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M23 31 L34 15 L42 33 Z" fill="#7d8794" stroke="#2b2b2b" stroke-width="1.8" stroke-linejoin="round"/>
-        <path d="M73 31 L62 15 L54 33 Z" fill="#7d8794" stroke="#2b2b2b" stroke-width="1.8" stroke-linejoin="round"/>
-        <path d="M21 42 C24 26 38 19 48 19 C58 19 72 26 75 42 C78 58 67 76 48 76 C29 76 18 58 21 42 Z" fill="#7d8794" stroke="#2b2b2b" stroke-width="2"/>
-        <path d="M31 40 C34 31 41 27 48 27 C55 27 62 31 65 40 C67 52 60 64 48 67 C36 64 29 52 31 40 Z" fill="#f8f8f5"/>
-        <path d="M48 28 L39 43 L48 54 L57 43 Z" fill="#e9ecef"/>
-        <path d="M39 43 L28 37 L33 52 L48 54 Z" fill="#636d78" opacity=".92"/>
-        <path d="M57 43 L68 37 L63 52 L48 54 Z" fill="#636d78" opacity=".92"/>
-        <circle cx="39" cy="45" r="3.1" fill="#1d1d1d"/>
-        <circle cx="57" cy="45" r="3.1" fill="#1d1d1d"/>
-        <path d="M44 55 Q48 58 52 55 L48 50 Z" fill="#1d1d1d"/>
-        <path d="M43 60 Q48 64 53 60" fill="none" stroke="#1d1d1d" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M33 57 Q27 61 23 68" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" opacity=".85"/>
-        <path d="M63 57 Q69 61 73 68" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" opacity=".85"/>
-        <path d="M39 21 Q35 18 31 17" fill="none" stroke="#cfd5db" stroke-width="2" stroke-linecap="round"/>
-        <path d="M57 21 Q61 18 65 17" fill="none" stroke="#cfd5db" stroke-width="2" stroke-linecap="round"/>
+        <g stroke="#171412" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Cuerpo blanco; el SVG no dibuja ningun fondo. -->
+          <path d="M25 49 C19 52 15 58 16 68 C17 75 21 79 27 80 L27 87 C27 91 33 92 36 88 L38 82 C45 84 55 84 62 81 L64 88 C65 92 72 92 74 88 L75 76 C81 73 84 68 84 61 C84 56 81 52 77 50 C70 46 64 45 57 46 L39 46 C34 46 29 47 25 49 Z" fill="#ffffff" stroke-width="2.5"/>
+          <path d="M23 58 C17 57 12 54 11 50 C10 47 13 46 16 48 C19 50 22 51 27 50" fill="#ffffff" stroke-width="2.5"/>
+
+          <!-- Cabeza y hocico. -->
+          <path d="M27 43 C29 32 37 26 48 26 C59 26 67 32 69 43 C71 54 63 63 48 64 C33 63 25 54 27 43 Z" fill="#ffffff" stroke-width="2.5"/>
+          <path d="M34 49 C38 45 43 43 48 43 C53 43 58 45 62 49 C61 57 56 61 48 62 C40 61 35 57 34 49 Z" fill="#ffffff" stroke-width="1.7"/>
+
+          <!-- Orejas amarillas inspiradas en Nova. -->
+          <path d="M28 39 C24 34 21 26 22 12 C22 8 25 6 28 9 C34 15 38 24 39 31 Z" fill="#ffe31a" stroke-width="2.5"/>
+          <path d="M68 39 C72 34 75 26 74 12 C74 8 71 6 68 9 C62 15 58 24 57 31 Z" fill="#ffe31a" stroke-width="2.5"/>
+          <path d="M27 15 C27 23 29 28 33 33" fill="none" stroke-width="2.2"/>
+          <path d="M69 15 C69 23 67 28 63 33" fill="none" stroke-width="2.2"/>
+          <path d="M25 13 L27 17 M27 22 L30 25 M30 30 L33 32 M71 13 L69 17 M69 22 L66 25 M66 30 L63 32" fill="none" stroke-width="2.1"/>
+
+          <!-- Rasgos negros y lineas organicas del dibujo original. -->
+          <ellipse cx="39" cy="43" rx="2.4" ry="3.1" fill="#171412" stroke="none"/>
+          <ellipse cx="57" cy="43" rx="2.4" ry="3.1" fill="#171412" stroke="none"/>
+          <path d="M44 51 Q48 54 52 51 Q51 48 48 48 Q45 48 44 51 Z" fill="#171412" stroke="none"/>
+          <path d="M48 53 L48 56 M48 56 Q44 59 41 56 M48 56 Q52 59 55 56" fill="none" stroke-width="1.7"/>
+          <path d="M31 45 Q27 43 24 44 M31 49 Q26 49 23 52 M65 45 Q69 43 72 44 M65 49 Q70 49 73 52" fill="none" stroke-width="1.6"/>
+          <path d="M29 68 Q31 73 37 75 M69 67 Q66 73 61 75 M44 78 Q48 80 52 78" fill="none" stroke-width="1.5"/>
+          <path d="M28 87 Q31 89 35 87 M65 87 Q69 89 73 87" fill="none" stroke-width="1.6"/>
+        </g>
       </svg>`;
     }
 

@@ -1335,18 +1335,18 @@
     .passport-id-card.bg-purple-trapezoids .id-label,
     .passport-id-card.bg-purple-trapezoids .id-card-mrz { color:rgba(255,250,240,.72); }
     .passport-id-card.bg-purple-trapezoids::before {
-      opacity: .22;
-      background-size: 86px 86px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='86' height='86' viewBox='0 0 86 86'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M10 23 L31 33 L31 53 L10 63 L16 43 Z'/%3E%3Cpath d='M76 23 L55 33 L55 53 L76 63 L70 43 Z'/%3E%3C/g%3E%3C/svg%3E");
+      opacity: .42;
+      background-size: 82px 82px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='82' height='82' viewBox='0 0 82 82'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M8 25 L28 31 L28 51 L8 57 L14 41 Z'/%3E%3Cpath d='M74 25 L54 31 L54 51 L74 57 L68 41 Z'/%3E%3C/g%3E%3C/svg%3E");
     }
 
     .background-preview.purple-trapezoids {
       background: linear-gradient(145deg,#8558d8,#5f3ab0 60%,#4d2c90);
     }
     .background-preview.purple-trapezoids::after {
-      opacity: .34;
-      background-size: 62px 62px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='62' height='62' viewBox='0 0 62 62'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M7 16 L23 24 L23 38 L7 46 L12 31 Z'/%3E%3Cpath d='M55 16 L39 24 L39 38 L55 46 L50 31 Z'/%3E%3C/g%3E%3C/svg%3E");
+      opacity: .48;
+      background-size: 58px 58px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M6 18 L20 22 L20 36 L6 40 L10 29 Z'/%3E%3Cpath d='M52 18 L38 22 L38 36 L52 40 L48 29 Z'/%3E%3C/g%3E%3C/svg%3E");
     }
 
     .id-card-header {
@@ -1675,6 +1675,15 @@
     }
     .nearest-cafe-banner.show { display:block; }
     .nearest-distance { display:block; font-size:11px; font-weight:600; opacity:.72; margin-top:3px; }
+    .nearest-settings-note {
+      display:block;
+      margin-top:7px;
+      font-size:10px;
+      font-weight:600;
+      line-height:1.35;
+      color:#426b4d;
+      opacity:.78;
+    }
 
     #store-overlay { align-items:stretch; padding:0; background:var(--cream); backdrop-filter:none; }
     #store-overlay .cafe-sheet { border-radius:0; max-width:none; width:100%; height:100vh; max-height:none; transform:translateX(100%); padding:24px 18px 40px; }
@@ -2227,7 +2236,11 @@
   <!-- CAFE DETAIL SHEET -->
   <div class="overlay" id="overlay" onclick="closeSheet(event)">
     <div class="cafe-sheet" id="cafe-sheet">
-      <div class="nearest-cafe-banner" id="nearest-cafe-banner">El café más cercano es este<span class="nearest-distance" id="nearest-cafe-distance"></span></div>
+      <div class="nearest-cafe-banner" id="nearest-cafe-banner">
+        El café más cercano es este
+        <span class="nearest-distance" id="nearest-cafe-distance"></span>
+        <span class="nearest-settings-note">Puedes desactivar esta función desde Configuraciones.</span>
+      </div>
       <div class="sheet-handle"></div>
       <div class="sheet-header">
         <h2 id="sheet-name">—</h2>

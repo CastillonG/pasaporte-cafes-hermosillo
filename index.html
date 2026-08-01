@@ -173,6 +173,22 @@
       white-space: nowrap;
     }
 
+    .topbar-home {
+      border: 0;
+      background: transparent;
+      color: var(--cream);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      letter-spacing: 1.5px;
+    }
+    .topbar-home-emoji { font-size: 20px; line-height: 1; }
+    .topbar-home-text { white-space: nowrap; }
+
     .nav-tabs {
       display: flex;
       gap: 4px;
@@ -1327,28 +1343,6 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cg fill='none' stroke='%237a3f25' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 17h20v13c0 5-4 9-9 9h-2c-5 0-9-4-9-9z'/%3E%3Cpath d='M30 21h4c5 0 5 8 0 8h-4'/%3E%3Cpath d='M14 13c-2-3 2-4 0-7M20 13c-2-3 2-4 0-7M26 13c-2-3 2-4 0-7'/%3E%3Cpath d='M8 40h28'/%3E%3C/g%3E%3C/svg%3E");
 }
 
-    .passport-id-card.bg-purple-trapezoids {
-      background: linear-gradient(145deg,#8558d8,#5f3ab0 60%,#4d2c90);
-    }
-    .passport-id-card.bg-purple-trapezoids .id-value,
-    .passport-id-card.bg-purple-trapezoids .id-card-country { color:#fffaf0; }
-    .passport-id-card.bg-purple-trapezoids .id-label,
-    .passport-id-card.bg-purple-trapezoids .id-card-mrz { color:rgba(255,250,240,.72); }
-    .passport-id-card.bg-purple-trapezoids::before {
-      opacity: .42;
-      background-size: 82px 82px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='82' height='82' viewBox='0 0 82 82'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M8 25 L28 31 L28 51 L8 57 L14 41 Z'/%3E%3Cpath d='M74 25 L54 31 L54 51 L74 57 L68 41 Z'/%3E%3C/g%3E%3C/svg%3E");
-    }
-
-    .background-preview.purple-trapezoids {
-      background: linear-gradient(145deg,#8558d8,#5f3ab0 60%,#4d2c90);
-    }
-    .background-preview.purple-trapezoids::after {
-      opacity: .48;
-      background-size: 58px 58px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M6 18 L20 22 L20 36 L6 40 L10 29 Z'/%3E%3Cpath d='M52 18 L38 22 L38 36 L52 40 L48 29 Z'/%3E%3C/g%3E%3C/svg%3E");
-    }
-
     .id-card-header {
       display: flex;
       justify-content: space-between;
@@ -1622,6 +1616,14 @@
     .owner-save-status.error { background:#fdecea; color:#a93226; border:1px solid #efb0aa; }
     .owner-empty-dashboard { text-align:center; color:var(--espresso); opacity:.62; padding:18px; font-size:13px; }
     @media(max-width:760px){ .dashboard-grid{grid-template-columns:repeat(2,1fr)} .dashboard-columns{grid-template-columns:1fr} .owner-form-grid{grid-template-columns:1fr} }
+    .owner-branches-list { display:grid; gap:10px; margin-top:12px; }
+    .owner-branch-item { display:flex; align-items:center; justify-content:space-between; gap:12px; background:white; border:1.5px solid rgba(122,63,37,.13); border-radius:14px; padding:12px 14px; }
+    .owner-branch-item-main { min-width:0; }
+    .owner-branch-item-title { font-weight:800; color:var(--dark); font-size:13px; }
+    .owner-branch-item-meta { color:var(--espresso); opacity:.68; font-size:11px; margin-top:3px; word-break:break-word; }
+    .owner-branch-add-btn { margin-top:12px; border:0; border-radius:12px; padding:12px 14px; background:rgba(122,63,37,.1); color:var(--espresso); font:800 13px 'DM Sans',sans-serif; cursor:pointer; width:100%; }
+    .owner-branch-add-btn:hover { background:rgba(122,63,37,.16); }
+    .branch-helper-note { color:var(--espresso); opacity:.72; font-size:12px; margin-top:6px; line-height:1.45; }
     .pending-note { margin-top:10px; text-align:center; color:var(--espresso); opacity:.66; font-size:12px; }
 
 
@@ -1869,9 +1871,16 @@
     .falling-bean::after { content:''; position:absolute; left:13px; top:4px; width:3px; height:31px; border-radius:99px; background:#d2e7a5; transform:rotate(-8deg); }
     @keyframes greenBeanFall { 0%{transform:translateY(-80px) rotate(0deg);opacity:0} 10%{opacity:1} 100%{transform:translateY(115vh) rotate(540deg);opacity:1} }
     @keyframes beanRewardPop { 0%{opacity:0;transform:translate(-50%,-35%) scale(.8)} 18%{opacity:1;transform:translate(-50%,-50%) scale(1.05)} 75%{opacity:1} 100%{opacity:0;transform:translate(-50%,-60%) scale(1)} }
-    .desert-night-preview { width:100%; height:100%; background:linear-gradient(#26324c 0 62%,#c87942 62% 75%,#e7c18f 75%); position:relative; }
-    .desert-night-preview::before { content:'✦  ✧    ✦'; position:absolute; top:16px; left:20px; color:#fff7d4; letter-spacing:16px; }
-    .desert-night-preview::after { content:'🌵'; position:absolute; bottom:8px; right:20px; font-size:44px; }
+    .desert-night-preview {
+      width:100%;
+      height:100%;
+      position:relative;
+      overflow:hidden;
+      background-color:#17152f;
+      background-size:cover;
+      background-position:center;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 220'%3E%3Cdefs%3E%3ClinearGradient id='sky' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23141138'/%3E%3Cstop offset='.58' stop-color='%23422a70'/%3E%3Cstop offset='1' stop-color='%23d06b65'/%3E%3C/linearGradient%3E%3ClinearGradient id='sand' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23d58a62'/%3E%3Cstop offset='1' stop-color='%238f4a42'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='360' height='220' fill='url(%23sky)'/%3E%3Ccircle cx='287' cy='47' r='22' fill='%23fff1bf'/%3E%3Cg fill='%23fff7d6'%3E%3Ccircle cx='42' cy='34' r='2'/%3E%3Ccircle cx='87' cy='59' r='1.7'/%3E%3Ccircle cx='130' cy='28' r='2.2'/%3E%3Ccircle cx='179' cy='53' r='1.6'/%3E%3Ccircle cx='224' cy='24' r='1.8'/%3E%3Ccircle cx='328' cy='78' r='2'/%3E%3Ccircle cx='251' cy='88' r='1.4'/%3E%3C/g%3E%3Cpath d='M0 145L66 91l49 45 53-70 75 79 47-45 70 48v72H0z' fill='%23211d46'/%3E%3Cpath d='M0 164l72-36 63 28 77-37 62 32 86-26v95H0z' fill='%23412b54'/%3E%3Cpath d='M0 181c58-22 113-12 166 0 66 15 122-10 194-5v44H0z' fill='url(%23sand)'/%3E%3Cg fill='%2324543c'%3E%3Cpath d='M63 183v-52c0-12 16-12 16 0v14h9v-18c0-8 11-8 11 0v27c0 8-8 13-20 12v17z'/%3E%3Cpath d='M278 186v-72c0-14 18-14 18 0v20h11v-23c0-9 12-9 12 0v34c0 9-9 14-23 13v28z'/%3E%3Cpath d='M222 187v-38c0-9 12-9 12 0v8h8v-11c0-7 9-7 9 0v20c0 7-7 11-17 10v11z'/%3E%3C/g%3E%3C/svg%3E");
+    }
     .stamp-star-preview { width:72px; height:72px; border-radius:50%; background:#c9a227; border:5px double #fff0a8; display:flex; align-items:center; justify-content:center; font-size:38px; color:white; transform:rotate(-8deg); }
 
     .pet-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
@@ -1883,11 +1892,38 @@
     .editor-panel { display:none; }
     .editor-panel.active { display:block; }
 
-    .passport-id-card.bg-desert-night { background:linear-gradient(145deg,#33415f,#786351 58%,#d9ab78); }
+    .passport-id-card.bg-desert-night,
+    .friend-passport-card.bg-desert-night {
+      background:#17152f;
+      color:#fff8ea;
+    }
+    .passport-id-card.bg-desert-night::before,
+    .friend-passport-card.bg-desert-night::before {
+      opacity:1;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 700 320'%3E%3Cdefs%3E%3ClinearGradient id='sky' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23141138'/%3E%3Cstop offset='.58' stop-color='%23422a70'/%3E%3Cstop offset='1' stop-color='%23d06b65'/%3E%3C/linearGradient%3E%3ClinearGradient id='sand' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23d58a62'/%3E%3Cstop offset='1' stop-color='%238f4a42'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='700' height='320' fill='url(%23sky)'/%3E%3Ccircle cx='588' cy='62' r='34' fill='%23fff1bf'/%3E%3Cg fill='%23fff7d6'%3E%3Ccircle cx='62' cy='38' r='3'/%3E%3Ccircle cx='142' cy='78' r='2.5'/%3E%3Ccircle cx='224' cy='35' r='3'/%3E%3Ccircle cx='318' cy='72' r='2.4'/%3E%3Ccircle cx='427' cy='31' r='2.8'/%3E%3Ccircle cx='655' cy='102' r='3'/%3E%3Ccircle cx='504' cy='118' r='2.3'/%3E%3C/g%3E%3Cpath d='M0 215L113 113l91 83 101-129 142 147 88-82 165 91v97H0z' fill='%23211d46'/%3E%3Cpath d='M0 250l142-70 119 52 151-73 116 58 172-50v153H0z' fill='%23412b54'/%3E%3Cpath d='M0 276c118-39 224-21 329 1 133 28 243-14 371-6v49H0z' fill='url(%23sand)'/%3E%3Cg fill='%2324543c'%3E%3Cpath d='M86 282v-93c0-21 27-21 27 0v26h16v-34c0-15 20-15 20 0v49c0 15-15 23-36 21v31z'/%3E%3Cpath d='M552 288v-126c0-25 32-25 32 0v35h20v-41c0-17 22-17 22 0v59c0 17-17 26-42 23v50z'/%3E%3Cpath d='M438 288v-69c0-17 22-17 22 0v15h14v-20c0-13 17-13 17 0v36c0 13-12 20-31 18v20z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    .passport-id-card.bg-desert-night .id-card-header,
+    .passport-id-card.bg-desert-night .id-card-mrz { border-color:rgba(255,255,255,.34); }
     .passport-id-card.bg-desert-night .id-value,
-    .passport-id-card.bg-desert-night .id-card-country { color:#fff8ea; }
+    .passport-id-card.bg-desert-night .id-card-country,
+    .friend-passport-card.bg-desert-night .friend-passport-value,
+    .friend-passport-card.bg-desert-night .id-card-country { color:#fffaf0; text-shadow:0 1px 3px rgba(0,0,0,.55); }
     .passport-id-card.bg-desert-night .id-label,
-    .passport-id-card.bg-desert-night .id-card-mrz { color:rgba(255,248,234,.68); }
+    .passport-id-card.bg-desert-night .id-card-mrz,
+    .friend-passport-card.bg-desert-night .friend-passport-label { color:rgba(255,250,240,.82); }
+    .background-preview.desert-night {
+      background:#17152f;
+    }
+    .background-preview.desert-night::after {
+      opacity:1;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 220'%3E%3Cdefs%3E%3ClinearGradient id='sky' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23141138'/%3E%3Cstop offset='.58' stop-color='%23422a70'/%3E%3Cstop offset='1' stop-color='%23d06b65'/%3E%3C/linearGradient%3E%3ClinearGradient id='sand' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23d58a62'/%3E%3Cstop offset='1' stop-color='%238f4a42'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='360' height='220' fill='url(%23sky)'/%3E%3Ccircle cx='287' cy='47' r='22' fill='%23fff1bf'/%3E%3Cg fill='%23fff7d6'%3E%3Ccircle cx='42' cy='34' r='2'/%3E%3Ccircle cx='87' cy='59' r='1.7'/%3E%3Ccircle cx='130' cy='28' r='2.2'/%3E%3Ccircle cx='179' cy='53' r='1.6'/%3E%3Ccircle cx='224' cy='24' r='1.8'/%3E%3Ccircle cx='328' cy='78' r='2'/%3E%3C/g%3E%3Cpath d='M0 145L66 91l49 45 53-70 75 79 47-45 70 48v72H0z' fill='%23211d46'/%3E%3Cpath d='M0 164l72-36 63 28 77-37 62 32 86-26v95H0z' fill='%23412b54'/%3E%3Cpath d='M0 181c58-22 113-12 166 0 66 15 122-10 194-5v44H0z' fill='url(%23sand)'/%3E%3Cg fill='%2324543c'%3E%3Cpath d='M63 183v-52c0-12 16-12 16 0v14h9v-18c0-8 11-8 11 0v27c0 8-8 13-20 12v17z'/%3E%3Cpath d='M278 186v-72c0-14 18-14 18 0v20h11v-23c0-9 12-9 12 0v34c0 9-9 14-23 13v28z'/%3E%3C/g%3E%3C/svg%3E");
+    }
 
     @media (max-width: 600px) {
       .store-grid { grid-template-columns:1fr; }
@@ -1972,6 +2008,9 @@
     @media (max-width: 480px) {
       .medals-slots { grid-template-columns: repeat(4, 1fr); gap: 9px; }
       .topbar h1 { font-size: 14px; }
+      .topbar-home { font-size: 18px; }
+      .topbar-home-text { display:none; }
+      .topbar-home-emoji { font-size: 24px; }
       .nav-tab { padding: 6px 10px; font-size: 12px; }
       .stamps-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
       .user-btn span { display: none; }
@@ -2047,7 +2086,7 @@
   <!-- TOP BAR -->
   <div class="topbar">
     <div class="topbar-left">
-      <h1>☕ PASAPORTE</h1>
+      <button class="topbar-home" id="topbar-home" onclick="goHome()" aria-label="Ir al inicio"><span class="topbar-home-emoji">☕</span><span class="topbar-home-text">PASAPORTE</span></button>
     </div>
     <div class="nav-tabs" id="regular-nav-tabs">
       <button class="nav-tab active" onclick="switchPage('map', this)">Mapa</button>
@@ -2098,11 +2137,11 @@
 
   <!-- MAIN MENU -->
   <div class="main-menu" id="main-menu">
-    <button class="main-menu-item" onclick="openSettings()"><span>⚙️</span> Configuraciones</button>
+    <button class="main-menu-item" id="menu-item-settings" onclick="openSettings()"><span>⚙️</span> Configuraciones</button>
     <div class="main-menu-separator"></div>
-    <button class="main-menu-item" onclick="openDiscounts()"><span>🏷️</span> Descuentos</button>
+    <button class="main-menu-item" id="menu-item-discounts" onclick="openDiscounts()"><span>🏷️</span> Descuentos</button>
     <div class="main-menu-separator"></div>
-    <button class="main-menu-item" onclick="openStore()"><span>🛍️</span> Tienda</button>
+    <button class="main-menu-item" id="menu-item-store" onclick="openStore()"><span>🛍️</span> Tienda</button>
   </div>
 
   <!-- MAP PAGE -->
@@ -2229,6 +2268,12 @@
         <div class="owner-hours-grid" id="owner-hours-grid"></div>
         <button class="owner-save-btn" id="owner-save-btn" onclick="saveOwnerCafeInfo()">Guardar cambios</button>
         <div class="owner-save-status" id="owner-save-status" role="status" aria-live="polite"></div>
+        <div class="profile-field" style="margin-top:18px;">
+          <label>Sucursales</label>
+          <div class="branch-helper-note">Agrega nuevas ubicaciones para el mismo café. Todas compartirán sello, visitas y tarjeta de lealtad.</div>
+          <div class="owner-branches-list" id="owner-branches-list"></div>
+          <button class="owner-branch-add-btn" onclick="openBranchModal()">＋ Agregar sucursal</button>
+        </div>
       </div>
     </section>
   </div>
@@ -2416,7 +2461,7 @@
         <div><h2>Configuraciones</h2><div class="sheet-address" style="margin:5px 0 0;">Preferencias de la aplicación.</div></div>
         <button class="sheet-close" onclick="closeSettings()">✕</button>
       </div>
-      <div class="settings-card">
+      <div class="settings-card" id="settings-nearest-card">
         <div>
           <div class="settings-title">Café más cercano</div>
           <div class="settings-desc">Al volver después de varios días, muestra automáticamente el café más cercano y su información.</div>
@@ -2426,6 +2471,22 @@
           <span class="settings-slider"></span>
         </label>
       </div>
+      <div class="owner-empty-dashboard" id="settings-owner-empty" style="display:none;">No hay configuraciones disponibles para cuentas de cafetería por ahora.</div>
+    </div>
+  </div>
+
+  <!-- BRANCH MODAL -->
+  <div class="overlay" id="branch-overlay" onclick="closeBranchModal(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div><h2>Nueva sucursal</h2><div class="sheet-address" style="margin:5px 0 0;">Pega el enlace de Google Maps o las coordenadas en formato lat,lng.</div></div>
+        <button class="sheet-close" onclick="closeBranchModal()">✕</button>
+      </div>
+      <div class="profile-field"><label>Ubicación</label><input id="branch-location-input" type="text" placeholder="Ej. https://maps.google.com/... o 29.10,-111.00"></div>
+      <div class="branch-helper-note">Esta sucursal compartirá el mismo sello, visitas, lealtad e información del café principal.</div>
+      <button class="owner-save-btn" style="margin-top:16px;" onclick="saveOwnerBranch()">Agregar sucursal</button>
+      <div class="owner-save-status" id="branch-save-status" role="status" aria-live="polite"></div>
     </div>
   </div>
 
@@ -2750,6 +2811,7 @@
       if (profileData.hours && typeof profileData.hours === 'object') cafe.hours = {...profileData.hours};
       cafe.googleLocation = profileData.googleLocation || '';
       cafe.officialProfileUpdatedAt = profileData.updatedAt || '';
+      cafe.branches = Array.isArray(profileData.branches) ? profileData.branches.map(b => ({...b})) : [];
 
       if (currentCafe && currentCafe.name === cafe.name && document.getElementById('overlay').classList.contains('open')) {
         openCafeSheet(encodeURIComponent(cafe.name));
@@ -2757,7 +2819,9 @@
       if (currentOwnerCafe && currentOwnerCafe.name === cafe.name) {
         currentOwnerCafe = cafe;
         ownerCafeProfile = profileData;
+        if (window.renderOwnerBranchesList) window.renderOwnerBranchesList();
       }
+      if (mapInstance && window.renderMapCafeMarkers) window.renderMapCafeMarkers();
     }
 
     window.applyCafeProfile = applyCafeProfile;
@@ -2850,6 +2914,8 @@
         document.getElementById('owner-nav-tabs').style.display = 'none';
         btn.classList.remove('show');
         ownerRequests = [];
+        currentOwnerCafe = null;
+        updateRoleBasedUI();
         renderOwnerRequests();
         return;
       }
@@ -2865,6 +2931,7 @@
       }, err => console.error('Owner inbox:', err));
       loadOwnerCafeInfo(ownerCafe);
       activateOwnerMode(ownerCafe);
+      updateRoleBasedUI();
     };
 
     window.respondCheckinRequest = async function(requestId, accepted) {
@@ -3178,6 +3245,8 @@
         ddEmail.textContent = '—';
         window.currentDisplayName = 'Usuario';
         window.currentUserEmail = '';
+        currentOwnerCafe = null;
+        updateRoleBasedUI();
         return;
       }
 
@@ -3191,6 +3260,7 @@
       img.style.display = 'none';
       placeholder.style.display = 'none';
       if (window.renderAccountCharacter) window.renderAccountCharacter();
+      updateRoleBasedUI();
     }
 
     function setSyncDot(state) {
@@ -3270,7 +3340,7 @@
     // ──────────────────────────────────────────────
     const cafes = [
       { name:"211 Barra Café", address:"C. Benito Juárez 211, Issste Federal", coords:[29.105567,-110.952852], menu:["Espresso","Cappuccino","Té","Pasteles"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"10–18"} },
-      { name:"Ágape Café", ownerEmail:"kelitzkeliton@gmail.com", address:"Av. Saturnino Campoy 869-GG, Álvaro Obregón", coords:[29.103832,-111.006329], menu:["Cold Brew","Latte","Sándwiches","Waffles"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { name:"Ágape Café", ownerEmail:"kelitzkeliton@gmail.com", address:"Av. Saturnino Campoy 869-GG, Álvaro Obregón", coords:[29.103832,-111.006329], branches:[], menu:["Cold Brew","Latte","Sándwiches","Waffles"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
       { name:"Aletto Café", address:"Av. Dr. Ignacio Pesqueira 608-A, Las Quintas", coords:[29.084816,-110.991711], menu:["V60","Aeropress","Croissants","Matcha"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–20",dom:"10–17"} },
       { name:"Café Central", address:"Blvd. Miguel Hidalgo 63, El Centenario", coords:[29.076014,-110.961434], menu:["Americano","Café de Olla","Pan de Dulce"], hours:{lun:"7–21",mar:"7–21",mie:"7–21",jue:"7–21",vie:"7–22",sab:"8–22",dom:"9–18"} },
       { name:"Cafelita", address:"Av. Tehuantepec 53, El Centenario", coords:[29.073757,-110.959006], menu:["Espresso","Muffins","Licuados","Tés"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"9–17"} },
@@ -3311,8 +3381,7 @@
   { id:'coffee', name:'Granos de café', preview:'coffee' },
   { id:'cups', name:'Tazas de café', preview:'cups' },
   { id:'cactus', name:'Cactus', preview:'cactus' },
-  { id:'desert_night', name:'Noche Sonorense', preview:'desert-night' },
-  { id:'purple_trapezoids', name:'Trapecios morados', preview:'purple-trapezoids' }
+  { id:'desert_night', name:'Noche Sonorense', preview:'desert-night' }
 ];
 
     const STAMP_ANIMATIONS = [
@@ -3324,12 +3393,12 @@
     const STORE_ITEMS = [
       { id:'scarf_red', category:'cosmetics', name:'Pañuelo Cafetero', desc:'Un pañuelo rojo para tu personaje.', price:29 },
       { id:'desert_night', category:'backgrounds', name:'Noche Sonorense', desc:'Fondo nocturno inspirado en el desierto.', price:39 },
-      { id:'purple_trapezoids', category:'backgrounds', name:'Trapecios morados', desc:'Fondo morado con figuras blancas de trapecios encontrados.', price:42 },
       { id:'gold_star_stamp', category:'stamps', name:'Sello Estrella', desc:'Cambia tus sellos visitados por una estrella dorada.', price:25 },
       { id:'coffee_bean_stamp', category:'stamps', name:'Sello Grano de Café', desc:'Un sello con forma de grano de café.', price:20 },
       { id:'lightning_stamp', category:'stamps', name:'Sello Rayo', desc:'Un sello eléctrico para tus visitas.', price:25 },
       { id:'coffee_bean_dog', category:'pets', name:'Perro Grano de Café', desc:'Un compañero con forma de grano de café.', price:49 },
-      { id:'heart_head_friend', category:'pets', name:'Amigo Corazón', desc:'Mascota de cabeza roja en forma de corazón, cuerpo azul y estilo garabato.', price:45 }
+      { id:'heart_head_friend', category:'pets', name:'Amigo Corazón', desc:'Mascota de cabeza roja en forma de corazón, cuerpo azul y estilo garabato.', price:45 },
+      { id:'nova_dog', category:'pets', name:'NOVA', desc:'Perrito ilustrado de pelaje blanco con manchas amarillas y estilo expresivo.', price:52 }
     ];
     const STORE_CATEGORIES = [
       { id:'cosmetics', name:'Cosméticos' }, { id:'backgrounds', name:'Fondos' },
@@ -3369,8 +3438,39 @@
     let currentOwnerCafe = null;
     let ownerCafeProfile = null;
     let currentCafe = null;
+
+    function getOwnerCafeByEmail(email) {
+      const normalized = (email || '').trim().toLowerCase();
+      return cafes.find(c => (c.ownerEmail || '').trim().toLowerCase() === normalized) || null;
+    }
+    function isOwnerAccount() {
+      return !!currentOwnerCafe || !!getOwnerCafeByEmail(window.currentUserEmail || '');
+    }
+    function updateRoleBasedUI() {
+      const owner = isOwnerAccount();
+      const friendsFab = document.getElementById('friends-fab');
+      if (friendsFab) friendsFab.style.display = owner ? 'none' : 'flex';
+      const menuDiscounts = document.getElementById('menu-item-discounts');
+      const menuStore = document.getElementById('menu-item-store');
+      if (menuDiscounts) menuDiscounts.style.display = owner ? 'none' : 'flex';
+      if (menuStore) menuStore.style.display = owner ? 'none' : 'flex';
+      const nearestCard = document.getElementById('settings-nearest-card');
+      const settingsEmpty = document.getElementById('settings-owner-empty');
+      if (nearestCard) nearestCard.style.display = owner ? 'none' : 'flex';
+      if (settingsEmpty) settingsEmpty.style.display = owner ? 'block' : 'none';
+    }
+    function goHome() {
+      if (isOwnerAccount()) {
+        const cafe = currentOwnerCafe || getOwnerCafeByEmail(window.currentUserEmail || '');
+        if (cafe) { activateOwnerMode(cafe); openOwnerTab('dashboard'); return; }
+      }
+      const mapBtn = document.querySelector('#regular-nav-tabs .nav-tab');
+      switchPage('map', mapBtn);
+    }
+    window.goHome = goHome;
     let mapInitialized = false;
     let markersByName = new Map();
+    let cafeMarkerEntries = [];
     let mapInstance = null;
     let stampAnimationTimer = null;
     let stampAnimationBaselineReady = false;
@@ -3545,6 +3645,21 @@
     }
 
 
+    function novaDogSvg() {
+      return `<svg viewBox="0 0 92 92" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="46" cy="46" r="34" fill="#d88d32"/>
+        <path d="M22 53c4-18 20-28 35-25 10 2 19 10 21 22-6 13-20 22-37 21C31 70 24 63 22 53z" fill="#f7f6f0" stroke="#2b2b2b" stroke-width="1.8"/>
+        <path d="M34 22l10 7-5 14-14-4z" fill="#f2c12c" stroke="#2b2b2b" stroke-width="1.6"/>
+        <path d="M56 19l12 8-6 16-13-5z" fill="#f2c12c" stroke="#2b2b2b" stroke-width="1.6"/>
+        <path d="M49 28l6 4-2 8-8-2z" fill="#f2c12c" stroke="#2b2b2b" stroke-width="1.2"/>
+        <circle cx="54" cy="46" r="2.3" fill="#1d1d1d"/>
+        <circle cx="43" cy="45" r="1.7" fill="#1d1d1d"/>
+        <path d="M30 52c6 4 16 6 25 5" fill="none" stroke="#1d1d1d" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M32 59c6 4 14 5 22 4" fill="none" stroke="#1d1d1d" stroke-width="1.4" stroke-linecap="round"/>
+        <ellipse cx="37" cy="53" rx="7" ry="4" fill="#fff" opacity=".55"/>
+      </svg>`;
+    }
+
     function heartHeadFriendSvg() {
       return `<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M45 34 C18 18 10 42 45 62 C80 42 72 18 45 34 Z" fill="#e23a3a" stroke="#9e2020" stroke-width="2.4"/>
@@ -3567,17 +3682,23 @@
       if (item.id === 'lightning_stamp') return '<div class="stamp-star-preview" style="background:#e2b52d;">⚡</div>';
       if (item.id === 'coffee_bean_dog') return coffeeBeanDogSvg();
       if (item.id === 'heart_head_friend') return heartHeadFriendSvg();
+      if (item.id === 'nova_dog') return novaDogSvg();
       return '';
     }
     function isStoreItemEquipped(id) {
       return equippedCosmetic === id || selectedPet === id ||
-        (id === 'desert_night' && selectedPassportBackground === id) ||
+        (STORE_ITEMS.some(x=>x.id===id&&x.category==='backgrounds') && selectedPassportBackground === id) ||
         (STORE_ITEMS.some(x=>x.id===id&&x.category==='stamps') && selectedStampStyle === id);
     }
     function openSettings() {
       closeMainMenu();
+      const owner = isOwnerAccount();
       const toggle = document.getElementById('nearest-cafe-toggle');
       if (toggle) toggle.checked = nearestCafeEnabled;
+      const nearestCard = document.getElementById('settings-nearest-card');
+      const settingsEmpty = document.getElementById('settings-owner-empty');
+      if (nearestCard) nearestCard.style.display = owner ? 'none' : 'flex';
+      if (settingsEmpty) settingsEmpty.style.display = owner ? 'block' : 'none';
       document.getElementById('settings-overlay').classList.add('open');
     }
     function closeSettings(e) {
@@ -3630,7 +3751,7 @@
     function closeMainMenu() { document.getElementById('main-menu').classList.remove('open'); }
     window.toggleMainMenu = toggleMainMenu;
 
-    function openStore() { closeMainMenu(); renderStore(); document.getElementById('store-overlay').classList.add('open'); }
+    function openStore() { if (isOwnerAccount()) { closeMainMenu(); return; } closeMainMenu(); renderStore(); document.getElementById('store-overlay').classList.add('open'); }
     function closeStore(e) { if (!e || e.target === document.getElementById('store-overlay')) document.getElementById('store-overlay').classList.remove('open'); }
     function setStoreCategory(id) { activeStoreCategory=id; const el=document.getElementById('store-section-'+id); if(el) el.scrollIntoView({behavior:'smooth'}); }
     function renderStore() {
@@ -3669,7 +3790,9 @@
         ? `<g transform="translate(-2 66) scale(.48)">${coffeeBeanDogSvg().replace(/<svg[^>]*>|<\/svg>/g,'')}</g>`
         : pet === 'heart_head_friend'
           ? `<g transform="translate(-3 67) scale(.46)">${heartHeadFriendSvg().replace(/<svg[^>]*>|<\/svg>/g,'')}</g>`
-          : '';
+          : pet === 'nova_dog'
+            ? `<g transform="translate(-2 66) scale(.48)">${novaDogSvg().replace(/<svg[^>]*>|<\/svg>/g,'')}</g>`
+            : '';
       const agapeCapLayer = cosmetic === 'agape_cap' ? `<g>
         <path d="M23 29 Q45 6 68 29 L65 37 H27 Z" fill="#f3efe4" stroke="#315f38" stroke-width="1.7"/>
         <path d="M59 31 Q77 29 82 36 Q69 42 58 37 Z" fill="#f3efe4" stroke="#315f38" stroke-width="1.7"/>
@@ -3716,6 +3839,10 @@
  function renderPassportBackground() {
   const card = document.getElementById('passport-id-card');
   if (!card) return;
+  if (selectedPassportBackground === 'purple_trapezoids') {
+    selectedPassportBackground = 'empty';
+    if (window.savePassportBackground) window.savePassportBackground('empty');
+  }
 
   card.classList.remove(
     'bg-coffee',
@@ -3734,13 +3861,12 @@
 
   if (selectedPassportBackground === 'cactus') card.classList.add('bg-cactus');
   if (selectedPassportBackground === 'desert_night') card.classList.add('bg-desert-night');
-  if (selectedPassportBackground === 'purple_trapezoids') card.classList.add('bg-purple-trapezoids');
 }
 
     function renderBackgroundGrid() {
       const grid = document.getElementById('background-grid');
       if (!grid) return;
-      const premiumBackgroundIds = new Set(['desert_night','purple_trapezoids']);
+      const premiumBackgroundIds = new Set(['desert_night']);
       grid.innerHTML = PASSPORT_BACKGROUNDS.filter(bg => !premiumBackgroundIds.has(bg.id) || ownedStoreItems[bg.id]).map(bg => `
         <button class="background-option ${selectedPassportBackground === bg.id ? 'selected' : ''}" onclick="selectPassportBackground('${bg.id}')">
           <div class="background-preview ${bg.preview}"></div>
@@ -3857,7 +3983,8 @@
       grid.innerHTML=`
         <button class="pet-option ${selectedPet===''?'selected':''}" onclick="selectPet('')"><div class="pet-preview" style="font-size:34px;opacity:.5;">—</div>Sin mascota</button>
         <button class="pet-option ${selectedPet==='coffee_bean_dog'?'selected':''} ${owned?'':'locked'}" onclick="${owned?"selectPet('coffee_bean_dog')":"openStoreFromPets()"}"><div class="pet-preview">${coffeeBeanDogSvg()}</div>Perro Grano de Café${owned?'':' · Tienda'}</button>
-        <button class="pet-option ${selectedPet==='heart_head_friend'?'selected':''} ${heartOwned?'':'locked'}" onclick="${heartOwned?"selectPet('heart_head_friend')":"openStoreFromPets()"}"><div class="pet-preview">${heartHeadFriendSvg()}</div>Amigo Corazón${heartOwned?'':' · Tienda'}</button>`;
+        <button class="pet-option ${selectedPet==='heart_head_friend'?'selected':''} ${heartOwned?'':'locked'}" onclick="${heartOwned?"selectPet('heart_head_friend')":"openStoreFromPets()"}"><div class="pet-preview">${heartHeadFriendSvg()}</div>Amigo Corazón${heartOwned?'':' · Tienda'}</button>
+        <button class="pet-option ${selectedPet==='nova_dog'?'selected':''} ${ownedStoreItems.nova_dog?'':'locked'}" onclick="${ownedStoreItems.nova_dog?"selectPet('nova_dog')":"openStoreFromPets()"}"><div class="pet-preview">${novaDogSvg()}</div>NOVA${ownedStoreItems.nova_dog?'':' · Tienda'}</button>`;
     }
     function openEditorTab(tab,btn) {
       document.querySelectorAll('.editor-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
@@ -3943,6 +4070,7 @@
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-owner').classList.add('active');
       document.getElementById('owner-dashboard-title').textContent = ownerCafe.name;
+      updateRoleBasedUI();
       renderOwnerDashboard();
     }
     window.activateOwnerMode = activateOwnerMode;
@@ -4004,17 +4132,19 @@
           saved = await window.firebaseCafeProfileApi.getProfile(ownerCafe.name);
         }
       } catch(e) { console.error('Cafe profile:', e); }
-      ownerCafeProfile = saved || { googleLocation:'', specialties:ownerCafe.menu || [], hours:ownerCafe.hours || {} };
+      ownerCafeProfile = saved || { googleLocation:'', specialties:ownerCafe.menu || [], hours:ownerCafe.hours || {}, branches: ownerCafe.branches || [] };
 
       // Aplicar inmediatamente los datos guardados al objeto que usa el mapa y la ficha pública.
       ownerCafe.googleLocation = ownerCafeProfile.googleLocation || '';
       ownerCafe.menu = ownerCafeProfile.specialties || ownerCafe.menu || [];
       ownerCafe.hours = ownerCafeProfile.hours || ownerCafe.hours || {};
+      ownerCafe.branches = Array.isArray(ownerCafeProfile.branches) ? ownerCafeProfile.branches : (ownerCafe.branches || []);
 
       document.getElementById('owner-cafe-name').value = ownerCafe.name;
       document.getElementById('owner-google-location').value = ownerCafe.googleLocation;
       document.getElementById('owner-specialties').value = ownerCafe.menu.join(', ');
       document.getElementById('owner-hours-grid').innerHTML = OWNER_DAYS.map(([key,label]) => `<div class="profile-field"><label>${label}</label><input id="owner-hour-${key}" value="${ownerCafe.hours[key] || ''}" placeholder="Ej. 8–21"></div>`).join('');
+      if (window.renderOwnerBranchesList) window.renderOwnerBranchesList();
     }
     window.loadOwnerCafeInfo = loadOwnerCafeInfo;
 
@@ -4024,6 +4154,91 @@
       status.className = 'owner-save-status show ' + type;
       status.textContent = message;
     }
+
+    function renderOwnerBranchesList() {
+      const root = document.getElementById('owner-branches-list');
+      if (!root) return;
+      const branches = Array.isArray(ownerCafeProfile?.branches) ? ownerCafeProfile.branches : [];
+      root.innerHTML = branches.length ? branches.map((branch, index) => `
+        <div class="owner-branch-item">
+          <div class="owner-branch-item-main">
+            <div class="owner-branch-item-title">Sucursal ${index + 2}</div>
+            <div class="owner-branch-item-meta">${branch.address || `${branch.coords?.[0] || ''}, ${branch.coords?.[1] || ''}`}</div>
+          </div>
+        </div>`).join('') : '<div class="owner-empty-dashboard">Aún no tienes sucursales registradas.</div>';
+    }
+    window.renderOwnerBranchesList = renderOwnerBranchesList;
+
+    function openBranchModal() {
+      document.getElementById('branch-location-input').value = '';
+      const status = document.getElementById('branch-save-status');
+      status.className = 'owner-save-status';
+      status.textContent = '';
+      document.getElementById('branch-overlay').classList.add('open');
+    }
+    function closeBranchModal(e) {
+      if (!e || e.target === document.getElementById('branch-overlay')) {
+        document.getElementById('branch-overlay').classList.remove('open');
+      }
+    }
+    function parseBranchLocation(raw) {
+      const value = String(raw || '').trim();
+      let match = value.match(/@\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
+      if (!match) match = value.match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/);
+      if (!match) {
+        const qMatch = value.match(/[?&]q=(-?\d+(?:\.\d+)?)%2C(-?\d+(?:\.\d+)?)/i) || value.match(/[?&]q=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/i);
+        if (qMatch) match = [qMatch[0], qMatch[1], qMatch[2]];
+      }
+      if (!match) return null;
+      const lat = Number(match[1]);
+      const lng = Number(match[2]);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+      return { id: 'branch_' + Date.now(), address: value, coords: [lat, lng] };
+    }
+    async function saveOwnerBranch() {
+      const status = document.getElementById('branch-save-status');
+      const input = document.getElementById('branch-location-input');
+      const firebaseUser = window.firebaseCafeProfileApi && window.firebaseCafeProfileApi.getCurrentUser();
+      if (!currentOwnerCafe || !firebaseUser) {
+        status.className = 'owner-save-status show error';
+        status.textContent = 'No se identificó la cuenta propietaria.';
+        return;
+      }
+      const branch = parseBranchLocation(input.value);
+      if (!branch) {
+        status.className = 'owner-save-status show error';
+        status.textContent = 'Pega un enlace de Google Maps con coordenadas o un texto tipo lat,lng.';
+        return;
+      }
+      const branches = Array.isArray(ownerCafeProfile?.branches) ? [...ownerCafeProfile.branches] : [];
+      branches.push(branch);
+      status.className = 'owner-save-status show saving';
+      status.textContent = 'Guardando sucursal…';
+      try {
+        const officialData = await window.firebaseCafeProfileApi.saveProfile(currentOwnerCafe.name, {
+          cafeName: currentOwnerCafe.name,
+          ownerEmail: (firebaseUser.email || '').trim().toLowerCase(),
+          googleLocation: ownerCafeProfile.googleLocation || '',
+          specialties: ownerCafeProfile.specialties || currentOwnerCafe.menu || [],
+          hours: ownerCafeProfile.hours || currentOwnerCafe.hours || {},
+          branches,
+          updatedAt: new Date().toISOString()
+        });
+        ownerCafeProfile = officialData;
+        if (window.applyCafeProfile) window.applyCafeProfile(officialData);
+        renderOwnerBranchesList();
+        status.className = 'owner-save-status show success';
+        status.textContent = '✓ Sucursal agregada';
+        setTimeout(() => closeBranchModal(), 700);
+      } catch (e) {
+        console.error(e);
+        status.className = 'owner-save-status show error';
+        status.textContent = 'No se pudo agregar la sucursal.';
+      }
+    }
+    window.openBranchModal = openBranchModal;
+    window.closeBranchModal = closeBranchModal;
+    window.saveOwnerBranch = saveOwnerBranch;
 
     async function saveOwnerCafeInfo() {
       const saveBtn = document.getElementById('owner-save-btn');
@@ -4052,6 +4267,7 @@
         googleLocation: document.getElementById('owner-google-location').value.trim(),
         specialties,
         hours,
+        branches: Array.isArray(ownerCafeProfile?.branches) ? ownerCafeProfile.branches : [],
         updatedAt: new Date().toISOString()
       };
 
@@ -4182,7 +4398,7 @@
         <button class="discount-claim" ${d.pending?'disabled':''} onclick="requestDiscountRedemption('${d.id}')">${d.pending?'Solicitud pendiente…':'Solicitar canje'}</button>
       </div>`).join('')}</div>`:'<div class="discount-empty">Todavía no tienes descuentos.<br>Completa tarjetas de lealtad para ganarlos.</div>';
     }
-    function openDiscounts(){ closeMainMenu(); renderDiscounts(); document.getElementById('discounts-overlay').classList.add('open'); }
+    function openDiscounts(){ if (isOwnerAccount()) { closeMainMenu(); return; } closeMainMenu(); renderDiscounts(); document.getElementById('discounts-overlay').classList.add('open'); }
     function closeDiscounts(e){ if(!e||e.target===document.getElementById('discounts-overlay')) document.getElementById('discounts-overlay').classList.remove('open'); }
     async function requestDiscountRedemption(id){
       try{ await window.createDiscountRequest(id); renderDiscounts(); showToast('Solicitud de canje enviada ✓'); }
@@ -4235,15 +4451,33 @@
         iconSize:[40,40], iconAnchor:[20,38], popupAnchor:[0,-38]
       });
 
-      cafes.forEach(c => {
-        const marker = L.marker(c.coords, { icon: visited[c.name] ? visitedIcon : cafeIcon })
-          .addTo(map)
-          .bindPopup(
-            '<b>' + c.name + '</b><br><small>' + c.address + '</small><br><br>' +
-            '<a href="#" onclick="openCafeSheet(\'' + encodeURIComponent(c.name) + '\');return false;" style="color:#7a3f25;font-weight:600;">Ver detalles →</a>'
-          );
-        markersByName.set(normalize(c.name), { cafe:c, marker, cafeIcon, visitedIcon });
-      });
+      function getCafeLocations(cafe) {
+        const base = [{ coords: cafe.coords, address: cafe.address, isPrimary: true }];
+        const extras = Array.isArray(cafe.branches)
+          ? cafe.branches.filter(b => Array.isArray(b.coords) && b.coords.length === 2).map(b => ({ coords: b.coords, address: b.address || 'Sucursal', isPrimary: false }))
+          : [];
+        return base.concat(extras);
+      }
+      function renderMapCafeMarkers() {
+        cafeMarkerEntries.forEach(entry => { try { map.removeLayer(entry.marker); } catch (e) {} });
+        cafeMarkerEntries = [];
+        markersByName.clear();
+        cafes.forEach(c => {
+          getCafeLocations(c).forEach((location, idx) => {
+            const marker = L.marker(location.coords, { icon: visited[c.name] ? visitedIcon : cafeIcon })
+              .addTo(map)
+              .bindPopup(
+                '<b>' + c.name + '</b><br><small>' + location.address + '</small><br><br>' +
+                '<a href="#" onclick="openCafeSheet(\'' + encodeURIComponent(c.name) + '\');return false;" style="color:#7a3f25;font-weight:600;">Ver detalles →</a>'
+              );
+            const entry = { cafe:c, marker, cafeIcon, visitedIcon };
+            cafeMarkerEntries.push(entry);
+            if (idx === 0) markersByName.set(normalize(c.name), entry);
+          });
+        });
+      }
+      window.renderMapCafeMarkers = renderMapCafeMarkers;
+      renderMapCafeMarkers();
 
       setTimeout(() => map.invalidateSize(), 250);
 
@@ -4306,7 +4540,7 @@
     // MARKER REFRESH
     // ──────────────────────────────────────────────
     function refreshMarkers() {
-      markersByName.forEach(({ cafe, marker, cafeIcon, visitedIcon }) => {
+      cafeMarkerEntries.forEach(({ cafe, marker, cafeIcon, visitedIcon }) => {
         marker.setIcon(visited[cafe.name] ? visitedIcon : cafeIcon);
       });
     }
@@ -4579,7 +4813,7 @@ window.doCheckin = function() {
 
 
     window.friendsState=[]; window.friendRequestsState=[];
-    function openFriendsDrawer(){ renderFriendsDrawer(); document.getElementById('friends-drawer-backdrop').classList.add('open'); }
+    function openFriendsDrawer(){ if (isOwnerAccount()) return; renderFriendsDrawer(); document.getElementById('friends-drawer-backdrop').classList.add('open'); }
     function closeFriendsDrawer(e){ if(!e || e.target===document.getElementById('friends-drawer-backdrop')) document.getElementById('friends-drawer-backdrop').classList.remove('open'); }
     function renderFriendsDrawer(){
       const friends=window.friendsState||[], reqs=window.friendRequestsState||[];

@@ -423,6 +423,31 @@
       touch-action: none;
     }
 
+    .ad-spaces { width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:16px; }
+    .ad-space { min-width:0; min-height:180px; display:flex; flex-direction:column; justify-content:space-between; gap:16px; padding:22px; border:1.5px solid rgba(122,63,37,.15); border-radius:20px; background:linear-gradient(145deg,var(--foam),var(--warm)); box-shadow:0 6px 18px rgba(62,31,14,.08); overflow:hidden; }
+    .ad-space:nth-child(2) { background:linear-gradient(145deg,#edf5ef,#dcebdc); }
+    .ad-space-kicker { color:var(--green); font-size:10px; font-weight:900; letter-spacing:1px; text-transform:uppercase; }
+    .ad-space h3 { margin-top:6px; color:var(--dark); font:700 22px 'Playfair Display',serif; }
+    .ad-space p { margin-top:7px; color:var(--espresso); opacity:.76; font-size:13px; line-height:1.5; }
+    .ad-contact-email { display:inline-flex; align-items:center; gap:7px; max-width:100%; margin-top:12px; padding:9px 11px; border-radius:11px; background:rgba(122,63,37,.1); color:var(--espresso); font-size:12px; font-weight:900; overflow-wrap:anywhere; cursor:pointer; user-select:none; }
+    .ad-contact-email:hover { background:rgba(122,63,37,.16); }
+    .ad-space button { min-height:44px; align-self:flex-start; border:0; border-radius:12px; padding:0 15px; background:var(--espresso); color:var(--cream); font:800 12px 'DM Sans',sans-serif; cursor:pointer; }
+    #advertise-overlay { align-items:center; padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom)); }
+    #advertise-overlay .cafe-sheet { max-width:760px; border-radius:24px; transform:translateY(15px) scale(.98); }
+    #advertise-overlay.open .cafe-sheet { transform:translateY(0) scale(1); }
+    .ad-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .ad-form-field { min-width:0; }
+    .ad-form-field.full { grid-column:1/-1; }
+    .ad-form-field label { display:block; margin-bottom:5px; color:var(--espresso); font-size:11px; font-weight:800; }
+    .ad-form-field input,.ad-form-field select,.ad-form-field textarea { width:100%; min-width:0; min-height:44px; border:1.5px solid rgba(122,63,37,.2); border-radius:12px; padding:10px 12px; background:white; color:var(--dark); font:13px 'DM Sans',sans-serif; }
+    .ad-form-field textarea { min-height:84px; resize:vertical; }
+    .ad-consent { display:flex; align-items:flex-start; gap:9px; margin-top:10px; color:var(--espresso); font-size:11px; line-height:1.4; }
+    .ad-consent input { width:18px; height:18px; flex-shrink:0; }
+    .ad-honeypot { position:absolute!important; left:-9999px!important; width:1px!important; height:1px!important; opacity:0!important; }
+    .ad-submit-status { display:none; margin-top:12px; padding:11px; border-radius:11px; font-size:12px; font-weight:800; text-align:center; }
+    .ad-submit-status.show { display:block; }.ad-submit-status.saving{background:#fff3cd;color:#856404}.ad-submit-status.success{background:#e7f5eb;color:#28643a}.ad-submit-status.error{background:#fdecea;color:#a93226}
+    @media(max-width:620px){.ad-spaces{grid-template-columns:minmax(0,1fr)}.ad-form-grid{grid-template-columns:minmax(0,1fr)}.ad-form-field.full{grid-column:auto}.ad-space{min-height:165px;padding:18px}}
+
     /* ── PASSPORT PAGE ── */
     .passport-page {
       padding: 20px 16px;
@@ -2242,6 +2267,10 @@
       <div id="suggestions" class="suggestions"></div>
     </div>
     <div id="map"></div>
+    <section class="ad-spaces" aria-label="Publicidad">
+      <article class="ad-space"><div><div class="ad-space-kicker">Espacio publicitario</div><h3>¿Quieres aparecer aquí?</h3><p>Si quieres publicitar tu cafetería, evento o negocio, envíanos tu información a este correo:</p><div class="ad-contact-email" onclick="copyAdvertisingEmail()" onkeydown="if(event.key==='Enter'||event.key===' ')copyAdvertisingEmail()" role="button" tabindex="0">📋 angelcastillongg@gmail.com</div></div><button onclick="copyAdvertisingEmail()">Copiar correo</button></article>
+      <article class="ad-space"><div><div class="ad-space-kicker">Crece con nosotros</div><h3>Haz crecer tu negocio</h3><p>Envíanos por correo la información de tu apertura, producto, descuento o experiencia.</p><div class="ad-contact-email" onclick="copyAdvertisingEmail()" onkeydown="if(event.key==='Enter'||event.key===' ')copyAdvertisingEmail()" role="button" tabindex="0">📋 angelcastillongg@gmail.com</div></div><button onclick="copyAdvertisingEmail()">Copiar correo</button></article>
+    </section>
   </div>
 
   <!-- PASSPORT PAGE -->
@@ -2623,6 +2652,37 @@
       <h2 id="reward-popup-title">Recompensa desbloqueada</h2>
       <p id="reward-popup-desc"></p>
       <button class="reward-popup-btn" onclick="closeRewardPopup()">Entendido</button>
+    </div>
+  </div>
+
+  <!-- ADVERTISING REQUEST -->
+  <div class="overlay" id="advertise-overlay" onclick="closeAdvertiseModal(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-header"><div><h2>Anúnciate en Pasaporte del Café</h2><div class="sheet-address" style="margin:6px 0 0;">Cuéntanos qué quieres promocionar. Revisaremos tu solicitud y nos pondremos en contacto contigo.</div></div><button class="sheet-close" onclick="closeAdvertiseModal()">✕</button></div>
+      <form id="advertise-form" onsubmit="submitAdvertisingRequest(event)">
+        <input id="ad-source-space" type="hidden" value="espacio_1"><input class="ad-honeypot" id="ad-website-trap" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="ad-form-grid">
+          <div class="ad-form-field"><label>Nombre completo *</label><input id="ad-full-name" required maxlength="100"></div>
+          <div class="ad-form-field"><label>Nombre del negocio *</label><input id="ad-business-name" required maxlength="120"></div>
+          <div class="ad-form-field"><label>Tipo de negocio *</label><select id="ad-business-type" required><option value="">Selecciona</option><option>Cafetería</option><option>Restaurante</option><option>Repostería</option><option>Marca de café</option><option>Evento</option><option>Escuela o curso</option><option>Producto relacionado con café</option><option>Otro</option></select></div>
+          <div class="ad-form-field"><label>Ciudad *</label><input id="ad-city" required maxlength="80" value="Hermosillo"></div>
+          <div class="ad-form-field"><label>Correo electrónico *</label><input id="ad-email" type="email" required maxlength="120"></div>
+          <div class="ad-form-field"><label>Teléfono o WhatsApp *</label><input id="ad-phone" type="tel" required maxlength="30"></div>
+          <div class="ad-form-field full"><label>¿Qué deseas anunciar? *</label><input id="ad-what" required maxlength="160"></div>
+          <div class="ad-form-field full"><label>Descripción de la promoción, producto, evento o negocio *</label><textarea id="ad-description" required maxlength="1000"></textarea></div>
+          <div class="ad-form-field"><label>Objetivo del anuncio *</label><input id="ad-objective" required maxlength="200"></div>
+          <div class="ad-form-field"><label>Fecha aproximada de inicio</label><input id="ad-start-date" type="date"></div>
+          <div class="ad-form-field"><label>Duración estimada *</label><input id="ad-duration" required maxlength="80" placeholder="Ej. 2 semanas"></div>
+          <div class="ad-form-field"><label>Presupuesto aproximado *</label><select id="ad-budget" required><option value="">Selecciona</option><option>Menos de $500 MXN</option><option>$500–$1,000 MXN</option><option>$1,001–$2,500 MXN</option><option>Más de $2,500 MXN</option><option>Aún no lo sé</option></select></div>
+          <div class="ad-form-field"><label>Audiencia que deseas alcanzar *</label><input id="ad-audience" required maxlength="200"></div>
+          <div class="ad-form-field"><label>Instagram, Facebook o sitio web</label><input id="ad-social-link" type="url" maxlength="300" placeholder="https://"></div>
+          <div class="ad-form-field full"><label>Observaciones adicionales</label><textarea id="ad-notes" maxlength="600"></textarea></div>
+        </div>
+        <label class="ad-consent"><input id="ad-contact-consent" type="checkbox" required><span>Autorizo que me contacten para dar seguimiento a esta solicitud.</span></label>
+        <label class="ad-consent"><input id="ad-privacy-consent" type="checkbox" required><span>Acepto el aviso de privacidad y el tratamiento de estos datos para atender mi solicitud.</span></label>
+        <button class="owner-save-btn" id="ad-submit-btn" type="submit">Enviar solicitud</button>
+        <div class="ad-submit-status" id="ad-submit-status" role="status" aria-live="polite"></div>
+      </form>
     </div>
   </div>
 
@@ -3452,15 +3512,25 @@
       saveEvent: async data => {
         if (!CONFIGURED || !currentUser) throw new Error('auth-required');
         const anon=data.anonymousUserId||await surveyAnonymousId(currentUser.uid), id=data.id||`${anon}_${safeFbKey(data.cafeName)}_${data.cycle}`;
-        const clean={id,anonymousUserId:anon,cafeName:data.cafeName,cardCycle:Number(data.cycle)||0,status:data.status,option:data.option||'',comment:String(data.comment||'').slice(0,150),firstResponse:!!data.firstResponse,surveyVersion:1,createdAt:data.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};
+        const clean={id,userUid:currentUser.uid,anonymousUserId:anon,cafeName:data.cafeName,cardCycle:Number(data.cycle)||0,status:data.status,option:data.option||'',comment:String(data.comment||'').slice(0,150),firstResponse:!!data.firstResponse,surveyVersion:1,createdAt:data.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};
         await setDoc(doc(db,'loyaltySurveyEvents',id),clean,{merge:true});
-        if(clean.status==='answered') await setDoc(doc(db,'loyaltySurveyUsers',`${anon}_${safeFbKey(data.cafeName)}`),{anonymousUserId:anon,cafeName:data.cafeName,answeredBefore:true,lastAnsweredAt:new Date().toISOString()},{merge:true});
+        if(clean.status==='answered') await setDoc(doc(db,'loyaltySurveyUsers',`${anon}_${safeFbKey(data.cafeName)}`),{userUid:currentUser.uid,anonymousUserId:anon,cafeName:data.cafeName,answeredBefore:true,lastAnsweredAt:new Date().toISOString()},{merge:true});
         return clean;
       },
       loadCafeResponses: async cafeName => {
         if (!CONFIGURED || !currentUser) return [];
         const snap=await getDocs(query(collection(db,'loyaltySurveyEvents'),where('cafeName','==',cafeName)));
         return snap.docs.map(d=>d.data()).filter(x=>x.status==='answered');
+      }
+    };
+    window.advertisingRequestApi = {
+      submit: async data => {
+        if(!CONFIGURED) throw new Error('Firebase no está configurado.');
+        const clean={...data,status:'Nueva',followUpStatus:'Nueva',source:'formulario_web',emailStatus:'processing',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),internalNotes:'',lastContactAt:null,userUid:currentUser?.uid||null};
+        const ref=await addDoc(collection(db,'advertisingRequests'),clean);
+        const deadline=Date.now()+45000;
+        while(Date.now()<deadline){await new Promise(resolve=>setTimeout(resolve,1200));const snap=await getDoc(ref);const saved=snap.exists()?snap.data():null;if(saved?.emailStatus==='sent')return {id:ref.id,...saved};if(saved?.emailStatus==='error')throw new Error(saved.emailError||'No se pudo procesar el correo.');}
+        throw new Error('La solicitud se guardó, pero el servicio de correo no confirmó el envío.');
       }
     };
   </script>
@@ -3895,6 +3965,37 @@
     window.openSettings = openSettings;
     window.closeSettings = closeSettings;
     window.toggleNearestCafeSetting = toggleNearestCafeSetting;
+
+    async function copyAdvertisingEmail(){
+      const email='angelcastillongg@gmail.com';
+      try{
+        if(navigator.clipboard&&window.isSecureContext) await navigator.clipboard.writeText(email);
+        else {const input=document.createElement('textarea');input.value=email;input.setAttribute('readonly','');input.style.position='fixed';input.style.opacity='0';document.body.appendChild(input);input.select();document.execCommand('copy');input.remove();}
+        showToast('Correo copiado ✓');
+      }catch(e){showToast('Correo: '+email);}
+    }
+    window.copyAdvertisingEmail=copyAdvertisingEmail;
+
+    function openAdvertiseModal(source='espacio_1'){
+      document.getElementById('ad-source-space').value=source;
+      const status=document.getElementById('ad-submit-status');status.className='ad-submit-status';status.textContent='';
+      document.getElementById('advertise-overlay').classList.add('open');
+    }
+    function closeAdvertiseModal(e){if(!e||e.target===document.getElementById('advertise-overlay'))document.getElementById('advertise-overlay').classList.remove('open');}
+    function adField(id){return document.getElementById(id).value.trim();}
+    async function submitAdvertisingRequest(event){
+      event.preventDefault();
+      const status=document.getElementById('ad-submit-status'),button=document.getElementById('ad-submit-btn');
+      if(adField('ad-website-trap'))return;
+      const last=Number(localStorage.getItem('lastAdvertisingRequestAt')||0);if(Date.now()-last<60000){status.className='ad-submit-status show error';status.textContent='Espera un minuto antes de enviar otra solicitud.';return;}
+      const data={fullName:adField('ad-full-name'),businessName:adField('ad-business-name'),businessType:adField('ad-business-type'),city:adField('ad-city'),email:adField('ad-email').toLowerCase(),phone:adField('ad-phone'),whatToAdvertise:adField('ad-what'),description:adField('ad-description'),objective:adField('ad-objective'),approximateStartDate:adField('ad-start-date'),estimatedDuration:adField('ad-duration'),budgetRange:adField('ad-budget'),targetAudience:adField('ad-audience'),socialLink:adField('ad-social-link'),additionalNotes:adField('ad-notes'),contactConsent:document.getElementById('ad-contact-consent').checked,privacyConsent:document.getElementById('ad-privacy-consent').checked,sourceSpace:adField('ad-source-space')};
+      if(!data.contactConsent||!data.privacyConsent)return;
+      button.disabled=true;button.textContent='Enviando…';status.className='ad-submit-status show saving';status.textContent='Guardando y enviando tu solicitud…';
+      try{if(!window.advertisingRequestApi)throw new Error('El servicio de solicitudes no está disponible.');await window.advertisingRequestApi.submit(data);localStorage.setItem('lastAdvertisingRequestAt',String(Date.now()));status.className='ad-submit-status show success';status.textContent='Tu solicitud fue enviada correctamente. Nos comunicaremos contigo pronto.';event.target.reset();setTimeout(()=>closeAdvertiseModal(),1800);}
+      catch(e){console.error('Solicitud publicitaria:',e);status.className='ad-submit-status show error';status.textContent=e.message||'No pudimos enviar tu solicitud. Revisa tus datos e inténtalo nuevamente.';}
+      finally{button.disabled=false;button.textContent='Enviar solicitud';}
+    }
+    window.openAdvertiseModal=openAdvertiseModal;window.closeAdvertiseModal=closeAdvertiseModal;window.submitAdvertisingRequest=submitAdvertisingRequest;
 
     function distanceKm(lat1, lon1, lat2, lon2) {
       const R = 6371;
@@ -5323,4 +5424,3 @@ window.doCheckin = function() {
   </script>
 </body>
 </html>
-

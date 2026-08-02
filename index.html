@@ -1685,6 +1685,11 @@
     .owner-save-status.success { background:#e7f5eb; color:#28643a; border:1px solid #9fd2ad; }
     .owner-save-status.error { background:#fdecea; color:#a93226; border:1px solid #efb0aa; }
     .owner-empty-dashboard { text-align:center; color:var(--espresso); opacity:.62; padding:18px; font-size:13px; }
+    .owner-recommendations { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .owner-recommendation { display:grid; grid-template-columns:42px minmax(0,1fr); gap:12px; align-items:start; padding:15px; border:1.5px solid rgba(49,95,56,.15); border-radius:15px; background:linear-gradient(145deg,#f7fff7,#e8f3e9); }
+    .owner-recommendation-icon { width:42px; height:42px; display:flex; align-items:center; justify-content:center; border-radius:13px; background:white; box-shadow:0 4px 12px rgba(49,95,56,.1); font-size:21px; }
+    .owner-recommendation strong { display:block; margin-bottom:4px; color:var(--dark); font-size:13px; }
+    .owner-recommendation p { color:var(--espresso); opacity:.78; font-size:12px; line-height:1.5; }
     .owner-dashboard-toolbar { width:100%; min-width:0; display:flex; align-items:flex-end; justify-content:space-between; gap:14px; margin-bottom:18px; padding:16px; border-radius:18px; background:var(--foam); border:1.5px solid rgba(122,63,37,.12); }
     .owner-period-wrap { min-width:0; display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px; }
     .owner-period-field label { display:block; margin-bottom:5px; color:var(--espresso); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.7px; }
@@ -1708,7 +1713,7 @@
     .survey-result-track { height:12px; border-radius:999px; overflow:hidden; background:rgba(122,63,37,.1); }
     .survey-result-fill { height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--green),#86aa6c); }
     .dashboard-columns,.dashboard-card,.owner-panel { width:100%; min-width:0; }
-    @media(max-width:760px){ .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-columns{grid-template-columns:minmax(0,1fr)}.owner-form-grid{grid-template-columns:minmax(0,1fr)} }
+    @media(max-width:760px){ .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-columns{grid-template-columns:minmax(0,1fr)}.owner-recommendations{grid-template-columns:minmax(0,1fr)}.owner-form-grid{grid-template-columns:minmax(0,1fr)} }
     @media(max-width:600px){ .owner-page{padding:14px 10px calc(90px + env(safe-area-inset-bottom))}.owner-hero{padding:18px;min-width:0}.owner-hero h2{font-size:22px;overflow-wrap:anywhere}.owner-hero-icon{font-size:36px}.owner-dashboard-toolbar{align-items:stretch;flex-direction:column;padding:12px}.owner-period-wrap{display:grid;grid-template-columns:minmax(0,1fr)}.owner-period-field{min-width:0}.owner-period-field select,.owner-period-field input,.owner-report-btn{width:100%;max-width:100%}.owner-custom-dates.show{display:grid;grid-template-columns:minmax(0,1fr)}.dashboard-grid{grid-template-columns:minmax(0,1fr)}.metric-card{padding:14px}.owner-chart{width:100%;max-width:100%;gap:2px;padding-left:0;padding-right:0}.owner-chart-col{min-width:0}.owner-chart-bar{max-width:18px}.owner-chart-label{font-size:7px;writing-mode:vertical-rl;transform:rotate(180deg);height:42px}.owner-moments-grid{grid-template-columns:minmax(0,1fr)}.survey-result-row{grid-template-columns:78px minmax(0,1fr) 34px}.owner-subtab{min-width:0;font-size:12px;padding:10px 6px} }
     .owner-branches-list { display:grid; gap:10px; margin-top:12px; }
     .owner-branch-item { display:flex; align-items:center; justify-content:space-between; gap:12px; background:white; border:1.5px solid rgba(122,63,37,.13); border-radius:14px; padding:12px 14px; }
@@ -2404,6 +2409,7 @@
         <div class="dashboard-card"><h3>Tus mejores momentos</h3><div class="owner-moments-grid" id="owner-best-moments"></div></div>
         <div class="dashboard-card"><h3>Lo que más valoran tus clientes</h3><div id="owner-survey-results" class="owner-empty-dashboard">Aún no hay suficientes opiniones para mostrar resultados.</div></div>
       </div>
+      <div class="dashboard-card"><h3>Recomendaciones para tu cafetería</h3><div class="owner-recommendations" id="owner-recommendations"><div class="owner-empty-dashboard" style="grid-column:1/-1;">Las recomendaciones aparecerán conforme aceptes visitas.</div></div></div>
       <div class="dashboard-card" style="margin-top:18px;"><h3>Solicitudes pendientes</h3><div id="owner-dashboard-requests"></div></div>
       <section class="newsletter-box"><h3>¿Quieres inscribirte a nuestra newsletter?</h3><p>Un newsletter semanal sobre café que conecta <strong>Sonora con el mundo</strong>: noticias relevantes, una idea práctica para hacer crecer cafeterías y un dato curioso para compartir en la próxima plática.</p><form class="newsletter-form" onsubmit="subscribeNewsletter(event,this)" data-source="dashboard"><input class="newsletter-email" type="email" required placeholder="Tu correo electrónico" autocomplete="email"><button type="submit">Quiero inscribirme</button><label class="newsletter-consent"><input class="newsletter-consent-check" type="checkbox" required><span>Acepto recibir novedades por correo. Podré solicitar la baja cuando quiera.</span></label><div class="newsletter-status" role="status" aria-live="polite"></div></form></section>
     </section>
@@ -4484,6 +4490,47 @@
       const items=[['Mejor día',days[dayRank[0].i]],['Mejor horario',activeBlocks[0]?.label||'Sin datos'],['Día más tranquilo',days[[...dayRank].reverse().find(x=>x.n>0)?.i??dayRank[dayRank.length-1].i]],['Horario más tranquilo',activeBlocks.length?activeBlocks[activeBlocks.length-1].label:'Sin datos']];
       root.innerHTML=items.map(([label,value])=>`<div class="owner-moment"><div class="owner-moment-label">${label}</div><div class="owner-moment-value">${value}</div></div>`).join('');
     }
+    function renderOwnerRecommendations(records, allRecords, people, newUsers, previousRecords, responses) {
+      const root=document.getElementById('owner-recommendations'); if(!root)return;
+      if(records.length<3){
+        const missing=Math.max(0,3-records.length);
+        root.innerHTML=`<div class="owner-empty-dashboard" style="grid-column:1/-1;">${records.length?'Registra '+missing+' visita'+(missing===1?'':'s')+' más':'Acepta tus primeras visitas'} para comenzar a recibir recomendaciones basadas en datos.</div>`;
+        return;
+      }
+      const tips=[];
+      const add=(icon,title,text)=>tips.push({icon,title,text});
+      const personCounts=new Map();
+      records.forEach(r=>{const key=ownerPersonKey(r);personCounts.set(key,(personCounts.get(key)||0)+1);});
+      const repeatVisitors=[...personCounts.values()].filter(n=>n>1).length;
+      const repeatRate=people.length?repeatVisitors/people.length:0;
+      const newRate=people.length?newUsers/people.length:0;
+      if(previousRecords.length){
+        const change=(records.length-previousRecords.length)/previousRecords.length;
+        if(change<=-.15)add('📣','Recupera movimiento',`Las visitas bajaron ${Math.abs(Math.round(change*100))}% frente al periodo anterior. Prueba una promoción breve en tu día más tranquilo y anúnciala con anticipación.`);
+        else if(change>=.15)add('📈','Aprovecha el crecimiento',`Las visitas subieron ${Math.round(change*100)}%. Mantén la experiencia que está funcionando y ofrece una razón sencilla para regresar.`);
+      }
+      if(people.length>=5){
+        if(repeatRate<.25)add('↩️','Convierte primeras visitas en regresos',`Solo ${Math.round(repeatRate*100)}% de tus visitantes del periodo regresó más de una vez. Prueba un beneficio claro para la segunda visita.`);
+        else if(repeatRate>=.4)add('💚','Reconoce a quienes regresan',`${Math.round(repeatRate*100)}% visitó más de una vez. Considera una recompensa especial o una recomendación personalizada para tus clientes frecuentes.`);
+        if(newRate>=.7)add('🌱','Da seguimiento a clientes nuevos',`${Math.round(newRate*100)}% de las personas fueron nuevas. Invítalas a guardar su siguiente beneficio antes de salir.`);
+        else if(newRate<=.25)add('✨','Atrae personas nuevas',`Solo ${Math.round(newRate*100)}% fueron visitantes nuevos. Una colaboración local o promoción para primera visita puede ampliar tu alcance.`);
+      }
+      const days=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+      const dayCounts=Array(7).fill(0), blocks=[{label:'7:00–10:00',a:7,b:10,n:0},{label:'10:00–13:00',a:10,b:13,n:0},{label:'13:00–16:00',a:13,b:16,n:0},{label:'16:00–19:00',a:16,b:19,n:0},{label:'19:00–22:00',a:19,b:22,n:0}];
+      records.forEach(r=>{const d=ownerVisitDate(r);dayCounts[d.getDay()]++;const block=blocks.find(x=>d.getHours()>=x.a&&d.getHours()<x.b);if(block)block.n++;});
+      const bestDay=dayCounts.map((n,i)=>({n,i})).sort((a,b)=>b.n-a.n)[0];
+      const bestBlock=blocks.sort((a,b)=>b.n-a.n)[0];
+      if(records.length>=5&&bestDay?.n)add('🗓️','Prepárate para tu mejor día',`El ${days[bestDay.i]} concentra más visitas. Refuerza inventario, personal y rapidez en ese día.`);
+      if(records.length>=5&&bestBlock?.n)add('⏰','Cuida tu horario fuerte',`Tu franja con más movimiento es ${bestBlock.label}. Procura que tus productos principales estén listos antes de ese horario.`);
+      if(responses.length>=5){
+        const counts={};responses.forEach(x=>(Array.isArray(x.options)&&x.options.length?x.options:[x.option].filter(Boolean)).forEach(option=>counts[option]=(counts[option]||0)+1));
+        const top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0];
+        const surveyTips={'Café':'Haz visible el origen, método o sabor de tu café más representativo.','Ambiente':'Cuida iluminación, música, limpieza y espacios cómodos; es parte central de la experiencia.','Precio':'Comunica con claridad el valor de tus productos y considera una opción accesible o paquete.','Servicio':'Refuerza saludo, tiempos de atención y recomendaciones del personal.','Ubicación':'Facilita cómo llegar, estacionarse y encontrar horarios actualizados.','Variedad':'Destaca novedades y mantén opciones claras para distintos gustos.'};
+        if(top)add('💬',`Tus clientes valoran: ${top}`,surveyTips[top]||`Haz más visible “${top}” en tu comunicación y úsalo como una fortaleza de la experiencia.`);
+      }
+      if(ownerRequests.length)add('🔔','Atiende solicitudes pendientes',`Tienes ${ownerRequests.length} solicitud${ownerRequests.length===1?'':'es'} por revisar. Responder pronto evita perder registros y mantiene actualizados tus datos.`);
+      root.innerHTML=(tips.length?tips.slice(0,5):[{icon:'☕',title:'Sigue reuniendo información',text:'Ya hay datos iniciales. Con más visitas y respuestas podremos detectar patrones más claros.'}]).map(t=>`<div class="owner-recommendation"><div class="owner-recommendation-icon">${t.icon}</div><div><strong>${t.title}</strong><p>${t.text}</p></div></div>`).join('');
+    }
     function renderOwnerDashboard() {
       if (!currentOwnerCafe) return;
       const all=ownerConfirmedLoyaltyVisits(), range=ownerPeriodRange(), approved=ownerRangeData(all,range);
@@ -4508,6 +4555,7 @@
       const surveyRoot=document.getElementById('owner-survey-results'), responses=(window.ownerSurveyResponses||[]).filter(x=>{const d=new Date(x.createdAt);return d>=range.start&&d<=range.end;});
       if(responses.length<5) surveyRoot.innerHTML='<div class="owner-empty-dashboard">Todavía no hay suficientes respuestas para mostrar resultados.</div>';
       else {const counts={};responses.forEach(x=>{const options=Array.isArray(x.options)&&x.options.length?x.options:[x.option].filter(Boolean);options.forEach(option=>counts[option]=(counts[option]||0)+1);});surveyRoot.innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="survey-result-row"><span>${k}</span><div class="survey-result-track"><div class="survey-result-fill" style="width:${Math.round(v/responses.length*100)}%"></div></div><strong>${Math.round(v/responses.length*100)}%</strong></div>`).join('')+`<div class="owner-updated">Basado en ${responses.length} respuestas. Cada persona puede elegir más de una opción.</div>`;}
+      renderOwnerRecommendations(approved,all,people,newUsers,previous,responses);
     }
     function handleOwnerPeriodChange(){const custom=document.getElementById('owner-period-select').value==='custom';document.getElementById('owner-custom-dates').classList.toggle('show',custom);renderOwnerDashboard();}
     function downloadOwnerReport(){const range=ownerPeriodRange(), rows=ownerRangeData(ownerConfirmedLoyaltyVisits(),range), people=new Set(rows.map(ownerPersonKey)).size;const csv=['Cafetería,Desde,Hasta,Visitas confirmadas,Personas diferentes',`"${String(currentOwnerCafe?.name||'').replace(/"/g,'""')}",${range.start.toISOString()},${range.end.toISOString()},${rows.length},${people}`].join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='reporte-cafeteria.csv';a.click();URL.revokeObjectURL(url);}

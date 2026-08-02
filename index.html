@@ -434,6 +434,14 @@
     .ad-space button { min-height:44px; align-self:flex-start; border:0; border-radius:12px; padding:0 15px; background:var(--espresso); color:var(--cream); font:800 12px 'DM Sans',sans-serif; cursor:pointer; }
     .ad-space-sponsored { min-height:0; padding:0; background:#461511; }
     .ad-space-sponsored img { display:block; width:100%; height:100%; min-height:180px; object-fit:contain; object-position:center; }
+    .map-ad-popup-overlay { z-index:3100; align-items:center; padding:calc(18px + env(safe-area-inset-top)) 14px calc(18px + env(safe-area-inset-bottom)); background:rgba(20,12,8,.78); }
+    .map-ad-popup-card { position:relative; width:min(94vw,900px); max-height:calc(100dvh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); padding:18px; border-radius:24px; background:var(--foam); box-shadow:0 24px 70px rgba(0,0,0,.42); overflow:auto; transform:scale(.92); transition:transform .22s ease; }
+    .map-ad-popup-overlay.open .map-ad-popup-card { transform:scale(1); }
+    .map-ad-popup-close { position:sticky; z-index:3; top:0; float:right; width:50px; height:50px; margin:0 0 -50px 0; border:3px solid white; border-radius:50%; background:#24130d; color:white; box-shadow:0 4px 16px rgba(0,0,0,.4); font:900 27px/1 'DM Sans',sans-serif; cursor:pointer; }
+    .map-ad-popup-body { clear:both; }
+    .map-ad-popup-body .ad-space { width:100%; min-height:280px; }
+    .map-ad-popup-body .ad-space-sponsored { min-height:0; padding:0; aspect-ratio:939/222; }
+    .map-ad-popup-body .ad-space-sponsored img { width:100%; height:100%; min-height:0; object-fit:contain; }
     #advertise-overlay { align-items:center; padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom)); }
     #advertise-overlay .cafe-sheet { max-width:760px; border-radius:24px; transform:translateY(15px) scale(.98); }
     #advertise-overlay.open .cafe-sheet { transform:translateY(0) scale(1); }
@@ -448,7 +456,7 @@
     .ad-honeypot { position:absolute!important; left:-9999px!important; width:1px!important; height:1px!important; opacity:0!important; }
     .ad-submit-status { display:none; margin-top:12px; padding:11px; border-radius:11px; font-size:12px; font-weight:800; text-align:center; }
     .ad-submit-status.show { display:block; }.ad-submit-status.saving{background:#fff3cd;color:#856404}.ad-submit-status.success{background:#e7f5eb;color:#28643a}.ad-submit-status.error{background:#fdecea;color:#a93226}
-    @media(max-width:620px){.ad-spaces{grid-template-columns:minmax(0,1fr);gap:12px}.ad-form-grid{grid-template-columns:minmax(0,1fr)}.ad-form-field.full{grid-column:auto}.ad-space{min-height:165px;padding:18px}.ad-space-sponsored{width:100%;min-height:0;padding:0;aspect-ratio:939/222;border-radius:14px}.ad-space-sponsored img{width:100%;height:100%;min-height:0;object-fit:contain}}
+    @media(max-width:620px){#map{height:clamp(300px,50dvh,460px)}.ad-spaces{grid-template-columns:minmax(0,1fr);gap:12px}.ad-form-grid{grid-template-columns:minmax(0,1fr)}.ad-form-field.full{grid-column:auto}.ad-space{min-height:165px;padding:18px}.ad-space-sponsored{width:100%;min-height:0;padding:0;aspect-ratio:939/222;border-radius:14px}.ad-space-sponsored img{width:100%;height:100%;min-height:0;object-fit:contain}.map-ad-popup-card{width:calc(100vw - 20px);padding:10px;border-radius:18px}.map-ad-popup-body .ad-space{min-height:220px;border-radius:14px}.map-ad-popup-body .ad-space-sponsored{min-height:0}.map-ad-popup-close{width:48px;height:48px;margin:6px 6px -54px 0}}
 
     .newsletter-box { width:100%; margin-top:18px; padding:22px; border-radius:20px; background:linear-gradient(135deg,var(--espresso),var(--dark)); color:var(--cream); box-shadow:0 8px 24px rgba(62,31,14,.16); }
     .newsletter-box h3 { font:700 22px 'Playfair Display',serif; }
@@ -2222,7 +2230,7 @@
       <button class="topbar-home" id="topbar-home" onclick="goHome()" aria-label="Ir al inicio"><span class="topbar-home-emoji">☕</span><span class="topbar-home-text">PASAPORTE</span></button>
     </div>
     <div class="nav-tabs" id="regular-nav-tabs">
-      <button class="nav-tab active" onclick="switchPage('map', this)">Mapa</button>
+      <button class="nav-tab active" onclick="openMapFromNav(this)">Mapa</button>
       <button class="nav-tab" onclick="switchPage('passport', this)">Mi Pasaporte</button>
     </div>
     <div class="nav-tabs" id="owner-nav-tabs" style="display:none;">
@@ -2691,6 +2699,14 @@
         <button class="owner-save-btn" id="ad-submit-btn" type="submit">Enviar solicitud</button>
         <div class="ad-submit-status" id="ad-submit-status" role="status" aria-live="polite"></div>
       </form>
+    </div>
+  </div>
+
+  <!-- PUBLICIDAD OCASIONAL: solo puede activarse al presionar el boton Mapa -->
+  <div class="overlay map-ad-popup-overlay" id="map-ad-popup-overlay" onclick="closeMapAdPopup(event)" role="dialog" aria-modal="true" aria-label="Publicidad">
+    <div class="map-ad-popup-card">
+      <button class="map-ad-popup-close" type="button" onclick="closeMapAdPopup()" aria-label="Cerrar publicidad">✕</button>
+      <div class="map-ad-popup-body" id="map-ad-popup-body"></div>
     </div>
   </div>
 
@@ -4762,6 +4778,36 @@
     // ──────────────────────────────────────────────
     // PAGE NAVIGATION
     // ──────────────────────────────────────────────
+    function openMapFromNav(btn) {
+      switchPage('map', btn);
+      // Esta probabilidad se evalua exclusivamente al pulsar el boton Mapa.
+      if (Math.random() < 0.05) setTimeout(showRandomMapAd, 180);
+    }
+
+    function showRandomMapAd() {
+      const ads = Array.from(document.querySelectorAll('#page-map .ad-spaces > .ad-space'));
+      const overlay = document.getElementById('map-ad-popup-overlay');
+      const body = document.getElementById('map-ad-popup-body');
+      if (!ads.length || !overlay || !body) return;
+      const selectedAd = ads[Math.floor(Math.random() * ads.length)].cloneNode(true);
+      body.replaceChildren(selectedAd);
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      const closeButton = overlay.querySelector('.map-ad-popup-close');
+      if (closeButton) closeButton.focus();
+    }
+
+    function closeMapAdPopup(event) {
+      const overlay = document.getElementById('map-ad-popup-overlay');
+      if (!overlay || (event && event.target !== overlay)) return;
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+      const body = document.getElementById('map-ad-popup-body');
+      if (body) body.replaceChildren();
+    }
+    window.openMapFromNav = openMapFromNav;
+    window.closeMapAdPopup = closeMapAdPopup;
+
     function switchPage(id, btn) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));

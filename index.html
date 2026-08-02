@@ -1783,6 +1783,9 @@
     #store-overlay { align-items:stretch; padding:0; background:var(--cream); backdrop-filter:none; }
     #store-overlay .cafe-sheet { border-radius:0; max-width:none; width:100%; height:100vh; height:100dvh; max-height:none; transform:translateX(100%); padding:calc(24px + env(safe-area-inset-top)) 18px calc(40px + env(safe-area-inset-bottom)); }
     #store-overlay.open .cafe-sheet { transform:translateX(0); }
+    #store-overlay .sheet-header { position:sticky; top:0; z-index:20; min-height:56px; margin:-8px 0 -48px; padding:4px; pointer-events:none; }
+    #store-overlay .sheet-close { width:48px; height:48px; border:2px solid rgba(255,255,255,.9); background:var(--dark); color:white; box-shadow:0 5px 18px rgba(62,31,14,.3); font-size:22px; font-weight:900; pointer-events:auto; }
+    #store-overlay .sheet-close:hover { background:var(--espresso); transform:scale(1.04); }
     .store-tabs { display:none; }
     .editor-tabs { display:flex; gap:7px; overflow-x:auto; padding-bottom:3px; margin-bottom:16px; }
     .store-section { margin:8px auto 34px; max-width:900px; }
@@ -1998,6 +2001,8 @@
     .pet-option.locked { opacity:.58; cursor:not-allowed; }
     .pet-preview { height:100px; display:flex; align-items:center; justify-content:center; }
     .pet-preview svg { width:88px; height:88px; }
+    .store-preview .nova-dog-svg { width:116px; height:116px; }
+    .pet-preview .nova-dog-svg { width:112px; height:112px; }
     .editor-panel { display:none; }
     .editor-panel.active { display:block; }
 
@@ -2652,7 +2657,7 @@
   <div class="overlay" id="store-overlay" onclick="closeStore(event)">
     <div class="cafe-sheet modal-sheet">
       <div class="sheet-handle"></div>
-      <div class="sheet-header"><div></div><button class="sheet-close" onclick="closeStore()">✕</button></div>
+      <div class="sheet-header"><div></div><button class="sheet-close" onclick="closeStore()" aria-label="Cerrar tienda" title="Cerrar tienda (Esc)">✕</button></div>
       <div class="store-hero"><h2>La Tiendita del Pasaporte</h2><p>Haz que tu pasaporte se sienta completamente tuyo.</p></div>
       <div id="store-all-sections"></div>
       <div class="store-note">Prototipo: los artículos se desbloquean sin realizar un cobro real.</div>
@@ -3931,7 +3936,7 @@
 
 
     function novaDogSvg() {
-      return `<svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      return `<svg class="nova-dog-svg" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <image href="https://raw.githubusercontent.com/CastillonG/pasaporte-cafes-hermosillo/main/ChatGPT%20Image%201%20ago%202026%2C%2019_20_55%20%281%29.png" x="0" y="0" width="96" height="96" preserveAspectRatio="xMidYMid meet"/>
       </svg>`;
     }
@@ -4073,6 +4078,12 @@
 
     function openStore() { if (isOwnerAccount()) { closeMainMenu(); return; } closeMainMenu(); renderStore(); document.getElementById('store-overlay').classList.add('open'); }
     function closeStore(e) { if (!e || e.target === document.getElementById('store-overlay')) document.getElementById('store-overlay').classList.remove('open'); }
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && document.getElementById('store-overlay')?.classList.contains('open')) {
+        event.preventDefault();
+        closeStore();
+      }
+    });
     function setStoreCategory(id) { activeStoreCategory=id; const el=document.getElementById('store-section-'+id); if(el) el.scrollIntoView({behavior:'smooth'}); }
     function renderStore() {
       const root=document.getElementById('store-all-sections'); if(!root) return;
@@ -4111,7 +4122,7 @@
         : pet === 'heart_head_friend'
           ? `<g transform="translate(-3 67) scale(.46)">${heartHeadFriendSvg().replace(/<svg[^>]*>|<\/svg>/g,'')}</g>`
           : pet === 'nova_dog'
-            ? `<g transform="translate(-2 66) scale(.48)">${novaDogSvg().replace(/<svg[^>]*>|<\/svg>/g,'')}</g>`
+            ? `<g transform="translate(-8 52) scale(.68)">${novaDogSvg().replace(/<svg[^>]*>|<\/svg>/g,'')}</g>`
             : '';
       const agapeCapLayer = cosmetic === 'agape_cap' ? `<g>
         <path d="M23 29 Q45 6 68 29 L65 37 H27 Z" fill="#f3efe4" stroke="#315f38" stroke-width="1.7"/>

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
   <title>Pasaporte del Café — Hermosillo</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +28,7 @@
       background: var(--cream);
       font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
+      min-height: 100dvh;
       overflow-x: hidden;
       touch-action: manipulation;
     }
@@ -43,6 +44,9 @@
       justify-content: center;
       z-index: 9999;
       padding: 24px;
+      min-height: 100dvh;
+      padding-top: calc(24px + env(safe-area-inset-top));
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
       transition: opacity .4s ease, transform .4s ease;
     }
 
@@ -865,7 +869,7 @@
       letter-spacing: .4px;
     }
 
-    .modal-sheet { max-height: 88vh; }
+    .modal-sheet { max-height: 88vh; max-height: 88dvh; }
 
     .medals-empty {
       text-align: center;
@@ -952,6 +956,10 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity .25s;
+      height: 100vh;
+      height: 100dvh;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     .overlay.open { opacity: 1; pointer-events: all; }
@@ -959,11 +967,15 @@
     .cafe-sheet {
       background: var(--foam);
       border-radius: 24px 24px 0 0;
-      padding: 24px 20px 32px;
+      padding: 24px 20px calc(32px + env(safe-area-inset-bottom));
       width: 100%;
       max-width: 700px;
       max-height: 85vh;
+      max-height: 85dvh;
       overflow-y: auto;
+      overscroll-behavior: contain;
+      scroll-padding-bottom: calc(90px + env(safe-area-inset-bottom));
+      -webkit-overflow-scrolling: touch;
       transform: translateY(100%);
       transition: transform .3s cubic-bezier(.4,0,.2,1);
     }
@@ -1499,11 +1511,12 @@
     .owner-empty { text-align:center; padding: 30px 12px; color:var(--espresso); opacity:.65; }
 
     /* Medallas: popup centrado, fondo borroso y 20 espacios */
-    #medals-overlay, #owner-overlay, #request-overlay { align-items: center; padding: 18px; backdrop-filter: blur(7px); }
+    #medals-overlay, #owner-overlay, #request-overlay { align-items:center; padding:calc(18px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom)); backdrop-filter:blur(7px); }
     #medals-overlay .cafe-sheet, #owner-overlay .cafe-sheet, #request-overlay .cafe-sheet {
       border-radius: 24px;
       max-width: 620px;
       max-height: 86vh;
+      max-height: 86dvh;
       transform: translateY(18px) scale(.97);
       box-shadow: 0 24px 60px rgba(35,18,9,.35);
     }
@@ -1696,7 +1709,7 @@
     }
 
     #store-overlay { align-items:stretch; padding:0; background:var(--cream); backdrop-filter:none; }
-    #store-overlay .cafe-sheet { border-radius:0; max-width:none; width:100%; height:100vh; max-height:none; transform:translateX(100%); padding:24px 18px 40px; }
+    #store-overlay .cafe-sheet { border-radius:0; max-width:none; width:100%; height:100vh; height:100dvh; max-height:none; transform:translateX(100%); padding:calc(24px + env(safe-area-inset-top)) 18px calc(40px + env(safe-area-inset-bottom)); }
     #store-overlay.open .cafe-sheet { transform:translateX(0); }
     .store-tabs { display:none; }
     .editor-tabs { display:flex; gap:7px; overflow-x:auto; padding-bottom:3px; margin-bottom:16px; }
@@ -1828,7 +1841,7 @@
     .loyalty-cycle-note { margin:9px 0 0; text-align:center; font-size:10px; color:var(--espresso); opacity:.68; }
 
     #discounts-overlay { align-items:stretch; padding:0; background:var(--cream); backdrop-filter:none; }
-    #discounts-overlay .cafe-sheet { border-radius:0; max-width:none; width:100%; height:100vh; max-height:none; transform:translateX(100%); padding:24px 18px 40px; }
+    #discounts-overlay .cafe-sheet { border-radius:0; max-width:none; width:100%; height:100vh; height:100dvh; max-height:none; transform:translateX(100%); padding:calc(24px + env(safe-area-inset-top)) 18px calc(40px + env(safe-area-inset-bottom)); }
     #discounts-overlay.open .cafe-sheet { transform:translateX(0); }
     .discounts-grid { display:grid; gap:14px; max-width:760px; margin:8px auto; }
     .discount-card { background:white; border:1.5px solid rgba(122,63,37,.15); border-radius:19px; padding:16px; box-shadow:0 5px 15px rgba(62,31,14,.06); }
@@ -1973,7 +1986,7 @@
     .friends-count.show { display:flex; }
     .friends-drawer-backdrop { position:fixed; inset:0; z-index:5000; background:rgba(35,18,9,.28); opacity:0; pointer-events:none; transition:.25s; }
     .friends-drawer-backdrop.open { opacity:1; pointer-events:all; }
-    .friends-drawer { position:absolute; left:0; top:0; bottom:0; width:min(88vw,390px); background:var(--foam); padding:24px 18px 30px; transform:translateX(-100%); transition:.28s ease; overflow-y:auto; box-shadow:18px 0 45px rgba(35,18,9,.24); }
+    .friends-drawer { position:absolute; left:0; top:0; bottom:0; width:min(88vw,390px); background:var(--foam); padding:calc(24px + env(safe-area-inset-top)) 18px calc(40px + env(safe-area-inset-bottom)); transform:translateX(-100%); transition:.28s ease; overflow-y:auto; overscroll-behavior:contain; scroll-padding-bottom:calc(90px + env(safe-area-inset-bottom)); -webkit-overflow-scrolling:touch; box-shadow:18px 0 45px rgba(35,18,9,.24); }
     .friends-drawer-backdrop.open .friends-drawer { transform:translateX(0); }
     .friends-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
     .friends-header h2 { font-family:'Playfair Display',serif; color:var(--dark); }
@@ -1990,9 +2003,10 @@
     .friend-mini-data { flex:1; min-width:0; }
     .friend-name { font-weight:800; font-size:14px; line-height:1.25; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .friend-mini-meta { margin-top:4px; font-size:10px; color:var(--espresso); opacity:.75; }
-    .friend-progress { display:flex; justify-content:space-between; margin-top:11px; font-size:10px; font-weight:800; color:var(--green); }
-    .friend-progress-track, .friend-passport-progress-track { width:100%; height:9px; margin-top:5px; overflow:hidden; border-radius:999px; background:rgba(74,124,89,.16); box-shadow:inset 0 1px 2px rgba(0,0,0,.08); }
-    .friend-progress-fill, .friend-passport-progress-fill { height:100%; border-radius:inherit; background:linear-gradient(90deg,#4a7c59,#79a867); transition:width .45s ease; }
+    .friend-progress { display:flex; justify-content:space-between; align-items:center; margin-top:13px; font-size:12px; font-weight:900; color:#315d3d; }
+    .friend-progress span:last-child { display:inline-flex; align-items:center; justify-content:center; min-width:48px; padding:4px 8px; border-radius:999px; background:#315d3d; color:white; font-size:12px; }
+    .friend-progress-track, .friend-passport-progress-track { width:100%; height:15px; margin-top:7px; overflow:hidden; border:2px solid #315d3d; border-radius:999px; background:#d8e5da; box-shadow:inset 0 2px 3px rgba(0,0,0,.14),0 2px 5px rgba(49,93,61,.14); }
+    .friend-progress-fill, .friend-passport-progress-fill { min-width:0; height:100%; border-radius:inherit; background:linear-gradient(90deg,#2f6d42,#69a35f 72%,#c9a227); box-shadow:inset 0 1px 0 rgba(255,255,255,.35); transition:width .45s ease; }
     .friend-view-more { margin-top:9px; text-align:right; color:var(--espresso); font-size:10px; font-weight:800; }
     .friend-search { display:flex; gap:8px; margin:14px 0; }
     .friend-search input { flex:1; padding:12px 13px; border:2px solid rgba(122,63,37,.2); border-radius:12px; font:14px 'DM Sans',sans-serif; }
@@ -2007,7 +2021,7 @@
     .friend-request-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.friend-request-actions button{border:0;border-radius:10px;padding:9px;font-weight:800;cursor:pointer}.friend-request-actions .accept{background:var(--green);color:white}.friend-request-actions .reject{background:#f3dfdc;color:#9b3028}
 
     /* Friend passport viewer */
-    #friend-passport-overlay { align-items:center; padding:18px; }
+    #friend-passport-overlay { align-items:center; padding:calc(18px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom)); }
     #friend-passport-overlay .cafe-sheet { width:min(100%,760px); max-width:760px; border-radius:26px; padding:24px; transform:scale(.88); opacity:0; }
     #friend-passport-overlay.open .cafe-sheet { transform:scale(1); opacity:1; }
     #friend-passport-overlay .sheet-handle { display:none; }
@@ -2018,13 +2032,13 @@
     .friend-passport-avatar { width:118px; height:142px; border-radius:12px; overflow:hidden; flex-shrink:0; background:#d9d1c2; border:2px solid rgba(122,63,37,.25); }
     .friend-passport-avatar svg{width:100%;height:100%}.friend-passport-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 22px;flex:1}.friend-passport-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--espresso);opacity:.55}.friend-passport-value{font-weight:800;color:var(--dark)}
     .friend-passport-progress-section { margin-top:20px; padding-top:15px; border-top:1.5px dashed rgba(122,63,37,.3); }
-    .friend-passport-progress-label { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--espresso); font-size:12px; font-weight:800; }
-    .friend-passport-progress-label strong { color:var(--green); font-size:16px; }
-    .friend-passport-progress-track { height:14px; margin-top:8px; }
+    .friend-passport-progress-label { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--dark); font-size:14px; font-weight:900; }
+    .friend-passport-progress-label strong { display:inline-flex; padding:5px 10px; border-radius:999px; background:#315d3d; color:white; font-size:16px; }
+    .friend-passport-progress-track { height:19px; margin-top:10px; }
     .friend-medals-circle { position:absolute; right:13px; bottom:13px; width:44px; height:44px; border-radius:50%; border:2px solid var(--stamp-gold); background:#fff8d8; cursor:pointer; font-size:20px; }
 
     @media (max-width:520px) {
-      #friend-passport-overlay { padding:12px; }
+      #friend-passport-overlay { padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom)); }
       #friend-passport-overlay .cafe-sheet { padding:18px 14px; }
       .friend-passport-card { padding:16px 16px 66px; }
       .friend-passport-body { align-items:flex-start; gap:12px; }
@@ -2629,6 +2643,13 @@
       setupUIWithLocalStorage();
     }
 
+    function resetAuthScreenState() {
+      const loginButton = document.getElementById('google-login-btn');
+      const loading = document.getElementById('auth-loading');
+      if (loginButton) loginButton.style.display = 'flex';
+      if (loading) loading.classList.remove('show');
+    }
+
     // ── Sign in ──
     window.signInWithGoogle = async function() {
       if (!CONFIGURED) { document.getElementById('auth-screen').classList.add('hidden'); return; }
@@ -2647,14 +2668,23 @@
     // ── Sign out ──
     window.signOut = async function() {
       closeDropdown();
+      resetAuthScreenState();
+      document.querySelectorAll('.overlay.open').forEach(el => el.classList.remove('open'));
+      document.getElementById('friends-drawer-backdrop')?.classList.remove('open');
+      document.getElementById('auth-screen').classList.remove('hidden');
       if (unsubscribeSnapshot) unsubscribeSnapshot();
       if (unsubscribeCafeProfiles) unsubscribeCafeProfiles();
       if (unsubscribeOwnerRequests) unsubscribeOwnerRequests();
       if (unsubscribeFriendRequests) unsubscribeFriendRequests();
       if (unsubscribeFriendships) unsubscribeFriendships();
-      if (unsubscribeCafeProfiles) unsubscribeCafeProfiles();
-      if (CONFIGURED && auth) await fbSignOut(auth);
-      else { localStorage.removeItem('cafeVisited'); localStorage.removeItem('cafeAvatar'); localStorage.removeItem('cafePassportBackground'); localStorage.removeItem('cafeStampAnimation'); }
+      unsubscribeSnapshot = unsubscribeCafeProfiles = unsubscribeOwnerRequests = unsubscribeFriendRequests = unsubscribeFriendships = null;
+      try {
+        if (CONFIGURED && auth) await fbSignOut(auth);
+        else { localStorage.removeItem('cafeVisited'); localStorage.removeItem('cafeAvatar'); localStorage.removeItem('cafePassportBackground'); localStorage.removeItem('cafeStampAnimation'); }
+      } catch (e) {
+        console.error('No se pudo cerrar la sesión correctamente:', e);
+        showToast('La sesión local se cerró. Puedes volver a iniciar sesión.');
+      }
       visited = {};
       selectedAvatar = 'classic';
       selectedPassportBackground = 'empty';
@@ -2670,6 +2700,7 @@
       updateUserUI(null);
       if (window.resetVisitedAnimationState) window.resetVisitedAnimationState();
       refreshMarkers();
+      resetAuthScreenState();
       document.getElementById('auth-screen').classList.remove('hidden');
     };
 
@@ -2677,6 +2708,7 @@
     if (CONFIGURED) {
       onAuthStateChanged(auth, async user => {
         if (user) {
+          resetAuthScreenState();
           currentUser = user;
           updateUserUI(user);
           document.getElementById('auth-screen').classList.add('hidden');
@@ -2689,6 +2721,7 @@
           initMap();
           setTimeout(() => { if (window.maybeShowNearestCafePopup) window.maybeShowNearestCafePopup(); }, 1200);
         } else {
+          resetAuthScreenState();
           currentUser = null;
           nearestCafeOfferAttempted = false;
           updateUserUI(null);

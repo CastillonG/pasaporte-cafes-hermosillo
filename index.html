@@ -1232,19 +1232,25 @@
       background-repeat: repeat;
     }
 
-    .passport-id-card.bg-coffee::before {
+    .passport-id-card.bg-coffee::before,
+    .friend-passport-card.bg-coffee::before,
+    .friend-mini-passport.bg-coffee::before {
       opacity: .07;
       background-size: 68px 68px;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='68' height='68' viewBox='0 0 68 68'%3E%3Cg fill='none' stroke='%237a3f25' stroke-width='2'%3E%3Cellipse cx='18' cy='18' rx='8' ry='12' transform='rotate(35 18 18)'/%3E%3Cpath d='M14 9c6 5 7 11 5 18'/%3E%3Cellipse cx='50' cy='49' rx='8' ry='12' transform='rotate(-35 50 49)'/%3E%3Cpath d='M54 40c-6 5-7 11-5 18'/%3E%3C/g%3E%3C/svg%3E");
     }
 
-    .passport-id-card.bg-cactus::before {
+    .passport-id-card.bg-cactus::before,
+    .friend-passport-card.bg-cactus::before,
+    .friend-mini-passport.bg-cactus::before {
       opacity: .065;
       background-size: 76px 76px;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76' height='76' viewBox='0 0 76 76'%3E%3Cg fill='none' stroke='%234a7c59' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M38 62V25c0-8 12-8 12 0v8c0 5 8 5 8 0v-5'/%3E%3Cpath d='M38 45h-7c-6 0-6-9-6-14v-4'/%3E%3Cpath d='M31 62h14'/%3E%3C/g%3E%3C/svg%3E");
     }
 
-    .passport-id-card.bg-cups::before {
+    .passport-id-card.bg-cups::before,
+    .friend-passport-card.bg-cups::before,
+    .friend-mini-passport.bg-cups::before {
   opacity: .065;
   background-size: 72px 72px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%237a3f25' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 24h26v17c0 7-5 12-12 12h-2c-7 0-12-5-12-12z'/%3E%3Cpath d='M41 29h5c7 0 7 11 0 11h-5'/%3E%3Cpath d='M20 18c-3-4 3-6 0-10M28 18c-3-4 3-6 0-10M36 18c-3-4 3-6 0-10'/%3E%3Cpath d='M12 54h35'/%3E%3C/g%3E%3C/svg%3E");
@@ -1895,12 +1901,14 @@
     .editor-panel.active { display:block; }
 
     .passport-id-card.bg-desert-night,
-    .friend-passport-card.bg-desert-night {
+    .friend-passport-card.bg-desert-night,
+    .friend-mini-passport.bg-desert-night {
       background:#17152f;
       color:#fff8ea;
     }
     .passport-id-card.bg-desert-night::before,
-    .friend-passport-card.bg-desert-night::before {
+    .friend-passport-card.bg-desert-night::before,
+    .friend-mini-passport.bg-desert-night::before {
       opacity:1;
       background-size:cover;
       background-position:center;
@@ -1912,10 +1920,13 @@
     .passport-id-card.bg-desert-night .id-value,
     .passport-id-card.bg-desert-night .id-card-country,
     .friend-passport-card.bg-desert-night .friend-passport-value,
-    .friend-passport-card.bg-desert-night .id-card-country { color:#fffaf0; text-shadow:0 1px 3px rgba(0,0,0,.55); }
+    .friend-passport-card.bg-desert-night .id-card-country,
+    .friend-mini-passport.bg-desert-night .friend-name,
+    .friend-mini-passport.bg-desert-night .friend-mini-header { color:#fffaf0; text-shadow:0 1px 3px rgba(0,0,0,.55); }
     .passport-id-card.bg-desert-night .id-label,
     .passport-id-card.bg-desert-night .id-card-mrz,
-    .friend-passport-card.bg-desert-night .friend-passport-label { color:rgba(255,250,240,.82); }
+    .friend-passport-card.bg-desert-night .friend-passport-label,
+    .friend-mini-passport.bg-desert-night .friend-mini-meta { color:rgba(255,250,240,.82); opacity:1; }
     .background-preview.desert-night {
       background:#17152f;
     }
@@ -1966,14 +1977,23 @@
     .friends-drawer-backdrop.open .friends-drawer { transform:translateX(0); }
     .friends-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
     .friends-header h2 { font-family:'Playfair Display',serif; color:var(--dark); }
-    .friends-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-    .friend-slot { min-height:154px; border:2px dashed #b1aaa4; border-radius:18px; background:rgba(190,186,181,.1); display:flex; align-items:center; justify-content:center; text-align:center; color:#8f8984; padding:10px; cursor:pointer; }
+    .friends-grid { display:grid; grid-template-columns:1fr; gap:14px; }
+    .friend-slot { min-height:154px; border:2px dashed #b1aaa4; border-radius:18px; background:rgba(190,186,181,.1); display:flex; align-items:center; justify-content:center; text-align:center; color:#8f8984; padding:12px; cursor:pointer; }
     .friend-slot.filled { border-style:solid; border-color:rgba(122,63,37,.18); background:white; color:var(--dark); }
     .friend-slot.add { font-size:34px; }
-    .friend-mini-avatar { width:72px; height:78px; margin:0 auto 6px; overflow:hidden; border-radius:12px; background:#ddd4c7; }
+    .friend-mini-passport { width:100%; position:relative; overflow:hidden; border:1.5px solid var(--espresso); border-radius:16px; padding:12px; background:linear-gradient(135deg,var(--foam),var(--warm)); text-align:left; isolation:isolate; }
+    .friend-mini-passport::before { content:''; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:0; background-repeat:repeat; }
+    .friend-mini-header { display:flex; justify-content:space-between; gap:8px; align-items:center; padding-bottom:7px; margin-bottom:9px; border-bottom:1px dashed rgba(122,63,37,.28); font:800 8px 'DM Sans',sans-serif; letter-spacing:.8px; color:var(--espresso); }
+    .friend-mini-body { display:flex; gap:10px; align-items:center; }
+    .friend-mini-avatar { width:72px; height:78px; overflow:hidden; border-radius:10px; background:#ddd4c7; flex-shrink:0; border:1px solid rgba(122,63,37,.22); }
     .friend-mini-avatar svg { width:100%; height:100%; }
-    .friend-name { font-weight:800; font-size:12px; line-height:1.25; }
-    .friend-progress { margin-top:4px; font-size:11px; font-weight:800; color:var(--green); }
+    .friend-mini-data { flex:1; min-width:0; }
+    .friend-name { font-weight:800; font-size:14px; line-height:1.25; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .friend-mini-meta { margin-top:4px; font-size:10px; color:var(--espresso); opacity:.75; }
+    .friend-progress { display:flex; justify-content:space-between; margin-top:11px; font-size:10px; font-weight:800; color:var(--green); }
+    .friend-progress-track, .friend-passport-progress-track { width:100%; height:9px; margin-top:5px; overflow:hidden; border-radius:999px; background:rgba(74,124,89,.16); box-shadow:inset 0 1px 2px rgba(0,0,0,.08); }
+    .friend-progress-fill, .friend-passport-progress-fill { height:100%; border-radius:inherit; background:linear-gradient(90deg,#4a7c59,#79a867); transition:width .45s ease; }
+    .friend-view-more { margin-top:9px; text-align:right; color:var(--espresso); font-size:10px; font-weight:800; }
     .friend-search { display:flex; gap:8px; margin:14px 0; }
     .friend-search input { flex:1; padding:12px 13px; border:2px solid rgba(122,63,37,.2); border-radius:12px; font:14px 'DM Sans',sans-serif; }
     .friend-search button { border:0; border-radius:12px; background:var(--espresso); color:var(--cream); padding:0 15px; font-weight:800; }
@@ -1987,13 +2007,30 @@
     .friend-request-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.friend-request-actions button{border:0;border-radius:10px;padding:9px;font-weight:800;cursor:pointer}.friend-request-actions .accept{background:var(--green);color:white}.friend-request-actions .reject{background:#f3dfdc;color:#9b3028}
 
     /* Friend passport viewer */
-    .friend-passport-view { max-width:520px; margin:0 auto; }
-    .friend-passport-card { position:relative; border:2px solid var(--espresso); border-radius:20px; padding:18px; background:linear-gradient(135deg,var(--foam),var(--warm)); overflow:hidden; }
+    #friend-passport-overlay { align-items:center; padding:18px; }
+    #friend-passport-overlay .cafe-sheet { width:min(100%,760px); max-width:760px; border-radius:26px; padding:24px; transform:scale(.88); opacity:0; }
+    #friend-passport-overlay.open .cafe-sheet { transform:scale(1); opacity:1; }
+    #friend-passport-overlay .sheet-handle { display:none; }
+    .friend-passport-view { max-width:680px; margin:0 auto; }
+    .friend-passport-card { position:relative; border:2px solid var(--espresso); border-radius:22px; padding:22px 22px 70px; background:linear-gradient(135deg,var(--foam),var(--warm)); overflow:hidden; isolation:isolate; }
+    .friend-passport-card::before { content:''; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:0; background-repeat:repeat; }
     .friend-passport-body { display:flex; gap:15px; align-items:center; }
-    .friend-passport-avatar { width:92px; height:112px; border-radius:12px; overflow:hidden; flex-shrink:0; background:#d9d1c2; }
-    .friend-passport-avatar svg{width:100%;height:100%}.friend-passport-fields{display:grid;gap:8px}.friend-passport-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--espresso);opacity:.55}.friend-passport-value{font-weight:800;color:var(--dark)}
-    .friend-passport-progress { display:inline-flex; align-items:center; gap:7px; margin-top:6px; padding:7px 11px; border-radius:999px; background:rgba(74,124,89,.12); color:var(--green); font-weight:800; font-size:12px; }
+    .friend-passport-avatar { width:118px; height:142px; border-radius:12px; overflow:hidden; flex-shrink:0; background:#d9d1c2; border:2px solid rgba(122,63,37,.25); }
+    .friend-passport-avatar svg{width:100%;height:100%}.friend-passport-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 22px;flex:1}.friend-passport-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--espresso);opacity:.55}.friend-passport-value{font-weight:800;color:var(--dark)}
+    .friend-passport-progress-section { margin-top:20px; padding-top:15px; border-top:1.5px dashed rgba(122,63,37,.3); }
+    .friend-passport-progress-label { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--espresso); font-size:12px; font-weight:800; }
+    .friend-passport-progress-label strong { color:var(--green); font-size:16px; }
+    .friend-passport-progress-track { height:14px; margin-top:8px; }
     .friend-medals-circle { position:absolute; right:13px; bottom:13px; width:44px; height:44px; border-radius:50%; border:2px solid var(--stamp-gold); background:#fff8d8; cursor:pointer; font-size:20px; }
+
+    @media (max-width:520px) {
+      #friend-passport-overlay { padding:12px; }
+      #friend-passport-overlay .cafe-sheet { padding:18px 14px; }
+      .friend-passport-card { padding:16px 16px 66px; }
+      .friend-passport-body { align-items:flex-start; gap:12px; }
+      .friend-passport-avatar { width:94px; height:116px; }
+      .friend-passport-fields { grid-template-columns:1fr; gap:8px; }
+    }
 
     /* Store personality */
     #store-overlay { background:linear-gradient(180deg,#f8ecda 0%,#f5ead8 55%,#ead4bc 100%)!important; }
@@ -2128,9 +2165,6 @@
     <div class="dropdown-header">
       <div class="dropdown-name" id="dropdown-name">—</div>
       <div class="dropdown-email" id="dropdown-email">—</div>
-    </div>
-    <div class="dropdown-item" onclick="closeDropdown()">
-      <span>☕</span> Mi progreso se guarda automáticamente
     </div>
     <div class="dropdown-item danger" onclick="signOut()">
       <span>↩️</span> Cerrar sesión
@@ -4942,7 +4976,31 @@ window.doCheckin = function() {
       const reqRoot=document.getElementById('friend-requests-section');
       reqRoot.innerHTML=reqs.length?`<div class="sheet-section-title">Solicitudes</div>${reqs.map(r=>`<div class="friend-request-card"><strong>${r.profile?.displayName||'Usuario'}</strong><div class="request-meta">quiere ser tu amigo</div><div class="friend-request-actions"><button class="accept" onclick="respondFriendRequest('${r.id}',true,'${r.fromUid}')">Aceptar</button><button class="reject" onclick="respondFriendRequest('${r.id}',false,'${r.fromUid}')">Rechazar</button></div></div>`).join('')}`:'';
       const capacity=Math.max(4,Math.ceil(Math.max(friends.length,1)/2)*2);
-      let slots=''; for(let i=0;i<capacity;i++){ const f=friends[i]; const pct=f?Math.round(((f.visitedCount||0)/cafes.length)*100):0; slots+=f?`<div class="friend-slot filled" onclick="openFriendPassport('${f.uid}')"><div><div class="friend-mini-avatar">${avatarSvg(f.selectedAvatar||'classic',true,false,{cosmetic:f.equippedCosmetic||'',pet:f.selectedPet||''})}</div><div class="friend-name">${f.displayName||'Usuario'}</div><div class="friend-progress">${pct}% completado</div></div></div>`:`<div class="friend-slot"><span>Pasaporte disponible</span></div>`; }
+      let slots='';
+      for(let i=0;i<capacity;i++){
+        const f=friends[i];
+        if(!f){ slots+=`<div class="friend-slot"><span>Pasaporte disponible</span></div>`; continue; }
+        const visits=Math.max(0,Number(f.visitedCount)||0);
+        const pct=Math.max(0,Math.min(100,Math.round((visits/cafes.length)*100)));
+        const age=f.profile?.birthYear?Math.max(0,new Date().getFullYear()-Number(f.profile.birthYear)):'—';
+        const bgClass=f.selectedPassportBackground&&f.selectedPassportBackground!=='empty'?'bg-'+String(f.selectedPassportBackground).replace(/_/g,'-'):'';
+        slots+=`<div class="friend-slot filled" onclick="openFriendPassport('${f.uid}')">
+          <div class="friend-mini-passport ${bgClass}">
+            <div class="friend-mini-header"><span>PASAPORTE · HERMOSILLO</span><span>AMIGO</span></div>
+            <div class="friend-mini-body">
+              <div class="friend-mini-avatar">${avatarSvg(f.selectedAvatar||'classic',true,false,{cosmetic:f.equippedCosmetic||'',pet:f.selectedPet||''})}</div>
+              <div class="friend-mini-data">
+                <div class="friend-name">${f.displayName||'Usuario'}</div>
+                <div class="friend-mini-meta">Edad: ${age}</div>
+                <div class="friend-mini-meta">Cafés visitados: ${visits} de ${cafes.length}</div>
+              </div>
+            </div>
+            <div class="friend-progress"><span>Progreso cafetero</span><span>${pct}%</span></div>
+            <div class="friend-progress-track"><div class="friend-progress-fill" style="width:${pct}%"></div></div>
+            <div class="friend-view-more">Toca para ver más grande ↗</div>
+          </div>
+        </div>`;
+      }
       slots+=`<div class="friend-slot add" onclick="openFriendSearch()">＋</div>`;
       document.getElementById('friends-grid').innerHTML=slots;
     }
@@ -4967,7 +5025,39 @@ window.doCheckin = function() {
       if(e.key==='Enter' && document.activeElement?.id==='friend-search-input') searchPeople();
     });
     async function sendFriendRequest(uid,btn){ try{btn.disabled=true;await window.friendApi.sendRequest(uid);btn.textContent='Enviada ✓';}catch(e){console.error(e);btn.disabled=false;showToast('No se pudo enviar la solicitud');} }
-    async function openFriendPassport(uid){ try{const p=await window.friendApi.getPublicProfile(uid); if(!p)return; window.currentFriendProfile=p; const age=p.profile?.birthYear?Math.max(0,new Date().getFullYear()-Number(p.profile.birthYear)):'—'; const pct=Math.round(((p.visitedCount||0)/cafes.length)*100); const bgClass=p.selectedPassportBackground&&p.selectedPassportBackground!=='empty'?'bg-'+String(p.selectedPassportBackground).replace(/_/g,'-'):''; document.getElementById('friend-passport-content').innerHTML=`<div class="friend-passport-view"><div class="friend-passport-card ${bgClass}"><div class="id-card-header"><span class="id-card-country">PASAPORTE · HERMOSILLO</span><span class="id-card-type">AMIGO</span></div><div class="friend-passport-body"><div class="friend-passport-avatar">${avatarSvg(p.selectedAvatar||'classic',false,false,{cosmetic:p.equippedCosmetic||'',pet:p.selectedPet||''})}</div><div class="friend-passport-fields"><div><div class="friend-passport-label">Nombre</div><div class="friend-passport-value">${p.displayName||'Usuario'}</div></div><div><div class="friend-passport-label">Edad</div><div class="friend-passport-value">${age}</div></div><div><div class="friend-passport-label">Cafés visitados</div><div class="friend-passport-value">${p.visitedCount||0}</div></div><div><div class="friend-passport-label">Porcentaje</div><div class="friend-passport-progress">${pct}% completado</div></div></div></div><button class="friend-medals-circle" onclick="openFriendMedals()">🏅</button></div></div>`; document.getElementById('friend-passport-overlay').classList.add('open'); }catch(e){console.error(e);showToast('No se pudo abrir el pasaporte');} }
+    async function openFriendPassport(uid){
+      closeFriendsDrawer();
+      try{
+        const p=await window.friendApi.getPublicProfile(uid); if(!p)return;
+        window.currentFriendProfile=p;
+        const age=p.profile?.birthYear?Math.max(0,new Date().getFullYear()-Number(p.profile.birthYear)):'—';
+        const gender=p.profile?.gender||p.profile?.genero||'—';
+        const visits=Math.max(0,Number(p.visitedCount)||0);
+        const pct=Math.max(0,Math.min(100,Math.round((visits/cafes.length)*100)));
+        const bgClass=p.selectedPassportBackground&&p.selectedPassportBackground!=='empty'?'bg-'+String(p.selectedPassportBackground).replace(/_/g,'-'):'';
+        document.getElementById('friend-passport-content').innerHTML=`
+          <div class="friend-passport-view">
+            <div class="friend-passport-card ${bgClass}">
+              <div class="id-card-header"><span class="id-card-country">PASAPORTE · HERMOSILLO</span><span class="id-card-type">AMIGO</span></div>
+              <div class="friend-passport-body">
+                <div class="friend-passport-avatar">${avatarSvg(p.selectedAvatar||'classic',false,false,{cosmetic:p.equippedCosmetic||'',pet:p.selectedPet||''})}</div>
+                <div class="friend-passport-fields">
+                  <div><div class="friend-passport-label">Nombre</div><div class="friend-passport-value">${p.displayName||'Usuario'}</div></div>
+                  <div><div class="friend-passport-label">Género</div><div class="friend-passport-value">${gender}</div></div>
+                  <div><div class="friend-passport-label">Edad</div><div class="friend-passport-value">${age}</div></div>
+                  <div><div class="friend-passport-label">Cafés visitados</div><div class="friend-passport-value">${visits} de ${cafes.length}</div></div>
+                </div>
+              </div>
+              <div class="friend-passport-progress-section">
+                <div class="friend-passport-progress-label"><span>Progreso de cafés visitados</span><strong>${pct}%</strong></div>
+                <div class="friend-passport-progress-track"><div class="friend-passport-progress-fill" style="width:${pct}%"></div></div>
+              </div>
+              <button class="friend-medals-circle" onclick="openFriendMedals()" aria-label="Ver medallas">🏅</button>
+            </div>
+          </div>`;
+        document.getElementById('friend-passport-overlay').classList.add('open');
+      }catch(e){console.error(e);showToast('No se pudo abrir el pasaporte');}
+    }
     function closeFriendPassport(e){if(!e||e.target===document.getElementById('friend-passport-overlay'))document.getElementById('friend-passport-overlay').classList.remove('open');}
     function openFriendMedals(){const slots=Array.from({length:20},(_,i)=>`<div class="medal-slot locked" title="Espacio de medalla ${i+1}"></div>`).join('');document.getElementById('friend-medals-content').innerHTML=`<div class="medals-slots">${slots}</div><div class="medals-help">Aún no hay medallas disponibles.</div>`;document.getElementById('friend-medals-overlay').classList.add('open');}
     function closeFriendMedals(e){if(!e||e.target===document.getElementById('friend-medals-overlay'))document.getElementById('friend-medals-overlay').classList.remove('open');}

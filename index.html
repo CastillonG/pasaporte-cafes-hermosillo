@@ -2747,7 +2747,7 @@
     import { initializeApp }                      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, getDocs, setDoc, updateDoc, onSnapshot, collection, addDoc, query, where, deleteDoc }
+    import { getFirestore, doc, getDoc, getDocs, setDoc, updateDoc, onSnapshot, collection, addDoc, query, where, orderBy, startAt, endAt, limit, deleteDoc }
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     let app, auth, db, provider, currentUser = null, unsubscribeSnapshot = null, unsubscribeOwnerRequests = null, unsubscribeCafeProfiles = null, unsubscribeFriendRequests = null, unsubscribeFriendships = null;
@@ -3300,12 +3300,22 @@
       }
       return value;
     }
+    function normalizePublicSearch(value) {
+      return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
+    }
     async function upsertPublicProfile() {
       if (!CONFIGURED || !currentUser) return;
+      const displayName=window.currentDisplayName || currentUser.displayName || 'Usuario';
+      const username=(profile && profile.username) || displayName;
+      const email=(currentUser.email || '').toLowerCase();
       const publicData = cleanFirestoreValue({
         uid: currentUser.uid,
-        displayName: window.currentDisplayName || currentUser.displayName || 'Usuario',
-        email: (currentUser.email || '').toLowerCase(),
+        displayName,
+        username,
+        email,
+        displayNameSearch: normalizePublicSearch(displayName),
+        usernameSearch: normalizePublicSearch(username),
+        emailSearch: normalizePublicSearch(email),
         profile: profile || {},
         selectedAvatar,
         selectedPassportBackground,
@@ -3323,13 +3333,23 @@
       searchPeople: async (term) => {
         if (!CONFIGURED || !currentUser) throw new Error('Debes iniciar sesión.');
         await upsertPublicProfile();
-        const snap = await getDocs(collection(db,'publicProfiles'));
-        const q=(term||'').trim().toLowerCase();
-        return snap.docs
-          .map(d=>({uid:d.id,...d.data()}))
-          .filter(x=>x.uid!==currentUser.uid && (!q || (x.displayName||'').toLowerCase().includes(q) || (x.email||'').toLowerCase().includes(q)))
+        const search=normalizePublicSearch(term);
+        if(search.length<2) throw new Error('Escribe al menos 2 caracteres.');
+        const fields=['displayNameSearch','usernameSearch','emailSearch'];
+        const snapshots=await Promise.all(fields.map(field=>getDocs(query(
+          collection(db,'publicProfiles'),
+          orderBy(field),
+          startAt(search),
+          endAt(search+'\uf8ff'),
+          limit(10)
+        ))));
+        const unique=new Map();
+        snapshots.forEach(snap=>snap.docs.forEach(d=>{
+          if(d.id!==currentUser.uid) unique.set(d.id,{uid:d.id,...d.data()});
+        }));
+        return [...unique.values()]
           .sort((a,b)=>(a.displayName||'').localeCompare(b.displayName||'', 'es'))
-          .slice(0,30);
+          .slice(0,20);
       },
       sendRequest: async (toUid) => {
         const id=`${currentUser.uid}_${toUid}`;
@@ -5363,6 +5383,7 @@ window.doCheckin = function() {
       const input=document.getElementById('friend-search-input');
       const term=input.value.trim();
       const root=document.getElementById('friend-search-results');
+      if(term.length<2){root.innerHTML='<div class="owner-empty">Escribe al menos 2 caracteres para buscar.</div>';return;}
       root.innerHTML='<div class="owner-empty">Buscando…</div>';
       try{
         const people=await window.friendApi.searchPeople(term);

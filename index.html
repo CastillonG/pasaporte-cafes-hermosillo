@@ -432,6 +432,8 @@
     .ad-contact-email { display:inline-flex; align-items:center; gap:7px; max-width:100%; margin-top:12px; padding:9px 11px; border-radius:11px; background:rgba(122,63,37,.1); color:var(--espresso); font-size:12px; font-weight:900; overflow-wrap:anywhere; cursor:pointer; user-select:none; }
     .ad-contact-email:hover { background:rgba(122,63,37,.16); }
     .ad-space button { min-height:44px; align-self:flex-start; border:0; border-radius:12px; padding:0 15px; background:var(--espresso); color:var(--cream); font:800 12px 'DM Sans',sans-serif; cursor:pointer; }
+    .ad-space-sponsored { min-height:0; padding:0; background:#461511; }
+    .ad-space-sponsored img { display:block; width:100%; height:100%; min-height:180px; object-fit:contain; object-position:center; }
     #advertise-overlay { align-items:center; padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom)); }
     #advertise-overlay .cafe-sheet { max-width:760px; border-radius:24px; transform:translateY(15px) scale(.98); }
     #advertise-overlay.open .cafe-sheet { transform:translateY(0) scale(1); }
@@ -2281,10 +2283,10 @@
     </div>
     <div id="map"></div>
     <section class="ad-spaces" aria-label="Publicidad">
-      <article class="ad-space"><div><div class="ad-space-kicker">Espacio publicitario</div><h3>¿Quieres aparecer aquí?</h3><p>Si quieres publicitar tu cafetería, evento o negocio, envíanos tu información a este correo:</p><div class="ad-contact-email" onclick="copyAdvertisingEmail()" onkeydown="if(event.key==='Enter'||event.key===' ')copyAdvertisingEmail()" role="button" tabindex="0">📋 angelcastillongg@gmail.com</div></div><button onclick="copyAdvertisingEmail()">Copiar correo</button></article>
+      <article class="ad-space ad-space-sponsored"><img src="publicidad-dcasa.png" alt="Publicidad de D’Casa angel’s bakery"></article>
       <article class="ad-space"><div><div class="ad-space-kicker">Crece con nosotros</div><h3>Haz crecer tu negocio</h3><p>Envíanos por correo la información de tu apertura, producto, descuento o experiencia.</p><div class="ad-contact-email" onclick="copyAdvertisingEmail()" onkeydown="if(event.key==='Enter'||event.key===' ')copyAdvertisingEmail()" role="button" tabindex="0">📋 angelcastillongg@gmail.com</div></div><button onclick="copyAdvertisingEmail()">Copiar correo</button></article>
     </section>
-    <section class="newsletter-box"><h3>¿Quieres inscribirte a nuestra newsletter?</h3><p>Recibe novedades, nuevas cafeterías, beneficios y noticias de Pasaporte del Café.</p><form class="newsletter-form" onsubmit="subscribeNewsletter(event,this)" data-source="mapa"><input class="newsletter-email" type="email" required placeholder="Tu correo electrónico" autocomplete="email"><button type="submit">Quiero inscribirme</button><label class="newsletter-consent"><input class="newsletter-consent-check" type="checkbox" required><span>Acepto recibir novedades por correo. Podré solicitar la baja cuando quiera.</span></label><div class="newsletter-status" role="status" aria-live="polite"></div></form></section>
+    <section class="newsletter-box"><h3>¿Quieres inscribirte a nuestra newsletter?</h3><p>Un newsletter semanal sobre café que conecta <strong>Sonora con el mundo</strong>: noticias relevantes, una idea práctica para hacer crecer cafeterías y un dato curioso para compartir en la próxima plática.</p><form class="newsletter-form" onsubmit="subscribeNewsletter(event,this)" data-source="mapa"><input class="newsletter-email" type="email" required placeholder="Tu correo electrónico" autocomplete="email"><button type="submit">Quiero inscribirme</button><label class="newsletter-consent"><input class="newsletter-consent-check" type="checkbox" required><span>Acepto recibir novedades por correo. Podré solicitar la baja cuando quiera.</span></label><div class="newsletter-status" role="status" aria-live="polite"></div></form></section>
   </div>
 
   <!-- PASSPORT PAGE -->
@@ -2389,7 +2391,7 @@
         <div class="dashboard-card"><h3>Lo que más valoran tus clientes</h3><div id="owner-survey-results" class="owner-empty-dashboard">Aún no hay suficientes opiniones para mostrar resultados.</div></div>
       </div>
       <div class="dashboard-card" style="margin-top:18px;"><h3>Solicitudes pendientes</h3><div id="owner-dashboard-requests"></div></div>
-      <section class="newsletter-box"><h3>¿Quieres inscribirte a nuestra newsletter?</h3><p>Recibe novedades, consejos y oportunidades para hacer crecer tu cafetería.</p><form class="newsletter-form" onsubmit="subscribeNewsletter(event,this)" data-source="dashboard"><input class="newsletter-email" type="email" required placeholder="Tu correo electrónico" autocomplete="email"><button type="submit">Quiero inscribirme</button><label class="newsletter-consent"><input class="newsletter-consent-check" type="checkbox" required><span>Acepto recibir novedades por correo. Podré solicitar la baja cuando quiera.</span></label><div class="newsletter-status" role="status" aria-live="polite"></div></form></section>
+      <section class="newsletter-box"><h3>¿Quieres inscribirte a nuestra newsletter?</h3><p>Un newsletter semanal sobre café que conecta <strong>Sonora con el mundo</strong>: noticias relevantes, una idea práctica para hacer crecer cafeterías y un dato curioso para compartir en la próxima plática.</p><form class="newsletter-form" onsubmit="subscribeNewsletter(event,this)" data-source="dashboard"><input class="newsletter-email" type="email" required placeholder="Tu correo electrónico" autocomplete="email"><button type="submit">Quiero inscribirme</button><label class="newsletter-consent"><input class="newsletter-consent-check" type="checkbox" required><span>Acepto recibir novedades por correo. Podré solicitar la baja cuando quiera.</span></label><div class="newsletter-status" role="status" aria-live="polite"></div></form></section>
     </section>
 
     <section class="owner-panel" id="owner-panel-edit">

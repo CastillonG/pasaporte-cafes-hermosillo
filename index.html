@@ -2352,11 +2352,6 @@
       <div class="owner-hero-icon">☕</div>
     </div>
 
-    <div class="owner-subtabs">
-      <button class="owner-subtab active" data-owner-tab="dashboard" onclick="openOwnerTab('dashboard', this)">Resumen</button>
-      <button class="owner-subtab" data-owner-tab="edit" onclick="openOwnerTab('edit', this)">Editar información</button>
-    </div>
-
     <section class="owner-panel active" id="owner-panel-dashboard">
       <div class="owner-dashboard-toolbar">
         <div>
@@ -2366,7 +2361,6 @@
           </div>
           <div class="owner-updated" id="owner-dashboard-updated">Actualizado hoy</div>
         </div>
-        <button class="owner-report-btn" onclick="downloadOwnerReport()">Descargar reporte</button>
       </div>
       <div class="dashboard-grid">
         <div class="metric-card"><div class="metric-icon">👣</div><div class="metric-number" id="metric-total-visits">0</div><div class="metric-label">Visitas</div><div class="metric-change" id="metric-visits-change">Durante el periodo elegido.</div></div>
@@ -2374,16 +2368,12 @@
         <div class="metric-card"><div class="metric-icon">🌱</div><div class="metric-number" id="metric-new-users">0</div><div class="metric-label">Nuevos visitantes</div><div class="metric-change">Conocieron tu cafetería en este periodo.</div></div>
         <div class="metric-card"><div class="metric-icon">↩️</div><div class="metric-number" id="metric-returning-users">0</div><div class="metric-label">Personas que regresaron</div><div class="metric-change">Ya habían venido anteriormente.</div></div>
       </div>
+      <div class="dashboard-card"><h3>Visitas durante el periodo</h3><div class="owner-chart" id="owner-visits-chart"></div><div class="owner-comparison" id="owner-period-comparison">Todavía no existe un periodo anterior comparable.</div></div>
       <div class="dashboard-columns">
-        <div>
-          <div class="dashboard-card"><h3>Visitas durante el periodo</h3><div class="owner-chart" id="owner-visits-chart"></div><div class="owner-comparison" id="owner-period-comparison">Todavía no existe un periodo anterior comparable.</div></div>
-          <div class="dashboard-card"><h3>Solicitudes pendientes</h3><div id="owner-dashboard-requests"></div></div>
-        </div>
-        <div>
-          <div class="dashboard-card"><h3>Tus mejores momentos</h3><div class="owner-moments-grid" id="owner-best-moments"></div></div>
-          <div class="dashboard-card"><h3>Lo que más valoran tus clientes</h3><div id="owner-survey-results" class="owner-empty-dashboard">Aún no hay suficientes opiniones para mostrar resultados.</div></div>
-        </div>
+        <div class="dashboard-card"><h3>Tus mejores momentos</h3><div class="owner-moments-grid" id="owner-best-moments"></div></div>
+        <div class="dashboard-card"><h3>Lo que más valoran tus clientes</h3><div id="owner-survey-results" class="owner-empty-dashboard">Aún no hay suficientes opiniones para mostrar resultados.</div></div>
       </div>
+      <div class="dashboard-card" style="margin-top:18px;"><h3>Solicitudes pendientes</h3><div id="owner-dashboard-requests"></div></div>
     </section>
 
     <section class="owner-panel" id="owner-panel-edit">
@@ -2690,7 +2680,7 @@
   <div class="survey-popup" id="survey-popup" onclick="closeCafeSurvey(event,'closed')">
     <div class="survey-popup-card">
       <div class="survey-popup-head"><div><div class="reward-popup-kicker">Encuesta rápida</div><h2>¿Qué fue lo que más valoraste de tu experiencia en esta cafetería?</h2></div><button class="sheet-close" onclick="closeCafeSurvey(null,'closed')">✕</button></div>
-      <p>Elige una opción. Tu respuesta será anónima y no afecta tus recompensas.</p>
+      <p>Elige una o varias opciones. Tu respuesta será anónima y no afecta tus recompensas.</p>
       <div class="survey-options" id="survey-options"></div>
       <textarea class="survey-other" id="survey-other-comment" maxlength="150" placeholder="Comentario opcional · máximo 150 caracteres"></textarea>
       <button class="survey-submit" id="survey-submit-btn" onclick="submitCafeSurvey()" disabled>Enviar respuesta</button>
@@ -2834,7 +2824,6 @@
           updateUserUI(user);
           document.getElementById('auth-screen').classList.add('hidden');
           await loadUserData(user.uid);
-          if (window.maybeOfferCafeSurvey) setTimeout(() => window.maybeOfferCafeSurvey(), 1200);
           setupRealtimeSync(user.uid);
           setupCafeProfilesSync();
           setupOwnerInbox();
@@ -3522,17 +3511,18 @@
       return Array.from(new Uint8Array(bytes)).map(x=>x.toString(16).padStart(2,'0')).join('').slice(0,24);
     }
     window.cafeSurveyApi = {
-      getState: async (cafeName, cycle) => {
+      getState: async (cafeName, loyaltyVisitNumber) => {
         if (!CONFIGURED || !currentUser) return {event:null,answeredBefore:false};
-        const anon=await surveyAnonymousId(currentUser.uid), id=`${anon}_${safeFbKey(cafeName)}_${cycle}`;
+        const anon=await surveyAnonymousId(currentUser.uid), id=`${anon}_${safeFbKey(cafeName)}_visit_${loyaltyVisitNumber}`;
         const eventSnap=await getDoc(doc(db,'loyaltySurveyEvents',id));
         const userState=await getDoc(doc(db,'loyaltySurveyUsers',`${anon}_${safeFbKey(cafeName)}`));
         return {event:eventSnap.exists()?eventSnap.data():null,answeredBefore:userState.exists()&&!!userState.data().answeredBefore,anonymousUserId:anon,id};
       },
       saveEvent: async data => {
         if (!CONFIGURED || !currentUser) throw new Error('auth-required');
-        const anon=data.anonymousUserId||await surveyAnonymousId(currentUser.uid), id=data.id||`${anon}_${safeFbKey(data.cafeName)}_${data.cycle}`;
-        const clean={id,userUid:currentUser.uid,anonymousUserId:anon,cafeName:data.cafeName,cardCycle:Number(data.cycle)||0,status:data.status,option:data.option||'',comment:String(data.comment||'').slice(0,150),firstResponse:!!data.firstResponse,surveyVersion:1,createdAt:data.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};
+        const anon=data.anonymousUserId||await surveyAnonymousId(currentUser.uid), id=data.id||`${anon}_${safeFbKey(data.cafeName)}_visit_${data.loyaltyVisitNumber}`;
+        const options=Array.isArray(data.options)?data.options.map(x=>String(x).slice(0,80)).slice(0,8):[];
+        const clean={id,userUid:currentUser.uid,anonymousUserId:anon,cafeName:data.cafeName,loyaltyVisitNumber:Number(data.loyaltyVisitNumber)||0,status:data.status,options,option:options.join(', '),comment:String(data.comment||'').slice(0,150),firstResponse:!!data.firstResponse,surveyVersion:2,createdAt:data.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};
         await setDoc(doc(db,'loyaltySurveyEvents',id),clean,{merge:true});
         if(clean.status==='answered') await setDoc(doc(db,'loyaltySurveyUsers',`${anon}_${safeFbKey(data.cafeName)}`),{userUid:currentUser.uid,anonymousUserId:anon,cafeName:data.cafeName,answeredBefore:true,lastAnsweredAt:new Date().toISOString()},{merge:true});
         return clean;
@@ -4475,7 +4465,7 @@
       pendingTarget.innerHTML=ownerRequests.length?`<div class="request-list">${ownerRequests.map(r=>`<div class="request-card"><div class="request-user">${r.requestType==='loyalty'?'Visita de tarjeta de lealtad':r.requestType==='discount'?'Canje de beneficio':'Solicitud de visita'}</div><div class="request-meta">Recibida ${r.requestedAt?new Date(r.requestedAt).toLocaleString('es-MX'):''}</div><div class="request-actions"><button class="request-action reject" onclick="respondCheckinRequest('${r.id}',false)">Rechazar</button><button class="request-action accept" onclick="respondCheckinRequest('${r.id}',true)">Aceptar</button></div></div>`).join('')}</div>`:'<div class="owner-empty-dashboard">No tienes solicitudes pendientes.</div>';
       const surveyRoot=document.getElementById('owner-survey-results'), responses=(window.ownerSurveyResponses||[]).filter(x=>{const d=new Date(x.createdAt);return d>=range.start&&d<=range.end;});
       if(responses.length<5) surveyRoot.innerHTML='<div class="owner-empty-dashboard">Todavía no hay suficientes respuestas para mostrar resultados.</div>';
-      else {const counts={};responses.forEach(x=>counts[x.option]=(counts[x.option]||0)+1);surveyRoot.innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="survey-result-row"><span>${k}</span><div class="survey-result-track"><div class="survey-result-fill" style="width:${Math.round(v/responses.length*100)}%"></div></div><strong>${Math.round(v/responses.length*100)}%</strong></div>`).join('')+`<div class="owner-updated">Basado en ${responses.length} respuestas.</div>`;}
+      else {const counts={};responses.forEach(x=>{const options=Array.isArray(x.options)&&x.options.length?x.options:[x.option].filter(Boolean);options.forEach(option=>counts[option]=(counts[option]||0)+1);});surveyRoot.innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="survey-result-row"><span>${k}</span><div class="survey-result-track"><div class="survey-result-fill" style="width:${Math.round(v/responses.length*100)}%"></div></div><strong>${Math.round(v/responses.length*100)}%</strong></div>`).join('')+`<div class="owner-updated">Basado en ${responses.length} respuestas. Cada persona puede elegir más de una opción.</div>`;}
     }
     function handleOwnerPeriodChange(){const custom=document.getElementById('owner-period-select').value==='custom';document.getElementById('owner-custom-dates').classList.toggle('show',custom);renderOwnerDashboard();}
     function downloadOwnerReport(){const range=ownerPeriodRange(), rows=ownerRangeData(ownerConfirmedLoyaltyVisits(),range), people=new Set(rows.map(ownerPersonKey)).size;const csv=['Cafetería,Desde,Hasta,Visitas confirmadas,Personas diferentes',`"${String(currentOwnerCafe?.name||'').replace(/"/g,'""')}",${range.start.toISOString()},${range.end.toISOString()},${rows.length},${people}`].join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='reporte-cafeteria.csv';a.click();URL.revokeObjectURL(url);}
@@ -5124,29 +5114,28 @@
     window.syncUnlockedRewards=syncUnlockedRewards;
 
     const CAFE_SURVEY_OPTIONS=['Ambiente','Atención','Café','Alimentos','Precio','Ubicación','Comodidad para trabajar o estudiar','Otro'];
-    let activeCafeSurvey=null, selectedCafeSurveyOption='';
+    let activeCafeSurvey=null, selectedCafeSurveyOptions=[];
     function secureSurveyRoll(){const values=new Uint32Array(1);crypto.getRandomValues(values);return values[0]/4294967296;}
     async function maybeOfferCafeSurvey(data=agapeVisitData()){
       if(isOwnerAccount()||!window.cafeSurveyApi||!window.currentUserEmail)return;
-      const cycle=Math.max(0,Number(data.loyaltyCycles)||0); if(!cycle)return;
+      const loyaltyVisitNumber=Math.max(0,Number(data.loyaltyLifetimeVisits)||agapeRewardState(data).lifetimeVisits||0); if(!loyaltyVisitNumber)return;
       try{
-        const state=await window.cafeSurveyApi.getState('Ágape Café',cycle); if(state.event)return;
-        const probability=state.answeredBefore?.05:.10;
-        // A safety invitation on the second completed card prevents the survey from never appearing.
-        const shouldShow=secureSurveyRoll()<probability||(!state.answeredBefore&&cycle>=2);
-        if(!shouldShow){await window.cafeSurveyApi.saveEvent({id:state.id,anonymousUserId:state.anonymousUserId,cafeName:'Ágape Café',cycle,status:'not_selected',firstResponse:!state.answeredBefore});return;}
-        activeCafeSurvey={id:state.id,anonymousUserId:state.anonymousUserId,cafeName:'Ágape Café',cycle,firstResponse:!state.answeredBefore};
+        const state=await window.cafeSurveyApi.getState('Ágape Café',loyaltyVisitNumber); if(state.event)return;
+        const probability=state.answeredBefore?.05:.20;
+        const shouldShow=secureSurveyRoll()<probability;
+        if(!shouldShow){await window.cafeSurveyApi.saveEvent({id:state.id,anonymousUserId:state.anonymousUserId,cafeName:'Ágape Café',loyaltyVisitNumber,status:'not_selected',firstResponse:!state.answeredBefore,options:[]});return;}
+        activeCafeSurvey={id:state.id,anonymousUserId:state.anonymousUserId,cafeName:'Ágape Café',loyaltyVisitNumber,firstResponse:!state.answeredBefore};
         await window.cafeSurveyApi.saveEvent({...activeCafeSurvey,status:'shown'});
-        selectedCafeSurveyOption='';
+        selectedCafeSurveyOptions=[];
         document.getElementById('survey-options').innerHTML=CAFE_SURVEY_OPTIONS.map(x=>`<button class="survey-option" onclick="selectCafeSurveyOption('${x.replace(/'/g,"\\'")}',this)">${x}</button>`).join('');
         document.getElementById('survey-other-comment').value=''; document.getElementById('survey-other-comment').classList.remove('show');
         document.getElementById('survey-submit-btn').disabled=true;
         document.getElementById('survey-popup').classList.add('show');
       }catch(e){console.error('Encuesta de lealtad:',e);}
     }
-    function selectCafeSurveyOption(option,button){selectedCafeSurveyOption=option;document.querySelectorAll('.survey-option').forEach(x=>x.classList.toggle('selected',x===button));document.getElementById('survey-other-comment').classList.toggle('show',option==='Otro');document.getElementById('survey-submit-btn').disabled=false;}
+    function selectCafeSurveyOption(option,button){const index=selectedCafeSurveyOptions.indexOf(option);if(index>=0)selectedCafeSurveyOptions.splice(index,1);else selectedCafeSurveyOptions.push(option);button.classList.toggle('selected',selectedCafeSurveyOptions.includes(option));document.getElementById('survey-other-comment').classList.toggle('show',selectedCafeSurveyOptions.includes('Otro'));document.getElementById('survey-submit-btn').disabled=selectedCafeSurveyOptions.length===0;}
     async function closeCafeSurvey(event,status='closed'){const popup=document.getElementById('survey-popup');if(event&&event.target!==popup)return;popup.classList.remove('show');if(activeCafeSurvey&&status==='closed'){try{await window.cafeSurveyApi.saveEvent({...activeCafeSurvey,status:'closed'});}catch(e){console.error(e);}}activeCafeSurvey=null;}
-    async function submitCafeSurvey(){if(!activeCafeSurvey||!selectedCafeSurveyOption)return;const button=document.getElementById('survey-submit-btn');button.disabled=true;try{await window.cafeSurveyApi.saveEvent({...activeCafeSurvey,status:'answered',option:selectedCafeSurveyOption,comment:selectedCafeSurveyOption==='Otro'?document.getElementById('survey-other-comment').value.trim():''});document.getElementById('survey-popup').classList.remove('show');activeCafeSurvey=null;showToast('Gracias. Tu respuesta ayudará a mejorar esta cafetería.');}catch(e){console.error(e);button.disabled=false;showToast('No se pudo guardar tu respuesta. Inténtalo nuevamente.');}}
+    async function submitCafeSurvey(){if(!activeCafeSurvey||!selectedCafeSurveyOptions.length)return;const button=document.getElementById('survey-submit-btn');button.disabled=true;try{await window.cafeSurveyApi.saveEvent({...activeCafeSurvey,status:'answered',options:[...selectedCafeSurveyOptions],comment:selectedCafeSurveyOptions.includes('Otro')?document.getElementById('survey-other-comment').value.trim():''});document.getElementById('survey-popup').classList.remove('show');activeCafeSurvey=null;selectedCafeSurveyOptions=[];showToast('Gracias. Tu respuesta ayudará a mejorar esta cafetería.');}catch(e){console.error(e);button.disabled=false;showToast('No se pudo guardar tu respuesta. Inténtalo nuevamente.');}}
     window.maybeOfferCafeSurvey=maybeOfferCafeSurvey;window.selectCafeSurveyOption=selectCafeSurveyOption;window.closeCafeSurvey=closeCafeSurvey;window.submitCafeSurvey=submitCafeSurvey;
 
     let agapeRewardRepairRunning = false;
@@ -5218,7 +5207,7 @@
         showRewardPopup('🏷️','Café con 50 % de descuento','Tu tarjeta quedó guardada en Descuentos y permanecerá ahí hasta que el owner acepte el canje.');
         playGreenBeanReward('¡6 visitas completadas!<br><span style="font-size:18px;">Animación y descuento desbloqueados</span>');
       }
-      if(nextState.cycles>prevState.cycles || (!prevState.cycles && nextState.cycles)) setTimeout(()=>maybeOfferCafeSurvey(nextData),900);
+      if(nextState.lifetimeVisits>prevState.lifetimeVisits) setTimeout(()=>maybeOfferCafeSurvey(nextData),900);
     }
     window.handleLoyaltyUpdate=handleLoyaltyUpdate;
 
@@ -5445,3 +5434,5 @@ window.doCheckin = function() {
   </script>
 </body>
 </html>
+
+  

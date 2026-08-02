@@ -448,6 +448,19 @@
     .ad-submit-status.show { display:block; }.ad-submit-status.saving{background:#fff3cd;color:#856404}.ad-submit-status.success{background:#e7f5eb;color:#28643a}.ad-submit-status.error{background:#fdecea;color:#a93226}
     @media(max-width:620px){.ad-spaces{grid-template-columns:minmax(0,1fr)}.ad-form-grid{grid-template-columns:minmax(0,1fr)}.ad-form-field.full{grid-column:auto}.ad-space{min-height:165px;padding:18px}}
 
+    .newsletter-box { width:100%; margin-top:18px; padding:22px; border-radius:20px; background:linear-gradient(135deg,var(--espresso),var(--dark)); color:var(--cream); box-shadow:0 8px 24px rgba(62,31,14,.16); }
+    .newsletter-box h3 { font:700 22px 'Playfair Display',serif; }
+    .newsletter-box p { margin-top:6px; color:var(--sand); font-size:13px; line-height:1.5; }
+    .newsletter-form { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:9px; margin-top:14px; }
+    .newsletter-form input[type="email"] { width:100%; min-width:0; min-height:46px; border:1.5px solid rgba(255,255,255,.2); border-radius:12px; padding:0 13px; background:white; color:var(--dark); font:13px 'DM Sans',sans-serif; }
+    .newsletter-form button { min-height:46px; border:0; border-radius:12px; padding:0 17px; background:var(--stamp-gold); color:var(--dark); font:900 12px 'DM Sans',sans-serif; cursor:pointer; }
+    .newsletter-consent { grid-column:1/-1; display:flex; align-items:flex-start; gap:8px; color:rgba(245,234,216,.78); font-size:10px; line-height:1.4; }
+    .newsletter-consent input { width:17px; height:17px; flex-shrink:0; }
+    .newsletter-status { grid-column:1/-1; min-height:16px; color:#ffe992; font-size:11px; font-weight:800; }
+    .owner-trial-banner { margin-bottom:18px; padding:15px 17px; border:1.5px solid rgba(201,162,39,.42); border-radius:16px; background:linear-gradient(135deg,#fff9df,#f7e7a5); color:var(--dark); font-size:13px; font-weight:800; line-height:1.5; box-shadow:0 5px 14px rgba(201,162,39,.13); }
+    .owner-trial-banner strong { color:var(--espresso); }
+    @media(max-width:520px){.newsletter-box{padding:18px}.newsletter-form{grid-template-columns:minmax(0,1fr)}.newsletter-consent,.newsletter-status{grid-column:auto}.newsletter-form button{width:100%}}
+
     /* ── PASSPORT PAGE ── */
     .passport-page {
       padding: 20px 16px;
@@ -2271,6 +2284,7 @@
       <article class="ad-space"><div><div class="ad-space-kicker">Espacio publicitario</div><h3>¿Quieres aparecer aquí?</h3><p>Si quieres publicitar tu cafetería, evento o negocio, envíanos tu información a este correo:</p><div class="ad-contact-email" onclick="copyAdvertisingEmail()" onkeydown="if(event.key==='Enter'||event.key===' ')copyAdvertisingEmail()" role="button" tabindex="0">📋 angelcastillongg@gmail.com</div></div><button onclick="copyAdvertisingEmail()">Copiar correo</button></article>
       <article class="ad-space"><div><div class="ad-space-kicker">Crece con nosotros</div><h3>Haz crecer tu negocio</h3><p>Envíanos por correo la información de tu apertura, producto, descuento o experiencia.</p><div class="ad-contact-email" onclick="copyAdvertisingEmail()" onkeydown="if(event.key==='Enter'||event.key===' ')copyAdvertisingEmail()" role="button" tabindex="0">📋 angelcastillongg@gmail.com</div></div><button onclick="copyAdvertisingEmail()">Copiar correo</button></article>
     </section>
+    <section class="newsletter-box"><h3>¿Quieres inscribirte a nuestra newsletter?</h3><p>Recibe novedades, nuevas cafeterías, beneficios y noticias de Pasaporte del Café.</p><form class="newsletter-form" onsubmit="subscribeNewsletter(event,this)" data-source="mapa"><input class="newsletter-email" type="email" required placeholder="Tu correo electrónico" autocomplete="email"><button type="submit">Quiero inscribirme</button><label class="newsletter-consent"><input class="newsletter-consent-check" type="checkbox" required><span>Acepto recibir novedades por correo. Podré solicitar la baja cuando quiera.</span></label><div class="newsletter-status" role="status" aria-live="polite"></div></form></section>
   </div>
 
   <!-- PASSPORT PAGE -->
@@ -2351,6 +2365,7 @@
       <div><h2 id="owner-dashboard-title">Ágape Café</h2><p>Resumen de tu cafetería</p></div>
       <div class="owner-hero-icon">☕</div>
     </div>
+    <div class="owner-trial-banner">✨ <strong>Tendrás acceso a este dashboard sin costo durante los primeros 30 días.</strong> Después, se solicitará un pago para continuar viéndolo, o podrás pagar el primer mes con 50% de descuento.</div>
 
     <section class="owner-panel active" id="owner-panel-dashboard">
       <div class="owner-dashboard-toolbar">
@@ -2374,6 +2389,7 @@
         <div class="dashboard-card"><h3>Lo que más valoran tus clientes</h3><div id="owner-survey-results" class="owner-empty-dashboard">Aún no hay suficientes opiniones para mostrar resultados.</div></div>
       </div>
       <div class="dashboard-card" style="margin-top:18px;"><h3>Solicitudes pendientes</h3><div id="owner-dashboard-requests"></div></div>
+      <section class="newsletter-box"><h3>¿Quieres inscribirte a nuestra newsletter?</h3><p>Recibe novedades, consejos y oportunidades para hacer crecer tu cafetería.</p><form class="newsletter-form" onsubmit="subscribeNewsletter(event,this)" data-source="dashboard"><input class="newsletter-email" type="email" required placeholder="Tu correo electrónico" autocomplete="email"><button type="submit">Quiero inscribirme</button><label class="newsletter-consent"><input class="newsletter-consent-check" type="checkbox" required><span>Acepto recibir novedades por correo. Podré solicitar la baja cuando quiera.</span></label><div class="newsletter-status" role="status" aria-live="polite"></div></form></section>
     </section>
 
     <section class="owner-panel" id="owner-panel-edit">
@@ -3543,6 +3559,16 @@
         throw new Error('La solicitud se guardó, pero el servicio de correo no confirmó el envío.');
       }
     };
+    window.newsletterApi = {
+      subscribe: async (email, source) => {
+        if(!CONFIGURED || !currentUser) throw new Error('Debes iniciar sesión para suscribirte.');
+        const cleanEmail=String(email||'').trim().toLowerCase();
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) throw new Error('Escribe un correo válido.');
+        const data={userUid:currentUser.uid,email:cleanEmail,source:String(source||'portal').slice(0,40),active:true,consent:true,subscribedAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
+        await setDoc(doc(db,'newsletterSubscriptions',currentUser.uid),data,{merge:true});
+        return data;
+      }
+    };
   </script>
 
   <script>
@@ -4006,6 +4032,16 @@
       finally{button.disabled=false;button.textContent='Enviar solicitud';}
     }
     window.openAdvertiseModal=openAdvertiseModal;window.closeAdvertiseModal=closeAdvertiseModal;window.submitAdvertisingRequest=submitAdvertisingRequest;
+
+    async function subscribeNewsletter(event,form){
+      event.preventDefault();
+      const input=form.querySelector('.newsletter-email'),consent=form.querySelector('.newsletter-consent-check'),button=form.querySelector('button'),status=form.querySelector('.newsletter-status');
+      if(!consent.checked)return;
+      button.disabled=true;button.textContent='Inscribiendo…';status.textContent='Guardando tu suscripción…';
+      try{if(!window.newsletterApi)throw new Error('El servicio de newsletter no está disponible.');await window.newsletterApi.subscribe(input.value,form.dataset.source);status.textContent='✓ Ya estás inscrito. Pronto recibirás novedades.';input.disabled=true;consent.disabled=true;button.textContent='Inscrito ✓';}
+      catch(e){console.error('Newsletter:',e);status.textContent=e.message||'No se pudo completar la suscripción.';button.disabled=false;button.textContent='Quiero inscribirme';}
+    }
+    window.subscribeNewsletter=subscribeNewsletter;
 
     function distanceKm(lat1, lon1, lat2, lon2) {
       const R = 6371;
@@ -5434,5 +5470,3 @@ window.doCheckin = function() {
   </script>
 </body>
 </html>
-
-  

@@ -4638,6 +4638,12 @@
       const lng = Number(match[2]);
       return Number.isFinite(lat) && Number.isFinite(lng) ? [lat, lng] : null;
     }
+    function googleMapsUrlForCoords(coords) {
+      if (!Array.isArray(coords) || coords.length !== 2) return '';
+      const lat=Number(coords[0]), lng=Number(coords[1]);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return '';
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lat.toFixed(7)+','+lng.toFixed(7))}`;
+    }
     function normalizeMexicanAddress(value) {
       return String(value || '')
         .replace(/\bCalz\.?/gi, 'Calzada')
@@ -4664,9 +4670,7 @@
         return {
           address: value,
           coords: directCoords,
-          googleLocation: /^https?:\/\//i.test(value)
-            ? value
-            : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(directCoords.join(','))}`
+          googleLocation: googleMapsUrlForCoords(directCoords)
         };
       }
       const expanded=normalizeMexicanAddress(value);
@@ -4685,14 +4689,14 @@
         const results=await fetchJsonWithTimeout(url);
         const first=Array.isArray(results)&&results[0];
         const lat=Number(first?.lat), lng=Number(first?.lon);
-        if(Number.isFinite(lat)&&Number.isFinite(lng)) return {address:value,coords:[lat,lng],googleLocation:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(value)}`,approximate:query!==candidates[0]};
+        if(Number.isFinite(lat)&&Number.isFinite(lng)) return {address:value,coords:[lat,lng],googleLocation:googleMapsUrlForCoords([lat,lng]),approximate:query!==candidates[0]};
       }
 
       for(const query of candidates.slice(0,2)){
         const results=await fetchJsonWithTimeout('https://photon.komoot.io/api/?limit=1&lang=es&q='+encodeURIComponent(query));
         const coords=results?.features?.[0]?.geometry?.coordinates;
         const lng=Number(coords?.[0]),lat=Number(coords?.[1]);
-        if(Number.isFinite(lat)&&Number.isFinite(lng)) return {address:value,coords:[lat,lng],googleLocation:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(value)}`,approximate:true};
+        if(Number.isFinite(lat)&&Number.isFinite(lng)) return {address:value,coords:[lat,lng],googleLocation:googleMapsUrlForCoords([lat,lng]),approximate:true};
       }
 
       const backup=Array.isArray(fallbackCoords)&&fallbackCoords.length===2?fallbackCoords:[29.072967,-110.955919];
@@ -5354,7 +5358,11 @@
       document.getElementById('sheet-address').textContent = '📍 ' + selectedLocation.address;
 
       const gmapsQuery = encodeURIComponent(selectedLocation.address + ', Hermosillo, Sonora');
-      document.getElementById('sheet-gmaps-link').href = selectedLocation.googleLocation || ('https://www.google.com/maps/search/?api=1&query=' + gmapsQuery);
+      // Las coordenadas del marcador tienen prioridad sobre enlaces de texto antiguos.
+      // Así Google Maps abre exactamente la sucursal elegida y no otra coincidencia de dirección.
+      document.getElementById('sheet-gmaps-link').href = googleMapsUrlForCoords(selectedLocation.coords)
+        || selectedLocation.googleLocation
+        || ('https://www.google.com/maps/search/?api=1&query=' + gmapsQuery);
 
       document.getElementById('sheet-menu').innerHTML =
         cafe.menu.map(m => `<span class="menu-tag">${m}</span>`).join('');

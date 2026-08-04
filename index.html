@@ -2787,6 +2787,19 @@
                                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     let app, auth, db, provider, currentUser = null, unsubscribeSnapshot = null, unsubscribeOwnerRequests = null, unsubscribeCafeProfiles = null, unsubscribeFriendRequests = null, unsubscribeFriendships = null;
+    const activeUnsubscribers = new Set();
+    function trackUnsubscribe(fn) {
+      if (typeof fn === 'function') activeUnsubscribers.add(fn);
+      return fn;
+    }
+    function stopTrackedUnsubscribe(fn) {
+      if (typeof fn !== 'function') return;
+      activeUnsubscribers.delete(fn);
+      try { fn(); } catch (e) {}
+    }
+    function stopAllTrackedUnsubscribers() {
+      [...activeUnsubscribers].forEach(stopTrackedUnsubscribe);
+    }
 
     if (CONFIGURED) {
       app      = initializeApp(FIREBASE_CONFIG);
@@ -2829,11 +2842,7 @@
       document.querySelectorAll('.overlay.open').forEach(el => el.classList.remove('open'));
       document.getElementById('friends-drawer-backdrop')?.classList.remove('open');
       document.getElementById('auth-screen').classList.remove('hidden');
-      if (unsubscribeSnapshot) unsubscribeSnapshot();
-      if (unsubscribeCafeProfiles) unsubscribeCafeProfiles();
-      if (unsubscribeOwnerRequests) unsubscribeOwnerRequests();
-      if (unsubscribeFriendRequests) unsubscribeFriendRequests();
-      if (unsubscribeFriendships) unsubscribeFriendships();
+      stopAllTrackedUnsubscribers();
       unsubscribeSnapshot = unsubscribeCafeProfiles = unsubscribeOwnerRequests = unsubscribeFriendRequests = unsubscribeFriendships = null;
       try {
         if (CONFIGURED && auth) await fbSignOut(auth);
@@ -2926,10 +2935,10 @@
 
     // ── Firestore: real-time listener ──
     function setupRealtimeSync(uid) {
-      if (unsubscribeSnapshot) unsubscribeSnapshot();
-      if (unsubscribeCafeProfiles) unsubscribeCafeProfiles();
+      stopTrackedUnsubscribe(unsubscribeSnapshot);
+      stopTrackedUnsubscribe(unsubscribeCafeProfiles);
       const ref = doc(db, 'users', uid);
-      unsubscribeSnapshot = onSnapshot(ref, snap => {
+      unsubscribeSnapshot = trackUnsubscribe(onSnapshot(ref, snap => {
         if (snap.exists()) {
           const previousVisited = { ...visited };
           visited = snap.data().visited || {};
@@ -2955,7 +2964,7 @@
           const activePage = document.querySelector('.nav-tab.active');
           if (activePage && activePage.textContent === 'Mi Pasaporte') renderPassport();
         }
-      });
+      }));
     }
 
     // ── Firestore: save check-in ──
@@ -3057,13 +3066,13 @@
 
     window.setupCafeProfilesSync = function() {
       if (!CONFIGURED || !currentUser) return;
-      if (unsubscribeCafeProfiles) unsubscribeCafeProfiles();
-      unsubscribeCafeProfiles = onSnapshot(collection(db, 'cafeProfiles'), snap => {
+      stopTrackedUnsubscribe(unsubscribeCafeProfiles);
+      unsubscribeCafeProfiles = trackUnsubscribe(onSnapshot(collection(db, 'cafeProfiles'), snap => {
         snap.docs.forEach(d => applyCafeProfile(d.data()));
       }, err => {
         console.error('Cafe profiles sync:', err);
         showToast('No se pudo cargar la información oficial de los cafés');
-      });
+      }));
     };
 
     // ── Check-in requests and owner inbox ──
@@ -3150,14 +3159,14 @@
       }
       btn.classList.add('show');
       setDoc(doc(db, 'users', currentUser.uid), { role: 'owner', ownerCafeName: ownerCafe.name }, { merge: true }).catch(console.error);
-      if (unsubscribeOwnerRequests) unsubscribeOwnerRequests();
+      stopTrackedUnsubscribe(unsubscribeOwnerRequests);
       const q = query(collection(db, 'checkinRequests'), where('ownerEmail', '==', email));
-      unsubscribeOwnerRequests = onSnapshot(q, snap => {
+      unsubscribeOwnerRequests = trackUnsubscribe(onSnapshot(q, snap => {
         ownerRequestHistory = snap.docs.map(d => ({ id:d.id, ...d.data() }));
         ownerRequests = ownerRequestHistory.filter(r => r.status === 'pending');
         renderOwnerRequests();
         renderOwnerDashboard();
-      }, err => console.error('Owner inbox:', err));
+      }, err => console.error('Owner inbox:', err)));
       loadOwnerCafeInfo(ownerCafe);
       activateOwnerMode(ownerCafe);
       updateRoleBasedUI();
@@ -3398,15 +3407,15 @@
     };
     function setupFriendsSystem(){
       if(!CONFIGURED||!currentUser)return;
-      if(unsubscribeFriendRequests)unsubscribeFriendRequests();
-      if(unsubscribeFriendships)unsubscribeFriendships();
-      unsubscribeFriendRequests=onSnapshot(query(collection(db,'friendRequests'),where('toUid','==',currentUser.uid),where('status','==','pending')),snap=>{
+      stopTrackedUnsubscribe(unsubscribeFriendRequests);
+      stopTrackedUnsubscribe(unsubscribeFriendships);
+      unsubscribeFriendRequests=trackUnsubscribe(onSnapshot(query(collection(db,'friendRequests'),where('toUid','==',currentUser.uid),where('status','==','pending')),snap=>{
         Promise.all(snap.docs.map(async d=>({id:d.id,...d.data(),profile:await window.friendApi.getPublicProfile(d.data().fromUid)}))).then(list=>{window.friendRequestsState=list;if(window.renderFriendsDrawer)window.renderFriendsDrawer();});
-      });
-      unsubscribeFriendships=onSnapshot(query(collection(db,'friendships'),where('members','array-contains',currentUser.uid)),snap=>{
+      }));
+      unsubscribeFriendships=trackUnsubscribe(onSnapshot(query(collection(db,'friendships'),where('members','array-contains',currentUser.uid)),snap=>{
         const ids=snap.docs.map(d=>d.data().members.find(x=>x!==currentUser.uid)).filter(Boolean);
         Promise.all(ids.map(uid=>window.friendApi.getPublicProfile(uid))).then(list=>{window.friendsState=list.filter(Boolean);if(window.renderFriendsDrawer)window.renderFriendsDrawer();});
-      });
+      }));
     }
 
     // ── Firestore: save passport background ──
@@ -4662,16 +4671,27 @@
       catch(e){ return null; }
       finally { clearTimeout(timer); }
     }
+    const geocodeCache = new Map();
+    function cloneGeocodeResult(result) {
+      return { ...result, coords:Array.isArray(result?.coords) ? [...result.coords] : result?.coords };
+    }
+    function cacheGeocodeResult(key, result) {
+      geocodeCache.set(key, cloneGeocodeResult(result));
+      return cloneGeocodeResult(result);
+    }
     async function resolveBranchLocation(raw, fallbackCoords = null) {
       const value = String(raw || '').trim();
       if (!value) throw new Error('Escribe una ubicación.');
+      const fallbackKey=Array.isArray(fallbackCoords)?fallbackCoords.map(Number).join(','):'';
+      const cacheKey=normalize(value)+'__'+fallbackKey;
+      if (geocodeCache.has(cacheKey)) return cloneGeocodeResult(geocodeCache.get(cacheKey));
       const directCoords = parseCoordinatesFromLocation(value);
       if (directCoords) {
-        return {
+        return cacheGeocodeResult(cacheKey, {
           address: value,
           coords: directCoords,
           googleLocation: googleMapsUrlForCoords(directCoords)
-        };
+        });
       }
       const expanded=normalizeMexicanAddress(value);
       const withoutCountry=expanded.replace(/,?\s*(México|Mexico)\s*$/i,'').trim();
@@ -4689,18 +4709,18 @@
         const results=await fetchJsonWithTimeout(url);
         const first=Array.isArray(results)&&results[0];
         const lat=Number(first?.lat), lng=Number(first?.lon);
-        if(Number.isFinite(lat)&&Number.isFinite(lng)) return {address:value,coords:[lat,lng],googleLocation:googleMapsUrlForCoords([lat,lng]),approximate:query!==candidates[0]};
+        if(Number.isFinite(lat)&&Number.isFinite(lng)) return cacheGeocodeResult(cacheKey,{address:value,coords:[lat,lng],googleLocation:googleMapsUrlForCoords([lat,lng]),approximate:query!==candidates[0]});
       }
 
       for(const query of candidates.slice(0,2)){
         const results=await fetchJsonWithTimeout('https://photon.komoot.io/api/?limit=1&lang=es&q='+encodeURIComponent(query));
         const coords=results?.features?.[0]?.geometry?.coordinates;
         const lng=Number(coords?.[0]),lat=Number(coords?.[1]);
-        if(Number.isFinite(lat)&&Number.isFinite(lng)) return {address:value,coords:[lat,lng],googleLocation:googleMapsUrlForCoords([lat,lng]),approximate:true};
+        if(Number.isFinite(lat)&&Number.isFinite(lng)) return cacheGeocodeResult(cacheKey,{address:value,coords:[lat,lng],googleLocation:googleMapsUrlForCoords([lat,lng]),approximate:true});
       }
 
       const backup=Array.isArray(fallbackCoords)&&fallbackCoords.length===2?fallbackCoords:[29.072967,-110.955919];
-      return {address:value,coords:[Number(backup[0]),Number(backup[1])],googleLocation:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(value)}`,approximate:true,geocodingPending:true};
+      return cacheGeocodeResult(cacheKey,{address:value,coords:[Number(backup[0]),Number(backup[1])],googleLocation:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(value)}`,approximate:true,geocodingPending:true});
     }
     async function saveOwnerBranch() {
       const status = document.getElementById('branch-save-status');
@@ -5051,22 +5071,38 @@
         return base.concat(extras);
       }
       function renderMapCafeMarkers() {
-        cafeMarkerEntries.forEach(entry => { try { map.removeLayer(entry.marker); } catch (e) {} });
-        cafeMarkerEntries = [];
         markersByName.clear();
+        const seenKeys = new Set();
         cafes.forEach(c => {
           getCafeLocations(c).forEach((location, idx) => {
-            const marker = L.marker(location.coords, { icon: visited[c.name] ? visitedIcon : cafeIcon })
-              .addTo(map)
-              .bindPopup(
-                '<b>' + c.name + '</b><br><small>' + location.address + '</small><br><br>' +
-                '<a href="#" onclick="openCafeSheet(\'' + encodeURIComponent(c.name) + '\',{locationId:\'' + location.id + '\'});return false;" style="color:#7a3f25;font-weight:600;">Ver detalles →</a>'
-              );
-            const entry = { cafe:c, location, marker, cafeIcon, visitedIcon };
-            cafeMarkerEntries.push(entry);
+            const key = normalize(c.name) + '__' + location.id;
+            const popupContent =
+              '<b>' + c.name + '</b><br><small>' + location.address + '</small><br><br>' +
+              '<a href="#" onclick="openCafeSheet(\'' + encodeURIComponent(c.name) + '\',{locationId:\'' + location.id + '\'});return false;" style="color:#7a3f25;font-weight:600;">Ver detalles →</a>';
+            seenKeys.add(key);
+            let entry = cafeMarkerEntries.find(item => item.key === key);
+            if (entry) {
+              entry.marker.setLatLng(location.coords);
+              entry.marker.setIcon(visited[c.name] ? visitedIcon : cafeIcon);
+              entry.marker.setPopupContent(popupContent);
+              entry.cafe = c;
+              entry.location = location;
+            } else {
+              const marker = L.marker(location.coords, { icon: visited[c.name] ? visitedIcon : cafeIcon })
+                .addTo(map)
+                .bindPopup(popupContent);
+              entry = { key, cafe:c, location, marker, cafeIcon, visitedIcon };
+              cafeMarkerEntries.push(entry);
+            }
             if (idx === 0) markersByName.set(normalize(c.name), entry);
           });
         });
+        cafeMarkerEntries = cafeMarkerEntries.filter(entry => {
+          if (seenKeys.has(entry.key)) return true;
+          try { map.removeLayer(entry.marker); } catch (e) {}
+          return false;
+        });
+        if (window.refreshLocationSearchCache) window.refreshLocationSearchCache();
       }
       window.renderMapCafeMarkers = renderMapCafeMarkers;
       renderMapCafeMarkers();
@@ -5097,6 +5133,11 @@
           key: `${normalize(cafe.name)}__${location.id}`
         })));
       }
+      let cachedLocationEntries = buildLocationSearchEntries();
+      function refreshLocationSearchCache() {
+        cachedLocationEntries = buildLocationSearchEntries();
+      }
+      window.refreshLocationSearchCache = refreshLocationSearchCache;
       function showSuggestions(list) {
         suggestions.innerHTML = '';
         if (!list.length) { suggestions.style.display='none'; return; }
@@ -5122,7 +5163,7 @@
       function goToCafe(query) {
         const q = normalize(query);
         if (!q) return;
-        const entries = buildLocationSearchEntries();
+        const entries = cachedLocationEntries;
         const exact = entries.find(e => normalize(e.displayLabel) === q || normalize(e.address) === q);
         const found = exact || entries.find(e => normalize(e.cafe.name).includes(q) || normalize(e.address).includes(q) || normalize(e.displayLabel).includes(q));
         if (found) goToCafeLocation(found);
@@ -5131,7 +5172,7 @@
       input.addEventListener('input', () => {
         const q = normalize(input.value);
         if (!q) { suggestions.style.display='none'; return; }
-        const matches = buildLocationSearchEntries().filter(entry =>
+        const matches = cachedLocationEntries.filter(entry =>
           normalize(entry.cafe.name).includes(q) ||
           normalize(entry.address).includes(q) ||
           normalize(entry.displayLabel).includes(q)

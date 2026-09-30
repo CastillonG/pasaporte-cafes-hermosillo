@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
-  <title>Pasaporte del Café — Hermosillo</title>
+  <title>Find My Coffee — Hermosillo</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -2158,6 +2158,74 @@
       .stamps-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
       .user-btn span { display: none; }
     }
+
+    /* ── POSTALES ── */
+    .postcard-open-btn { display:inline-flex; align-items:center; gap:8px; margin:0 0 20px 8px; padding:6px 14px 6px 10px; border-radius:20px; border:1.5px solid rgba(122,63,37,.22); background:var(--foam); color:var(--espresso); font:700 13px 'DM Sans',sans-serif; cursor:pointer; transition:.2s; vertical-align:top; }
+    .postcard-open-btn:hover { background:#fff9df; border-color:var(--stamp-gold); transform:translateY(-1px); }
+    .postcard-open-btn svg { width:34px; height:24px; flex-shrink:0; }
+    #postcard-overlay, #postcard-view-overlay { align-items:center; padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom)); backdrop-filter:blur(6px); }
+    #postcard-overlay .cafe-sheet, #postcard-view-overlay .cafe-sheet { max-width:520px; border-radius:24px; transform:translateY(16px) scale(.97); }
+    #postcard-overlay.open .cafe-sheet, #postcard-view-overlay.open .cafe-sheet { transform:none; }
+    .postcard { position:relative; background:linear-gradient(135deg,#fffaf1,#f6e7cf); border:2px solid var(--espresso); border-radius:18px; padding:18px; box-shadow:0 10px 26px rgba(62,31,14,.14); overflow:hidden; }
+    .postcard::before { content:''; position:absolute; inset:6px; border:1.5px dashed rgba(122,63,37,.22); border-radius:13px; pointer-events:none; }
+    .postcard.flying { animation:postcardFly .9s cubic-bezier(.5,0,.8,.4) forwards; }
+    @keyframes postcardFly { 0%{transform:none;opacity:1} 30%{transform:translate(-8px,6px) rotate(-3deg)} 100%{transform:translate(120%,-140%) rotate(18deg) scale(.4);opacity:0} }
+    .postcard-top { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:10px; position:relative; }
+    .postcard-brand { font:800 10px 'DM Sans',sans-serif; letter-spacing:1.4px; color:var(--espresso); opacity:.7; }
+    .postcard-cafe { font:700 22px 'Playfair Display',serif; color:var(--dark); line-height:1.2; margin-top:4px; }
+    .postcard-from { font-size:12px; color:var(--espresso); margin-top:4px; opacity:.8; }
+    .postcard-stamp { width:54px; height:62px; flex-shrink:0; border:2px dashed var(--stamp-gold); border-radius:6px; background:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; transform:rotate(4deg); }
+    .pc-row { position:relative; padding:11px 0; border-top:1px solid rgba(122,63,37,.12); }
+    .pc-row-head { display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:5px; }
+    .pc-label { font:800 11px 'DM Sans',sans-serif; letter-spacing:1px; text-transform:uppercase; color:var(--espresso); }
+    .pc-caption { font-size:12px; font-weight:700; color:var(--green); }
+    .pc-icons { display:flex; gap:6px; user-select:none; }
+    .pc-icon { position:relative; display:inline-block; font-size:30px; line-height:1; }
+    .pc-icons.interactive .pc-icon { cursor:pointer; transition:transform .12s; }
+    .pc-icons.interactive .pc-icon:hover { transform:scale(1.12); }
+    .pc-icons.small .pc-icon { font-size:17px; }
+    .pc-icons.small { gap:2px; }
+    .pc-base { filter:grayscale(1); opacity:.25; }
+    .pc-fill { position:absolute; left:0; top:0; overflow:hidden; white-space:nowrap; }
+    .pc-icon.star .pc-base { filter:none; opacity:1; color:#ddd3c4; }
+    .pc-icon.star .pc-fill { color:#e2ad1f; }
+    .pc-hint { font-size:10px; color:var(--espresso); opacity:.55; margin-top:4px; }
+    .pc-step { display:none; padding-top:12px; border-top:1px solid rgba(122,63,37,.12); position:relative; animation:pcFade .25s ease; }
+    .pc-step.show { display:block; }
+    @keyframes pcFade { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+    .pc-levels { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+    .pc-level { min-height:48px; border:1.5px solid rgba(122,63,37,.2); border-radius:12px; background:#fff; color:var(--espresso); font:800 12px 'DM Sans',sans-serif; cursor:pointer; padding:6px; }
+    .pc-level.selected { background:var(--espresso); color:var(--cream); border-color:var(--espresso); }
+    .pc-level-badge { display:inline-block; margin-top:10px; padding:6px 12px; border-radius:999px; background:var(--espresso); color:var(--cream); font:800 12px 'DM Sans',sans-serif; position:relative; }
+    .pc-friends { display:grid; gap:7px; max-height:210px; overflow-y:auto; }
+    .pc-friend { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:12px; border:1.5px solid rgba(122,63,37,.15); background:#fff; cursor:pointer; text-align:left; font:700 13px 'DM Sans',sans-serif; color:var(--dark); }
+    .pc-friend.selected { border-color:var(--stamp-gold); background:#fff9df; box-shadow:0 0 0 3px rgba(201,162,39,.15); }
+    .pc-friend-avatar { width:36px; height:40px; border-radius:8px; overflow:hidden; background:#ddd4c7; flex-shrink:0; }
+    .pc-friend-avatar svg { width:100%; height:100%; }
+    .pc-send { width:100%; margin-top:14px; min-height:48px; border:0; border-radius:14px; background:var(--espresso); color:var(--cream); font:800 15px 'DM Sans',sans-serif; cursor:pointer; }
+    .pc-send:disabled { opacity:.45; cursor:not-allowed; }
+    .pc-mini { display:block; width:100%; text-align:left; cursor:pointer; background:linear-gradient(135deg,#fffaf1,#f6e7cf); border:1.5px solid rgba(122,63,37,.3); border-radius:14px; padding:12px; margin-bottom:9px; font-family:'DM Sans',sans-serif; }
+    .pc-mini-title { font:700 15px 'Playfair Display',serif; color:var(--dark); }
+    .pc-mini-meta { font-size:11px; color:var(--espresso); opacity:.72; margin:2px 0 6px; }
+    .pc-mini-line { display:flex; align-items:center; gap:6px; font-size:10px; color:var(--espresso); font-weight:700; margin:2px 0; }
+    .pc-mini-line > span:first-child { width:58px; flex-shrink:0; }
+    .menu-badge { margin-left:auto; min-width:20px; height:20px; padding:0 6px; border-radius:999px; background:#c0392b; color:#fff; font-size:11px; font-weight:900; display:none; align-items:center; justify-content:center; }
+    .menu-badge.show { display:inline-flex; }
+    #albums-overlay { align-items:stretch; padding:0; background:var(--cream); }
+    #albums-overlay .cafe-sheet { border-radius:0; max-width:none; width:100%; height:100vh; height:100dvh; max-height:none; transform:translateX(100%); padding:calc(24px + env(safe-area-inset-top)) 18px calc(40px + env(safe-area-inset-bottom)); }
+    #albums-overlay.open .cafe-sheet { transform:none; }
+    .albums-wrap { max-width:820px; margin:0 auto; }
+    .album-tabs { display:flex; gap:7px; overflow-x:auto; padding-bottom:4px; margin-bottom:16px; }
+    .album-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
+    .album-grid .pc-mini { margin:0; }
+    .pc-album-row { display:flex; gap:8px; margin-top:14px; }
+    .pc-album-row select { flex:1; min-height:44px; border:1.5px solid rgba(122,63,37,.22); border-radius:12px; padding:0 10px; font:600 13px 'DM Sans',sans-serif; background:#fff; color:var(--dark); }
+    .pc-album-row button { border:0; border-radius:12px; padding:0 16px; background:var(--green); color:#fff; font:800 13px 'DM Sans',sans-serif; cursor:pointer; }
+    .owner-pc-avgs { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:14px; }
+    .owner-pc-avg { background:#fff; border:1px solid rgba(122,63,37,.12); border-radius:13px; padding:12px; }
+    .owner-pc-avg .pc-label { font-size:10px; }
+    .owner-pc-avg strong { display:block; font:700 20px 'Playfair Display',serif; color:var(--dark); margin:3px 0; }
+    @media(max-width:520px){ .pc-levels{grid-template-columns:1fr} .owner-pc-avgs{grid-template-columns:1fr} .pc-icon{font-size:27px} .postcard-open-btn{margin-left:0} }
   </style>
 </head>
 <body>
@@ -2165,7 +2233,7 @@
   <!-- ══ AUTH SCREEN ══ -->
   <div class="auth-screen" id="auth-screen">
     <div class="auth-logo">☕</div>
-    <h1 class="auth-title">PASAPORTE DEL CAFÉ</h1>
+    <h1 class="auth-title">FIND MY COFFEE</h1>
     <div class="auth-subtitle">HERMOSILLO, SONORA</div>
 
     <div class="auth-card">
@@ -2192,7 +2260,7 @@
   <div class="profile-screen" id="profile-screen">
     <div class="profile-card">
       <div class="profile-icon">🛂</div>
-      <h1 class="profile-title">COMPLETA TU PASAPORTE</h1>
+      <h1 class="profile-title">COMPLETA TU PERFIL</h1>
       <div class="profile-subtitle">Cuéntanos un poco de ti antes de empezar</div>
 
       <div class="profile-field">
@@ -2229,11 +2297,11 @@
   <!-- TOP BAR -->
   <div class="topbar">
     <div class="topbar-left">
-      <button class="topbar-home" id="topbar-home" onclick="goHome()" aria-label="Ir al inicio"><span class="topbar-home-emoji">☕</span><span class="topbar-home-text">PASAPORTE</span></button>
+      <button class="topbar-home" id="topbar-home" onclick="goHome()" aria-label="Ir al inicio"><span class="topbar-home-emoji">☕</span><span class="topbar-home-text">FIND MY COFFEE</span></button>
     </div>
     <div class="nav-tabs" id="regular-nav-tabs">
       <button class="nav-tab active" onclick="openMapFromNav(this)">Mapa</button>
-      <button class="nav-tab" onclick="switchPage('passport', this)">Mi Pasaporte</button>
+      <button class="nav-tab" onclick="switchPage('passport', this)">Mi Perfil</button>
     </div>
     <div class="nav-tabs" id="owner-nav-tabs" style="display:none;">
       <button class="nav-tab active" onclick="openOwnerTab('dashboard', this)">Dashboard</button>
@@ -2258,7 +2326,7 @@
 
   <div class="friends-drawer-backdrop" id="friends-drawer-backdrop" onclick="closeFriendsDrawer(event)">
     <aside class="friends-drawer">
-      <div class="friends-header"><div><h2>Amigos</h2><div class="sheet-address" style="margin:3px 0 0;">Explora sus pasaportes.</div></div><button class="sheet-close" onclick="closeFriendsDrawer()">✕</button></div>
+      <div class="friends-header"><div><h2>Amigos</h2><div class="sheet-address" style="margin:3px 0 0;">Explora sus perfiles y postales.</div></div><button class="sheet-close" onclick="closeFriendsDrawer()">✕</button></div>
       <div id="friend-requests-section"></div>
       <div class="friends-grid" id="friends-grid"></div>
     </aside>
@@ -2282,6 +2350,8 @@
     <button class="main-menu-item" id="menu-item-discounts" onclick="openDiscounts()"><span>🏷️</span> Descuentos</button>
     <div class="main-menu-separator"></div>
     <button class="main-menu-item" id="menu-item-store" onclick="openStore()"><span>🛍️</span> Tienda</button>
+    <div class="main-menu-separator"></div>
+    <button class="main-menu-item" id="menu-item-postcards" onclick="openPostcardAlbums()"><span>📬</span> Mis postales <span class="menu-badge" id="postcards-menu-badge">0</span></button>
   </div>
 
   <!-- MAP PAGE -->
@@ -2305,8 +2375,8 @@
     <div class="passport-id-card" id="passport-id-card">
       <button class="passport-bg-btn" onclick="openBackgroundModal()">Cambiar fondo</button>
       <div class="id-card-header">
-        <span class="id-card-country">PASAPORTE · HERMOSILLO</span>
-        <span class="id-card-type">CAFÉ ID</span>
+        <span class="id-card-country">MI PERFIL</span>
+        <span class="id-card-type">CAFETERO</span>
       </div>
       <div class="id-card-body">
         <div class="id-photo" id="passport-character" onclick="openAvatarModal()" role="button" aria-label="Cambiar personaje" tabindex="0"></div>
@@ -2330,12 +2400,12 @@
         </div>
       </div>
       <div class="owner-badge" id="owner-badge">Owner de Ágape Café</div>
-      <div class="id-card-mrz" id="id-mrz">P&lt;HMO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+      <div class="id-card-mrz" id="id-mrz" style="display:none">P&lt;HMO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
       <button class="passport-effects-btn" onclick="openStampAnimationModal()" aria-label="Elegir efectos del sello">✨ Efectos</button>
     </div>
 
     <div class="passport-cover">
-      <h2>PASAPORTE DEL CAFÉ</h2>
+      <h2>MI RUTA CAFETERA</h2>
       <div class="subtitle">HERMOSILLO, SONORA</div>
       <div class="passport-stats">
         <div class="stat-box">
@@ -2399,6 +2469,7 @@
         <div class="dashboard-card"><h3>Tus mejores momentos</h3><div class="owner-moments-grid" id="owner-best-moments"></div></div>
         <div class="dashboard-card"><h3>Lo que más valoran tus clientes</h3><div id="owner-survey-results" class="owner-empty-dashboard">Aún no hay suficientes opiniones para mostrar resultados.</div></div>
       </div>
+      <div class="dashboard-card"><h3>Postales de cafeteros</h3><div class="owner-updated" style="margin:-8px 0 12px;">Anónimas: ves cómo recomendaron tu café, nunca quién lo hizo.</div><div id="owner-postcard-recs"><div class="owner-empty-dashboard">Aún nadie ha mandado una postal de tu café.</div></div></div>
       <div class="dashboard-card"><h3>Recomendaciones para tu cafetería</h3><div class="owner-recommendations" id="owner-recommendations"><div class="owner-empty-dashboard" style="grid-column:1/-1;">Las recomendaciones aparecerán conforme aceptes visitas.</div></div></div>
       <div class="dashboard-card" style="margin-top:18px;"><h3>Solicitudes pendientes</h3><div id="owner-dashboard-requests"></div></div>
     </section>
@@ -2439,6 +2510,7 @@
       </div>
       <div class="sheet-address" id="sheet-address">📍 —</div>
       <a class="sheet-gmaps-link" id="sheet-gmaps-link" href="#" target="_blank" rel="noopener">🔎 Buscar en Google</a>
+      <button class="postcard-open-btn" id="postcard-open-btn" onclick="openPostcardComposer()" title="Mandar postal a un amigo"><svg viewBox="0 0 42 28" aria-hidden="true"><rect x="1" y="6" width="27" height="20" rx="2.5" fill="#fdf6ed" stroke="#7a3f25" stroke-width="1.8"/><rect x="19.5" y="9" width="5.5" height="6.5" rx="1" fill="none" stroke="#c9a227" stroke-width="1.5"/><path d="M4.5 12h11M4.5 16h9M4.5 20.5h12" stroke="#7a3f25" stroke-width="1.4" stroke-linecap="round"/><path d="M25 8 L41 1.5 L34.5 17.5 L30.5 12 Z" fill="#fff" stroke="#3e1f0e" stroke-width="1.5" stroke-linejoin="round"/><path d="M30.5 12 L41 1.5" stroke="#3e1f0e" stroke-width="1.2"/></svg> Mandar postal</button>
       <div class="sheet-section-title">Especialidades</div>
       <div class="menu-tags" id="sheet-menu"></div>
       <div class="sheet-section-title">Horarios</div>
@@ -2469,6 +2541,34 @@
     </div>
   </div>
 
+  <!-- POSTCARD COMPOSER -->
+  <div class="overlay" id="postcard-overlay" onclick="closePostcardComposer(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-header"><div><h2>Mandar postal</h2><div class="sheet-address" style="margin:5px 0 0;">Califica y recomiéndale este café a un amigo.</div></div><button class="sheet-close" onclick="closePostcardComposer()">✕</button></div>
+      <div id="postcard-composer"></div>
+    </div>
+  </div>
+
+  <!-- POSTCARD VIEWER -->
+  <div class="overlay" id="postcard-view-overlay" onclick="closePostcardView(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="sheet-header"><h2>Postal</h2><button class="sheet-close" onclick="closePostcardView()">✕</button></div>
+      <div id="postcard-view-content"></div>
+    </div>
+  </div>
+
+  <!-- POSTCARD ALBUMS -->
+  <div class="overlay" id="albums-overlay" onclick="closePostcardAlbums(event)">
+    <div class="cafe-sheet modal-sheet">
+      <div class="albums-wrap">
+        <div class="sheet-header"><div><h2>Mis postales</h2><div class="sheet-address" style="margin:5px 0 0;">Recomendaciones que te mandaron tus amigos.</div></div><button class="sheet-close" onclick="closePostcardAlbums()">✕</button></div>
+        <div id="albums-pending"></div>
+        <div class="album-tabs" id="album-tabs"></div>
+        <div class="album-grid" id="album-grid"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- MEDALS MODAL -->
   <div class="overlay" id="medals-overlay" onclick="closeMedalsModal(event)">
     <div class="cafe-sheet modal-sheet">
@@ -2488,7 +2588,7 @@
       <div class="sheet-header">
         <div>
           <h2>Animación al sellar</h2>
-          <div class="sheet-address" style="margin:5px 0 0;">Elige cómo quieres celebrar un nuevo sello en tu pasaporte.</div>
+          <div class="sheet-address" style="margin:5px 0 0;">Elige cómo quieres celebrar un nuevo sello en tu perfil.</div>
         </div>
         <button class="sheet-close" onclick="closeStampAnimationModal()">✕</button>
       </div>
@@ -2512,7 +2612,7 @@
       <div class="sheet-header">
         <div>
           <h2>Elige tu personaje</h2>
-          <div class="sheet-address" style="margin:5px 0 0;">Toca una opción para usarla en tu pasaporte.</div>
+          <div class="sheet-address" style="margin:5px 0 0;">Toca una opción para usarla en tu perfil.</div>
         </div>
         <button class="sheet-close" onclick="closeAvatarModal()">✕</button>
       </div>
@@ -2548,7 +2648,7 @@
       <div class="sheet-handle"></div>
       <div class="sheet-header">
         <div>
-          <h2>Fondo del pasaporte</h2>
+          <h2>Fondo del perfil</h2>
           <div class="sheet-address" style="margin:5px 0 0;">Elige el patrón de tu tarjeta de información.</div>
         </div>
         <button class="sheet-close" onclick="closeBackgroundModal()">✕</button>
@@ -2589,7 +2689,7 @@
   <div class="overlay" id="friend-passport-overlay" onclick="closeFriendPassport(event)">
     <div class="cafe-sheet modal-sheet">
       <div class="sheet-handle"></div>
-      <div class="sheet-header"><h2>Pasaporte de amigo</h2><button class="sheet-close" onclick="closeFriendPassport()">✕</button></div>
+      <div class="sheet-header"><h2>Perfil de amigo</h2><button class="sheet-close" onclick="closeFriendPassport()">✕</button></div>
       <div id="friend-passport-content"></div>
     </div>
   </div>
@@ -2654,7 +2754,7 @@
     <div class="cafe-sheet modal-sheet">
       <div class="sheet-handle"></div>
       <div class="sheet-header"><div></div><button class="sheet-close" onclick="closeStore()" aria-label="Cerrar tienda" title="Cerrar tienda (Esc)">✕</button></div>
-      <div class="store-hero"><h2>La Tiendita del Pasaporte</h2><p>Haz que tu pasaporte se sienta completamente tuyo.</p></div>
+      <div class="store-hero"><h2>La Tiendita de Find My Coffee</h2><p>Haz que tu perfil se sienta completamente tuyo.</p></div>
       <div id="store-all-sections"></div>
       <div class="store-note">Prototipo: los artículos se desbloquean sin realizar un cobro real.</div>
     </div>
@@ -2675,7 +2775,7 @@
   <!-- ADVERTISING REQUEST -->
   <div class="overlay" id="advertise-overlay" onclick="closeAdvertiseModal(event)">
     <div class="cafe-sheet modal-sheet">
-      <div class="sheet-header"><div><h2>Anúnciate en Pasaporte del Café</h2><div class="sheet-address" style="margin:6px 0 0;">Cuéntanos qué quieres promocionar. Revisaremos tu solicitud y nos pondremos en contacto contigo.</div></div><button class="sheet-close" onclick="closeAdvertiseModal()">✕</button></div>
+      <div class="sheet-header"><div><h2>Anúnciate en Find My Coffee</h2><div class="sheet-address" style="margin:6px 0 0;">Cuéntanos qué quieres promocionar. Revisaremos tu solicitud y nos pondremos en contacto contigo.</div></div><button class="sheet-close" onclick="closeAdvertiseModal()">✕</button></div>
       <form id="advertise-form" onsubmit="submitAdvertisingRequest(event)">
         <input id="ad-source-space" type="hidden" value="espacio_1"><input class="ad-honeypot" id="ad-website-trap" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="ad-form-grid">
@@ -2832,6 +2932,7 @@
       document.getElementById('friends-drawer-backdrop')?.classList.remove('open');
       document.getElementById('auth-screen').classList.remove('hidden');
       stopAllTrackedUnsubscribers();
+      window.postcardsState = []; window.postcardsReady = false;
       unsubscribeSnapshot = unsubscribeCafeProfiles = unsubscribeOwnerRequests = unsubscribeFriendRequests = unsubscribeFriendships = null;
       try {
         if (CONFIGURED && auth) await fbSignOut(auth);
@@ -2873,6 +2974,7 @@
           setupOwnerInbox();
           await upsertPublicProfile();
           setupFriendsSystem();
+          setupPostcardsSync();
           initMap();
           setTimeout(() => { if (window.maybeShowNearestCafePopup) window.maybeShowNearestCafePopup(); }, 1200);
         } else {
@@ -2951,7 +3053,7 @@
           if (window.schedulePublicProfileSync) window.schedulePublicProfileSync();
           if (currentCafe && currentCafe.name === 'Ágape Café' && document.getElementById('overlay').classList.contains('open')) renderAgapeLoyaltyCard();
           const activePage = document.querySelector('.nav-tab.active');
-          if (activePage && activePage.textContent === 'Mi Pasaporte') renderPassport();
+          if (activePage && activePage.textContent === 'Mi Perfil') renderPassport();
         }
       }));
     }
@@ -3611,6 +3713,47 @@
         throw new Error('La solicitud se guardó, pero el servicio de correo no confirmó el envío.');
       }
     };
+    let unsubscribePostcards = null;
+    function setupPostcardsSync(){
+      if(!CONFIGURED||!currentUser)return;
+      stopTrackedUnsubscribe(unsubscribePostcards);
+      window.postcardsReady=false;
+      unsubscribePostcards=trackUnsubscribe(onSnapshot(query(collection(db,'postcards'),where('toUid','==',currentUser.uid)),snap=>{
+        const list=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+        const prevPending=new Set((window.postcardsState||[]).filter(p=>p.status==='pending').map(p=>p.id));
+        window.postcardsState=list;
+        if(window.postcardsReady){
+          const fresh=list.find(p=>p.status==='pending'&&!prevPending.has(p.id));
+          if(fresh) showToast(`📬 ${fresh.fromName||'Un amigo'} te mandó una postal`);
+        }
+        window.postcardsReady=true;
+        if(window.renderPostcardViews) window.renderPostcardViews();
+      },err=>console.error('Postales:',err)));
+    }
+    window.setupPostcardsSync=setupPostcardsSync;
+    window.postcardApi = {
+      send: async ({toUid,cafe,flavor,ambience,price,level}) => {
+        if(!CONFIGURED||!currentUser) throw new Error('Necesitas iniciar sesión.');
+        const now=new Date().toISOString();
+        await addDoc(collection(db,'postcards'),{
+          fromUid:currentUser.uid, fromName:window.currentDisplayName||currentUser.displayName||'Usuario',
+          fromAvatar:selectedAvatar||'classic', toUid, cafeName:cafe.name,
+          flavor, ambience, price, level, status:'pending', album:'', createdAt:now
+        });
+        // Registro anónimo para la cuenta de la cafetería: sin remitente ni destinatario, solo fecha.
+        await addDoc(collection(db,'cafeRecommendations'),{
+          cafeName:cafe.name, ownerEmail:(cafe.ownerEmail||'').toLowerCase(),
+          flavor, ambience, price, level, createdAt:now.slice(0,10)
+        });
+      },
+      respond: (id,accepted) => updateDoc(doc(db,'postcards',id),{status:accepted?'accepted':'rejected',respondedAt:new Date().toISOString()}),
+      setAlbum: (id,album) => updateDoc(doc(db,'postcards',id),{album:String(album||'').slice(0,40)}),
+      loadCafeRecommendations: async email => {
+        if(!CONFIGURED||!currentUser) return [];
+        const snap=await getDocs(query(collection(db,'cafeRecommendations'),where('ownerEmail','==',String(email||'').toLowerCase())));
+        return snap.docs.map(d=>d.data());
+      }
+    };
   </script>
 
   <script>
@@ -3763,6 +3906,10 @@
       const menuStore = document.getElementById('menu-item-store');
       if (menuDiscounts) menuDiscounts.style.display = owner ? 'none' : 'flex';
       if (menuStore) menuStore.style.display = owner ? 'none' : 'flex';
+      const menuPostcards = document.getElementById('menu-item-postcards');
+      if (menuPostcards) menuPostcards.style.display = owner ? 'none' : 'flex';
+      const postcardBtn = document.getElementById('postcard-open-btn');
+      if (postcardBtn) postcardBtn.style.display = owner ? 'none' : 'inline-flex';
       const nearestCard = document.getElementById('settings-nearest-card');
       const settingsEmpty = document.getElementById('settings-owner-empty');
       if (nearestCard) nearestCard.style.display = owner ? 'none' : 'flex';
@@ -4231,7 +4378,7 @@
       if (window.savePassportBackground) window.savePassportBackground(id);
       renderPassportBackground();
       renderBackgroundGrid();
-      showToast('Fondo del pasaporte actualizado ✓');
+      showToast('Fondo del perfil actualizado ✓');
       setTimeout(() => closeBackgroundModal(), 350);
     }
     window.selectPassportBackground = selectPassportBackground;
@@ -4412,6 +4559,7 @@
       document.getElementById('owner-dashboard-title').textContent = ownerCafe.name;
       updateRoleBasedUI();
       renderOwnerDashboard();
+      if(window.postcardApi) window.postcardApi.loadCafeRecommendations(ownerCafe.ownerEmail).then(rows=>{window.ownerPostcardRecs=rows;renderOwnerPostcardRecs();}).catch(e=>console.error('Postales del café:',e));
       if(window.cafeSurveyApi) window.cafeSurveyApi.loadCafeResponses(ownerCafe.name).then(rows=>{window.ownerSurveyResponses=rows;renderOwnerDashboard();}).catch(e=>console.error('Resultados de encuesta:',e));
     }
     window.activateOwnerMode = activateOwnerMode;
@@ -5512,26 +5660,174 @@ window.doCheckin = async function() {
     }
 
 
+
+    // ──────────────────────────────────────────────
+    // POSTALES
+    // ──────────────────────────────────────────────
+    const PC_FIELDS = {
+      flavor:   { label:'Sabor',    icon:'☕', cls:'emoji', half:true,  captions:['Toca las tazas','Malo','Regular','Bueno','Muy bueno','Excelente'] },
+      ambience: { label:'Ambiente', icon:'★',  cls:'star',  half:false, captions:['Toca las estrellas','Malo','Regular','Bueno','Muy bueno','Excelente'] },
+      price:    { label:'Precio',   icon:'💵', cls:'emoji', half:false, captions:['Toca los billetes','Muy barato','Barato','Justo','Caro','Muy caro'] }
+    };
+    const PC_LEVELS = ['Recomendado','Muy recomendado','¡Tienes que probarlo!'];
+    let postcardDraft = null;
+    window.postcardsState = window.postcardsState || [];
+    let activeAlbum = '__all';
+
+    function escHtml(v){ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function pcCaption(key,v){ const c=PC_FIELDS[key].captions; if(!v) return c[0]; const base=c[Math.ceil(v)]||''; return key==='flavor' ? `${String(v).replace('.',',')} de 5 · ${base}` : base; }
+    function pcIconsHtml(key,value,interactive=false,small=false){
+      const f=PC_FIELDS[key]; let html='';
+      for(let i=1;i<=5;i++){
+        const fill=Math.max(0,Math.min(1,(Number(value)||0)-(i-1)))*100;
+        html+=`<span class="pc-icon ${f.cls}" ${interactive?`onclick="setPostcardRating(event,'${key}',${i})" role="button" aria-label="${f.label} ${i}"`:''}><span class="pc-base">${f.icon}</span><span class="pc-fill" style="width:${fill}%">${f.icon}</span></span>`;
+      }
+      return `<div class="pc-icons ${interactive?'interactive':''} ${small?'small':''}">${html}</div>`;
+    }
+    function pcStampFor(cafeName){ return cafeName && normalize(cafeName).includes('agape') ? '🫘' : '☕'; }
+
+    function postcardCardHtml(pc, opts={}){
+      const rows=Object.keys(PC_FIELDS).map(k=>`<div class="pc-row"><div class="pc-row-head"><span class="pc-label">${PC_FIELDS[k].label}</span><span class="pc-caption">${pcCaption(k,pc[k])}</span></div>${pcIconsHtml(k,pc[k])}</div>`).join('');
+      const date=pc.createdAt?new Date(pc.createdAt).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}):'';
+      return `<div class="postcard"><div class="postcard-top"><div><div class="postcard-brand">FIND MY COFFEE · POSTAL</div><div class="postcard-cafe">${escHtml(pc.cafeName)}</div>${opts.hideFrom?'':`<div class="postcard-from">De: <strong>${escHtml(pc.fromName||'Un amigo')}</strong>${date?' · '+date:''}</div>`}</div><div class="postcard-stamp">${pcStampFor(pc.cafeName)}</div></div>${rows}<div class="pc-level-badge">${escHtml(pc.level||'')}</div></div>`;
+    }
+    function postcardMiniHtml(pc, onclick){
+      return `<button class="pc-mini" onclick="${onclick}"><div class="pc-mini-title">${escHtml(pc.cafeName)}</div><div class="pc-mini-meta">De ${escHtml(pc.fromName||'un amigo')} · ${escHtml(pc.level||'')}</div>${Object.keys(PC_FIELDS).map(k=>`<div class="pc-mini-line"><span>${PC_FIELDS[k].label}</span>${pcIconsHtml(k,pc[k],false,true)}</div>`).join('')}</button>`;
+    }
+
+    // Composer
+    function openPostcardComposer(){
+      if(!currentCafe) return;
+      if(isOwnerAccount()) return;
+      if(!window.postcardApi || !window.currentUserEmail){ showToast('Inicia sesión para mandar postales'); return; }
+      postcardDraft={ cafe:currentCafe, flavor:0, ambience:0, price:0, level:'', toUid:'' };
+      renderPostcardComposer();
+      document.getElementById('postcard-overlay').classList.add('open');
+    }
+    function closePostcardComposer(e){ if(!e||e.target===document.getElementById('postcard-overlay')) document.getElementById('postcard-overlay').classList.remove('open'); }
+    function renderPostcardComposer(){
+      const d=postcardDraft; if(!d) return;
+      const rated=d.flavor>0&&d.ambience>0&&d.price>0;
+      const friends=window.friendsState||[];
+      const rows=Object.keys(PC_FIELDS).map(k=>`<div class="pc-row"><div class="pc-row-head"><span class="pc-label">${PC_FIELDS[k].label}</span><span class="pc-caption">${pcCaption(k,d[k])}</span></div>${pcIconsHtml(k,d[k],true)}${k==='flavor'?'<div class="pc-hint">Toca la mitad izquierda de una taza para dar medio punto.</div>':''}</div>`).join('');
+      const levels=PC_LEVELS.map(l=>`<button class="pc-level ${d.level===l?'selected':''}" onclick="setPostcardLevel('${l.replace(/'/g,"\\'")}')">${l}</button>`).join('');
+      const friendList=friends.length?friends.map(f=>`<button class="pc-friend ${d.toUid===f.uid?'selected':''}" onclick="setPostcardFriend('${f.uid}')"><span class="pc-friend-avatar">${avatarSvg(f.selectedAvatar||'classic',true,false,{cosmetic:f.equippedCosmetic||'',pet:''})}</span>${escHtml(f.displayName||'Usuario')}</button>`).join(''):'<div class="owner-empty" style="padding:14px;">Aún no tienes amigos. Agrega uno desde el botón 👥.</div>';
+      document.getElementById('postcard-composer').innerHTML=`
+        <div class="postcard" id="postcard-draft-card">
+          <div class="postcard-top"><div><div class="postcard-brand">FIND MY COFFEE · POSTAL</div><div class="postcard-cafe">${escHtml(d.cafe.name)}</div></div><div class="postcard-stamp">${pcStampFor(d.cafe.name)}</div></div>
+          ${rows}
+          <div class="pc-step ${rated?'show':''}"><div class="pc-label" style="margin-bottom:8px;">¿Qué tanto lo recomiendas?</div><div class="pc-levels">${levels}</div></div>
+          <div class="pc-step ${rated&&d.level?'show':''}"><div class="pc-label" style="margin-bottom:8px;">¿A qué amigo se la mandas?</div><div class="pc-friends">${friendList}</div></div>
+        </div>
+        <button class="pc-send" id="pc-send-btn" ${rated&&d.level&&d.toUid?'':'disabled'} onclick="sendPostcard()">Enviar postal ✈️</button>`;
+    }
+    function setPostcardRating(e,key,i){
+      let v=i;
+      if(PC_FIELDS[key].half){ const r=e.currentTarget.getBoundingClientRect(); if(e.clientX-r.left<r.width/2) v=i-0.5; }
+      postcardDraft[key]=v; renderPostcardComposer();
+    }
+    function setPostcardLevel(l){ postcardDraft.level=l; renderPostcardComposer(); }
+    function setPostcardFriend(uid){ postcardDraft.toUid=uid; renderPostcardComposer(); }
+    async function sendPostcard(){
+      const d=postcardDraft, btn=document.getElementById('pc-send-btn');
+      if(!d||!d.flavor||!d.ambience||!d.price||!d.level||!d.toUid) return;
+      btn.disabled=true; btn.textContent='Enviando…';
+      try{
+        await window.postcardApi.send({toUid:d.toUid,cafe:d.cafe,flavor:d.flavor,ambience:d.ambience,price:d.price,level:d.level});
+        const friend=(window.friendsState||[]).find(f=>f.uid===d.toUid);
+        document.getElementById('postcard-draft-card')?.classList.add('flying');
+        setTimeout(()=>{ closePostcardComposer(); showToast(`Postal enviada a ${friend?.displayName||'tu amigo'} ✈️`); },850);
+      }catch(e){ console.error(e); btn.disabled=false; btn.textContent='Enviar postal ✈️'; showToast(e.code==='permission-denied'?'Faltan permisos en Firestore para postales':'No se pudo enviar la postal'); }
+    }
+
+    // Recepción
+    function pendingPostcardsHtml(){
+      const pending=(window.postcardsState||[]).filter(p=>p.status==='pending');
+      if(!pending.length) return '';
+      return `<div class="sheet-section-title" style="margin-top:6px;">Postales nuevas</div>${pending.map(p=>`<div class="friend-request-card">${postcardMiniHtml(p,`openPostcardView('${p.id}')`)}<div class="friend-request-actions"><button class="accept" onclick="respondPostcard('${p.id}',true)">Aceptar</button><button class="reject" onclick="respondPostcard('${p.id}',false)">Rechazar</button></div></div>`).join('')}`;
+    }
+    async function respondPostcard(id,accepted){
+      try{ await window.postcardApi.respond(id,accepted); showToast(accepted?'Postal guardada en Mis postales 📬':'Postal rechazada'); if(accepted) setTimeout(()=>openPostcardView(id),300); }
+      catch(e){ console.error(e); showToast('No se pudo responder la postal'); }
+    }
+    function postcardAlbumsList(){ return [...new Set((window.postcardsState||[]).filter(p=>p.status==='accepted'&&p.album).map(p=>p.album))].sort((a,b)=>a.localeCompare(b,'es')); }
+    function openPostcardView(id){
+      const pc=(window.postcardsState||[]).find(p=>p.id===id); if(!pc) return;
+      const albums=postcardAlbumsList();
+      const actions = pc.status==='pending'
+        ? `<div class="friend-request-actions" style="margin-top:14px;"><button class="accept" onclick="closePostcardView();respondPostcard('${pc.id}',true)">Aceptar</button><button class="reject" onclick="closePostcardView();respondPostcard('${pc.id}',false)">Rechazar</button></div>`
+        : `<div class="pc-album-row"><select id="pc-album-select"><option value="">Sin álbum</option>${albums.map(a=>`<option value="${escHtml(a)}" ${pc.album===a?'selected':''}>${escHtml(a)}</option>`).join('')}<option value="__new">＋ Nuevo álbum…</option></select><button onclick="savePostcardAlbum('${pc.id}')">Guardar</button></div>`;
+      document.getElementById('postcard-view-content').innerHTML=postcardCardHtml(pc)+actions;
+      document.getElementById('postcard-view-overlay').classList.add('open');
+    }
+    function closePostcardView(e){ if(!e||e.target===document.getElementById('postcard-view-overlay')) document.getElementById('postcard-view-overlay').classList.remove('open'); }
+    async function savePostcardAlbum(id){
+      let album=document.getElementById('pc-album-select').value;
+      if(album==='__new'){ album=(prompt('Nombre del nuevo álbum')||'').trim(); if(!album) return; }
+      try{ await window.postcardApi.setAlbum(id,album); activeAlbum=album||'__none'; showToast(album?`Guardada en “${album}” ✓`:'Postal sin álbum'); closePostcardView(); }
+      catch(e){ console.error(e); showToast('No se pudo guardar en el álbum'); }
+    }
+
+    // Álbumes
+    function openPostcardAlbums(){ closeMainMenu(); if(isOwnerAccount()) return; renderPostcardAlbums(); document.getElementById('albums-overlay').classList.add('open'); }
+    function closePostcardAlbums(e){ if(!e||e.target===document.getElementById('albums-overlay')) document.getElementById('albums-overlay').classList.remove('open'); }
+    function setActiveAlbum(a){ activeAlbum=a; renderPostcardAlbums(); }
+    function renderPostcardAlbums(){
+      const tabs=document.getElementById('album-tabs'), grid=document.getElementById('album-grid'), pend=document.getElementById('albums-pending');
+      if(!tabs) return;
+      const accepted=(window.postcardsState||[]).filter(p=>p.status==='accepted');
+      const albums=postcardAlbumsList();
+      if(activeAlbum!=='__all'&&activeAlbum!=='__none'&&!albums.includes(activeAlbum)) activeAlbum='__all';
+      pend.innerHTML=pendingPostcardsHtml();
+      const tabList=[['__all',`Todas (${accepted.length})`],...albums.map(a=>[a,`${a} (${accepted.filter(p=>p.album===a).length})`]),['__none','Sin álbum']];
+      tabs.innerHTML=tabList.map(([id,label])=>`<button class="editor-tab ${activeAlbum===id?'active':''}" onclick="setActiveAlbum('${String(id).replace(/'/g,"\\'")}')">${escHtml(label)}</button>`).join('');
+      const shown=accepted.filter(p=>activeAlbum==='__all'||(activeAlbum==='__none'?!p.album:p.album===activeAlbum));
+      grid.innerHTML=shown.length?shown.map(p=>postcardMiniHtml(p,`openPostcardView('${p.id}')`)).join(''):`<div class="owner-empty" style="grid-column:1/-1;">${accepted.length?'No hay postales en este álbum.':'Aún no tienes postales. Cuando un amigo te recomiende un café, aparecerá aquí.'}</div>`;
+    }
+    function renderPostcardViews(){
+      const pending=(window.postcardsState||[]).filter(p=>p.status==='pending').length;
+      const b=document.getElementById('postcards-menu-badge'); if(b){ b.textContent=pending; b.classList.toggle('show',pending>0); }
+      if(window.renderFriendsDrawer) window.renderFriendsDrawer();
+      if(document.getElementById('albums-overlay')?.classList.contains('open')) renderPostcardAlbums();
+    }
+
+    // Vista anónima para la cuenta de la cafetería
+    function renderOwnerPostcardRecs(){
+      const root=document.getElementById('owner-postcard-recs'); if(!root) return;
+      const rows=window.ownerPostcardRecs||[];
+      if(!rows.length){ root.innerHTML='<div class="owner-empty-dashboard">Aún nadie ha mandado una postal de tu café.</div>'; return; }
+      const avg=k=>rows.reduce((t,r)=>t+(Number(r[k])||0),0)/rows.length;
+      const round=v=>Math.round(v*2)/2;
+      const avgs=Object.keys(PC_FIELDS).map(k=>`<div class="owner-pc-avg"><div class="pc-label">${PC_FIELDS[k].label}</div><strong>${avg(k).toFixed(1)}</strong>${pcIconsHtml(k,round(avg(k)),false,true)}<div class="pc-hint" style="opacity:.7">${pcCaption(k,Math.max(1,Math.round(avg(k)))).replace(/^.* · /,'')}</div></div>`).join('');
+      const levels=PC_LEVELS.map(l=>{const n=rows.filter(r=>r.level===l).length;return `<div class="survey-result-row"><span>${l}</span><div class="survey-result-track"><div class="survey-result-fill" style="width:${Math.round(n/rows.length*100)}%"></div></div><strong>${n}</strong></div>`;}).join('');
+      const recent=rows.slice().sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))).slice(0,5).map(r=>`<div class="recent-item"><div class="recent-name">Un cafetero · ${escHtml(r.level||'')}</div><div class="recent-meta" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">${Object.keys(PC_FIELDS).map(k=>pcIconsHtml(k,r[k],false,true)).join('')}<span>${r.createdAt?new Date(r.createdAt+'T12:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short'}):''}</span></div></div>`).join('');
+      root.innerHTML=`<div class="owner-updated" style="margin:0 0 10px;">${rows.length} postal${rows.length===1?'':'es'} mandada${rows.length===1?'':'s'} recomendando tu café.</div><div class="owner-pc-avgs">${avgs}</div>${levels}<div class="sheet-section-title" style="margin-top:14px;">Más recientes</div>${recent}`;
+    }
+
+    Object.assign(window,{openPostcardComposer,closePostcardComposer,setPostcardRating,setPostcardLevel,setPostcardFriend,sendPostcard,respondPostcard,openPostcardView,closePostcardView,savePostcardAlbum,openPostcardAlbums,closePostcardAlbums,setActiveAlbum,renderPostcardViews,renderOwnerPostcardRecs,pendingPostcardsHtml});
+
     window.friendsState=[]; window.friendRequestsState=[];
     function openFriendsDrawer(){ if (isOwnerAccount()) return; renderFriendsDrawer(); document.getElementById('friends-drawer-backdrop').classList.add('open'); }
     function closeFriendsDrawer(e){ if(!e || e.target===document.getElementById('friends-drawer-backdrop')) document.getElementById('friends-drawer-backdrop').classList.remove('open'); }
     function renderFriendsDrawer(){
       const friends=window.friendsState||[], reqs=window.friendRequestsState||[];
-      const badge=document.getElementById('friends-count'); if(badge){badge.textContent=reqs.length;badge.classList.toggle('show',reqs.length>0);}
+      const pendingPcs=(window.postcardsState||[]).filter(p=>p.status==='pending'); const totalBadge=reqs.length+pendingPcs.length;
+      const badge=document.getElementById('friends-count'); if(badge){badge.textContent=totalBadge;badge.classList.toggle('show',totalBadge>0);}
       const reqRoot=document.getElementById('friend-requests-section');
       reqRoot.innerHTML=reqs.length?`<div class="sheet-section-title">Solicitudes</div>${reqs.map(r=>`<div class="friend-request-card"><strong>${r.profile?.displayName||'Usuario'}</strong><div class="request-meta">quiere ser tu amigo</div><div class="friend-request-actions"><button class="accept" onclick="respondFriendRequest('${r.id}',true,'${r.fromUid}')">Aceptar</button><button class="reject" onclick="respondFriendRequest('${r.id}',false,'${r.fromUid}')">Rechazar</button></div></div>`).join('')}`:'';
+      reqRoot.innerHTML+=pendingPostcardsHtml();
       const capacity=Math.max(4,Math.ceil(Math.max(friends.length,1)/2)*2);
       let slots='';
       for(let i=0;i<capacity;i++){
         const f=friends[i];
-        if(!f){ slots+=`<div class="friend-slot"><span>Pasaporte disponible</span></div>`; continue; }
+        if(!f){ slots+=`<div class="friend-slot"><span>Espacio para amigo</span></div>`; continue; }
         const visits=Math.max(0,Number(f.visitedCount)||0);
         const pct=Math.max(0,Math.min(100,Math.round((visits/cafes.length)*100)));
         const age=f.profile?.birthYear?Math.max(0,new Date().getFullYear()-Number(f.profile.birthYear)):'—';
         const bgClass=f.selectedPassportBackground&&f.selectedPassportBackground!=='empty'?'bg-'+String(f.selectedPassportBackground).replace(/_/g,'-'):'';
         slots+=`<div class="friend-slot filled" onclick="openFriendPassport('${f.uid}')">
           <div class="friend-mini-passport ${bgClass}">
-            <div class="friend-mini-header"><span>PASAPORTE · HERMOSILLO</span><span>AMIGO</span></div>
+            <div class="friend-mini-header"><span>PERFIL CAFETERO</span><span>AMIGO</span></div>
             <div class="friend-mini-body">
               <div class="friend-mini-avatar">${avatarSvg(f.selectedAvatar||'classic',true,false,{cosmetic:f.equippedCosmetic||'',pet:f.selectedPet||''})}</div>
               <div class="friend-mini-data">
@@ -5584,7 +5880,7 @@ window.doCheckin = async function() {
         document.getElementById('friend-passport-content').innerHTML=`
           <div class="friend-passport-view">
             <div class="friend-passport-card ${bgClass}">
-              <div class="id-card-header"><span class="id-card-country">PASAPORTE · HERMOSILLO</span><span class="id-card-type">AMIGO</span></div>
+              <div class="id-card-header"><span class="id-card-country">PERFIL CAFETERO</span><span class="id-card-type">AMIGO</span></div>
               <div class="friend-passport-body">
                 <div class="friend-passport-avatar">${avatarSvg(p.selectedAvatar||'classic',false,false,{cosmetic:p.equippedCosmetic||'',pet:p.selectedPet||''})}</div>
                 <div class="friend-passport-fields">
@@ -5602,7 +5898,7 @@ window.doCheckin = async function() {
             </div>
           </div>`;
         document.getElementById('friend-passport-overlay').classList.add('open');
-      }catch(e){console.error(e);showToast('No se pudo abrir el pasaporte');}
+      }catch(e){console.error(e);showToast('No se pudo abrir el perfil');}
     }
     function closeFriendPassport(e){if(!e||e.target===document.getElementById('friend-passport-overlay'))document.getElementById('friend-passport-overlay').classList.remove('open');}
     function openFriendMedals(){const slots=Array.from({length:20},(_,i)=>`<div class="medal-slot locked" title="Espacio de medalla ${i+1}"></div>`).join('');document.getElementById('friend-medals-content').innerHTML=`<div class="medals-slots">${slots}</div><div class="medals-help">Aún no hay medallas disponibles.</div>`;document.getElementById('friend-medals-overlay').classList.add('open');}

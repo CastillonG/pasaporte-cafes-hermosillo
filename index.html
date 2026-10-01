@@ -42,6 +42,48 @@
     .fmc-home { position:absolute; bottom:9px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:5px; background:#55555a; }
     .fmc-caption { font:600 13px -apple-system, 'Segoe UI', sans-serif; color:rgba(245,234,216,.7); }
     .fmc-caption a { color:#e0b389; margin-left:8px; }
+
+    /* ── PASAPORTE / COFFEEPOINTS / PAQUETES ── */
+    .sheet-passport-badge { display:none; flex-shrink:0; margin-left:auto; margin-right:10px; width:34px; height:42px; transform:rotate(8deg); filter:drop-shadow(0 3px 5px rgba(62,31,14,.3)); }
+    .sheet-passport-badge.show { display:block; }
+    .sheet-passport-badge svg { width:100%; height:100%; }
+    .coffeepoints-card { display:flex; align-items:center; gap:12px; margin:0 auto 18px; max-width:640px; padding:14px 16px; border-radius:18px; background:linear-gradient(135deg,#3e1f0e,#7a3f25); color:var(--cream); box-shadow:0 8px 20px rgba(62,31,14,.18); }
+    .cp-coin { width:46px; height:46px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:22px; background:radial-gradient(circle at 35% 30%,#ffe8a3,#c9a227 60%,#8a6a12); box-shadow:inset 0 -3px 0 rgba(0,0,0,.18), 0 0 0 3px rgba(255,255,255,.12); }
+    .cp-main { flex:1; min-width:0; }
+    .cp-value { font:700 24px 'Playfair Display',serif; line-height:1; }
+    .cp-label { font-size:11px; letter-spacing:1.2px; font-weight:800; text-transform:uppercase; color:var(--sand); margin-top:4px; }
+    .cp-sub { font-size:12px; color:rgba(245,234,216,.8); margin-top:4px; }
+    .cp-btn { border:0; border-radius:12px; padding:9px 12px; background:var(--cream); color:var(--espresso); font:800 12px 'DM Sans',sans-serif; cursor:pointer; flex-shrink:0; }
+    .store-balance { display:inline-flex; align-items:center; gap:8px; margin-top:12px; padding:7px 12px; border-radius:999px; background:rgba(255,255,255,.14); font-weight:800; font-size:13px; }
+    .store-buy.points-short { background:rgba(122,63,37,.12); color:var(--espresso); }
+    .store-price-pts { display:inline-flex; align-items:center; gap:4px; }
+    .pack-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
+    .pack-card { position:relative; border-radius:20px; padding:18px; background:#fff; border:1.5px solid rgba(122,63,37,.16); overflow:hidden; }
+    .pack-card.premium { background:linear-gradient(160deg,#2a140a,#5c2e18 60%,#7a3f25); color:var(--cream); border-color:#c9a227; }
+    .pack-tag { display:inline-block; padding:4px 9px; border-radius:999px; font:800 10px 'DM Sans',sans-serif; letter-spacing:1px; text-transform:uppercase; background:rgba(122,63,37,.1); color:var(--espresso); }
+    .pack-card.premium .pack-tag { background:#c9a227; color:#2a140a; }
+    .pack-title { font:700 21px 'Playfair Display',serif; margin:10px 0 4px; }
+    .pack-price { font:800 15px 'DM Sans',sans-serif; color:var(--green); }
+    .pack-card.premium .pack-price { color:#f3d27a; }
+    .pack-art { display:flex; gap:-8px; margin:12px 0; height:54px; }
+    .pack-art .mini-pc { width:58px; height:40px; border-radius:5px; background:#f7eedb; border:1.5px solid #c9a227; box-shadow:0 3px 8px rgba(62,31,14,.18); margin-right:-26px; position:relative; }
+    .pack-art .mini-pc::after { content:'✈'; position:absolute; right:5px; bottom:2px; font-size:13px; color:#3e1f0e; }
+    .pack-art .mini-pc:nth-child(odd) { transform:rotate(-7deg); } .pack-art .mini-pc:nth-child(even) { transform:rotate(6deg) translateY(4px); }
+    .pack-benefits { list-style:none; padding:0; margin:12px 0 4px; display:grid; gap:8px; font-size:13px; line-height:1.4; }
+    .pack-benefits li { display:flex; gap:9px; align-items:flex-start; }
+    .pack-benefits li span:first-child { flex-shrink:0; width:22px; text-align:center; }
+    .pack-fine { font-size:11px; opacity:.7; margin-top:8px; }
+    .pack-btn { width:100%; margin-top:14px; min-height:46px; border:0; border-radius:14px; background:var(--espresso); color:var(--cream); font:800 14px 'DM Sans',sans-serif; cursor:pointer; transition:transform .15s; }
+    .pack-card.premium .pack-btn { background:#c9a227; color:#2a140a; }
+    .pack-btn:active { transform:scale(.97); }
+    .pack-btn.nope { animation:packNope .4s; }
+    @keyframes packNope { 0%,100%{transform:none} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+    .pc-quota { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; padding:9px 12px; border-radius:12px; background:rgba(201,162,39,.12); color:var(--espresso); font-size:12px; font-weight:700; }
+    .pc-quota strong { color:var(--dark); }
+    .pc-limit { text-align:center; padding:22px 12px 8px; color:var(--espresso); }
+    .pc-limit .big { font-size:44px; }
+    .pc-limit h3 { font:700 20px 'Playfair Display',serif; color:var(--dark); margin:8px 0 6px; }
+    .pc-limit p { font-size:13px; line-height:1.5; opacity:.85; }
   </style>
   <title>Find My Coffee — Hermosillo</title>
 
@@ -619,6 +661,7 @@
     }
 
     .stamp-item {
+      position: relative;
       background: var(--foam);
       border: 2px dashed rgba(122,63,37,.2);
       border-radius: 14px;
@@ -2655,6 +2698,8 @@
       <button class="passport-effects-btn" onclick="openStampAnimationModal()" aria-label="Elegir efectos del sello">✨ Efectos</button>
     </div>
 
+    <div class="coffeepoints-card" id="coffeepoints-card"></div>
+
     <div class="passport-cover">
       <h2>MI RUTA CAFETERA</h2>
       <div class="subtitle">HERMOSILLO, SONORA</div>
@@ -2757,6 +2802,7 @@
       <div class="sheet-handle"></div>
       <div class="sheet-header">
         <h2 id="sheet-name">—</h2>
+        <span class="sheet-passport-badge" id="sheet-passport-badge" title="Pasaporte del café"><svg viewBox="0 0 34 42" aria-hidden="true"><rect x="2" y="2" width="30" height="38" rx="4" fill="#6b2a1a" stroke="#3e1308" stroke-width="1.5"/><rect x="5" y="2" width="2" height="38" fill="#4d1c10"/><circle cx="18.5" cy="17" r="8.5" fill="none" stroke="#e0b23a" stroke-width="1.3"/><path d="M14 14.5h8v3.6a4 4 0 0 1-4 4a4 4 0 0 1-4-4z" fill="#e0b23a"/><path d="M22 15.6h1.3a1.6 1.6 0 0 1 0 3.2H22" fill="none" stroke="#e0b23a" stroke-width="1.1"/><path d="M16.4 12.6c-.6-1 .6-1.6 0-2.6M19.4 12.6c-.6-1 .6-1.6 0-2.6" stroke="#e0b23a" stroke-width=".9" fill="none" stroke-linecap="round"/><path d="M11 31h15M13 34.5h11" stroke="#e0b23a" stroke-width="1.1" stroke-linecap="round" opacity=".8"/></svg></span>
         <button class="sheet-close" onclick="closeOverlay()">✕</button>
       </div>
       <div class="sheet-address" id="sheet-address">📍 —</div>
@@ -2968,6 +3014,16 @@
           <span class="settings-slider"></span>
         </label>
       </div>
+      <div class="settings-card" id="settings-passport-card" style="margin-top:10px;">
+        <div>
+          <div class="settings-title">Modo Pasaporte</div>
+          <div class="settings-desc">Muestra en el mapa y en tu ruta solo los cafés con la etiqueta “Pasaporte del café”.</div>
+        </div>
+        <label class="settings-switch">
+          <input type="checkbox" id="passport-mode-toggle" onchange="togglePassportMode(this.checked)">
+          <span class="settings-slider"></span>
+        </label>
+      </div>
       <div class="owner-empty-dashboard" id="settings-owner-empty" style="display:none;">No hay configuraciones disponibles para cuentas de cafetería por ahora.</div>
     </div>
   </div>
@@ -3005,9 +3061,9 @@
     <div class="cafe-sheet modal-sheet">
       <div class="sheet-handle"></div>
       <div class="sheet-header"><div></div><button class="sheet-close" onclick="closeStore()" aria-label="Cerrar tienda" title="Cerrar tienda (Esc)">✕</button></div>
-      <div class="store-hero"><h2>La Tiendita de Find My Coffee</h2><p>Haz que tu perfil se sienta completamente tuyo.</p></div>
+      <div class="store-hero"><h2>La Tiendita de Find My Coffee</h2><p>Canjea tus CoffeePoints por cosméticos. Ganas 5 por cada postal que mandas.</p><div class="store-balance" id="store-balance">☕ 0 CoffeePoints</div></div>
       <div id="store-all-sections"></div>
-      <div class="store-note">Prototipo: los artículos se desbloquean sin realizar un cobro real.</div>
+      <div class="store-note">Los paquetes de postales y la suscripción todavía no están disponibles; se muestran como vista previa.</div>
     </div>
   </div>
 
@@ -3256,6 +3312,8 @@
           selectedPet = snap.data().selectedPet || '';
           selectedStampStyle = snap.data().selectedStampStyle || 'coffee';
           nearestCafeEnabled = snap.data().nearestCafeEnabled !== false;
+          applyCoffeeData(snap.data());
+          if (window.applyPassportMode) window.applyPassportMode();
         } else {
           // New user — always start at zero
           visited = {};
@@ -3294,6 +3352,10 @@
           selectedPet = snap.data().selectedPet || '';
           selectedStampStyle = snap.data().selectedStampStyle || 'coffee';
           nearestCafeEnabled = snap.data().nearestCafeEnabled !== false;
+          const prevPassportMode = passportModeEnabled;
+          applyCoffeeData(snap.data());
+          if (prevPassportMode !== passportModeEnabled && window.applyPassportMode) window.applyPassportMode();
+          if (window.renderCoffeePointsCard) window.renderCoffeePointsCard();
           renderPassportCharacter();
           if (window.updateStampAnimationSummary) window.updateStampAnimationSummary();
           renderPassportBackground();
@@ -3664,7 +3726,7 @@
     window.saveStoreCustomization = async function() {
       setSyncDot('syncing');
       try {
-        const data = { ownedStoreItems, equippedCosmetic, selectedPet, selectedStampStyle, selectedPassportBackground };
+        const data = { ownedStoreItems, equippedCosmetic, selectedPet, selectedStampStyle, selectedPassportBackground, coffeePoints };
         if (CONFIGURED && currentUser) {
           await setDoc(doc(db, 'users', currentUser.uid), data, { merge:true });
         } else {
@@ -3675,6 +3737,11 @@
         }
         setSyncDot('synced');
       } catch(e) { console.error(e); setSyncDot(''); throw e; }
+    };
+
+    // ── Firestore: preferencias y CoffeePoints ──
+    window.saveUserPrefs = async function(data) {
+      if (CONFIGURED && currentUser) await setDoc(doc(db, 'users', currentUser.uid), data, { merge:true });
     };
 
     // ── Firestore: save nearest-cafe preference ──
@@ -3812,6 +3879,11 @@
       selectedPet = localStorage.getItem('cafeSelectedPet') || '';
       selectedStampStyle = localStorage.getItem('cafeSelectedStampStyle') || 'coffee';
       nearestCafeEnabled = localStorage.getItem('cafeNearestEnabled') !== 'false';
+      try { applyCoffeeData(JSON.parse(localStorage.getItem('cafeCoffeeData') || '{}')); } catch (e) {}
+      window.saveUserPrefs = function(data) {
+        const cur = JSON.parse(localStorage.getItem('cafeCoffeeData') || '{}');
+        localStorage.setItem('cafeCoffeeData', JSON.stringify({ ...cur, ...data }));
+      };
       window.saveCheckin = function(cafeName) {
         localStorage.setItem('cafeVisited', JSON.stringify(visited));
       };
@@ -3844,6 +3916,7 @@
         localStorage.setItem('cafeEquippedCosmetic', equippedCosmetic);
         localStorage.setItem('cafeSelectedPet', selectedPet);
         localStorage.setItem('cafeSelectedStampStyle', selectedStampStyle);
+        window.saveUserPrefs({ coffeePoints });
       };
       updateUserUI({ displayName:'Invitado', email:'Sin cuenta', photoURL: null });
       initMap();
@@ -4042,39 +4115,39 @@
     // DATA
     // ──────────────────────────────────────────────
     const cafes = [
-      { name:"211 Barra Café", address:"C. Benito Juárez 211, Issste Federal", coords:[29.105567,-110.952852], menu:["Espresso","Cappuccino","Té","Pasteles"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"10–18"} },
-      { name:"Ágape Café", ownerEmail:"kelitzkeliton@gmail.com", address:"Av. Saturnino Campoy 869-GG, Álvaro Obregón", coords:[29.103832,-111.006329], branches:[], menu:["Cold Brew","Latte","Sándwiches","Waffles"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
-      { name:"Aletto Café", address:"Av. Dr. Ignacio Pesqueira 608-A, Las Quintas", coords:[29.084816,-110.991711], menu:["V60","Aeropress","Croissants","Matcha"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–20",dom:"10–17"} },
-      { name:"Café Central", address:"Blvd. Miguel Hidalgo 63, El Centenario", coords:[29.076014,-110.961434], menu:["Americano","Café de Olla","Pan de Dulce"], hours:{lun:"7–21",mar:"7–21",mie:"7–21",jue:"7–21",vie:"7–22",sab:"8–22",dom:"9–18"} },
-      { name:"Cafelita", address:"Av. Tehuantepec 53, El Centenario", coords:[29.073757,-110.959006], menu:["Espresso","Muffins","Licuados","Tés"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"9–17"} },
-      { name:"ROOCÖ Café", address:"Plaza Navarrete Local 22, Montebello", coords:[29.089559,-110.990957], menu:["Specialty Coffee","Tapioca","Matcha Latte"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
-      { name:"Flor del Desierto Café", address:"Banús 4D, Insurgentes", coords:[29.144872,-110.961260], menu:["Cold Brew","Frappé","Tamales","Pan"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–20",dom:"Cerrado"} },
-      { name:"Clarity - Brew Bar", address:"Av. San Luis Potosí 211-B, San Benito", coords:[29.089694,-110.965569], menu:["Pour Over","Chemex","Filtrado","Pasteles"], hours:{lun:"8–19",mar:"8–19",mie:"8–19",jue:"8–19",vie:"8–20",sab:"9–20",dom:"10–15"} },
-      { name:"Colibrí Café", address:"Segunda de Obregón 140, El Centenario", coords:[29.077396,-110.958316], menu:["Café Mexicano","Horchata","Burritos","Pan"], hours:{lun:"7–21",mar:"7–21",mie:"7–21",jue:"7–21",vie:"7–22",sab:"8–22",dom:"9–19"} },
-   { name:"Culto al Perro Café – Tostador de Café en Hermosillo", address:"General Piña y Cuernavaca 151, Av. Zacatecas, San Benito, 83190 Hermosillo, Son.", coords:[29.0895,-110.9645], menu:["Espresso","Dog-Friendly","Galletas","Tés"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
-      { name:"Dante y Nova Café", address:"Pbro. Pedro Villegas Ramírez 2, Col del Razo", coords:[29.076618,-110.947631], menu:["Latte Art","Filtrados","Scones","Quiche"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"10–18"} },
-      { name:"Dos Raíces Casa Tostadora", address:"Benito Quintana 20, Constitución", coords:[29.100452,-110.950297], menu:["Single Origin","Café Verde","Tostados","Granos"], hours:{lun:"9–19",mar:"9–19",mie:"9–19",jue:"9–19",vie:"9–20",sab:"10–18",dom:"Cerrado"} },
-      { name:"El Chapucero | Café", address:"Blvd. Miguel Hidalgo 60, El Centenario", coords:[29.075265,-110.961415], menu:["Americano","Brownies","Sandwich","Granola"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
-      { name:"El Idilio Café", address:"Av. Gastón Madrid 157-2, San Benito", coords:[29.088434,-110.963335], menu:["Latte","Avocado Toast","Smoothies","Matcha"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
-      { name:"Enclave Libros y Café", address:"Calle José María Yáñez 136A, Centro", coords:[29.080131,-110.956635], menu:["Café","Libros","Charlas","Tés"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
-      { name:"Griegos Cafe Grand Kino", address:"Blvd. Fco. Eusebio Kino 315, Country Club", coords:[29.097279,-110.938294], menu:["Gyros","Espresso","Tzatziki","Croissants"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–18"} },
-      { name:"HORIZON COFFEE HOUSE", address:"Plaza Universidad, Blvd. Luis D. Colosio 158", coords:[29.079920,-110.963149], menu:["Pour Over","Batch Brew","Waffles","Granola"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–20"} },
-      { name:"Josefina Cafe", address:"Av. Guillermo Prieto 22, Constitución", coords:[29.100127,-110.950148], menu:["Café de la Abuela","Pan Casero","Atole","Tamales"], hours:{lun:"7–20",mar:"7–20",mie:"7–20",jue:"7–20",vie:"7–21",sab:"8–21",dom:"9–17"} },
-  { name:"Maleducados", address:"Felicitas Zermeño 41, Centro, 83010 Hermosillo, Son.", coords:[29.093120186930836,-110.94834301525984], menu:["Espresso","Cocteles Café","Pan Artesanal"], hours:{lun:"9–22",mar:"9–22",mie:"9–22",jue:"9–22",vie:"9–24",sab:"10–24",dom:"11–20"} },
-      { name:"MASALA CAFÉ", address:"Blvd. José María Morelos 389, Sacramento", coords:[29.129456,-110.951330], menu:["Chai Latte","Curry","Especias","Pan Pita"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
-      { name:"Café Modular", address:"La Jolla Ote. 90, Lomas Altas", coords:[29.107736,-110.936426], menu:["Cold Brew","Kombucha","Avocado Toast","Bowl"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
-      { name:"Órbita Anticafé", address:"C. Mina 37, Cerro de la Campana", coords:[29.074456,-110.955275], menu:["Tiempo Libre","Juegos","Café Incluido","Snacks"], hours:{lun:"10–22",mar:"10–22",mie:"10–22",jue:"10–22",vie:"10–24",sab:"11–24",dom:"11–21"} },
-      { name:"Perséfone Café", address:"Blvd. Valentín Gómez Farías 57-J, Periodista", coords:[29.104687,-110.949439], menu:["Filtrado","Espresso","Banana Bread","Brownies"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
-      { name:"Pura Vida - Cafeteria & Brunch", address:"Dr. Hoeffer 19, El Centenario", coords:[29.076335,-110.960077], menu:["Brunch","Smoothie Bowl","Tostadas","Jugos"], hours:{lun:"8–16",mar:"8–16",mie:"8–16",jue:"8–16",vie:"8–17",sab:"9–17",dom:"9–15"} },
-      { name:"Renacer Café", address:"Av. Tehuantepec 61, El Centenario", coords:[29.073682,-110.959915], menu:["Americano","Frappés","Repostería","Atole"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"9–19"} },
-      { name:"Social Café", address:"Blvd. Luis Donaldo Colosio 914-L5, La Manga", coords:[29.081208,-111.030319], menu:["Cold Brew","Açaí Bowl","Tostadas","Matcha"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
-      { name:"Sonora Classic Rock Café", address:"C. Benito Juárez 431, Sacramento", coords:[29.119342,-110.952766], menu:["Americano","Hot Dog","Nachos","Cocteles"], hours:{lun:"Cerrado",mar:"14–23",mie:"14–23",jue:"14–23",vie:"14–01",sab:"14–01",dom:"14–21"} },
-      { name:"Tertulia Café", address:"Blvd. Valentín Gómez Farías 102, Periodista", coords:[29.108751,-110.949949], menu:["Filtrado","Charlas","Libros","Pan Artesanal"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
-      { name:"Tomomi Café", address:"C. Juan Aldama 13, San Benito", coords:[29.090454,-110.963957], menu:["Matcha","Mochi","Café Japonés","Onigiri"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
-      { name:"zanati coffee and tea house", address:"Oposura 153, Centro", coords:[29.073770,-110.955393], menu:["Té de Especialidad","Single Origin","Oolong","Pan"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
-      { name:"Casazul coffee and bakery", address:"Av. Campeche 1875, Bahía de Kino", coords:[28.861529,-112.008140], menu:["Pan Artesanal","Espresso","Pasteles","Jugos"], hours:{lun:"8–18",mar:"8–18",mie:"8–18",jue:"8–18",vie:"8–19",sab:"9–19",dom:"9–16"} },
-      { name:"Meri Meri Coffee Community", address:"Blvd. Manlio Fabio Beltrones 717, San Carlos", coords:[27.962812,-111.026543], menu:["Specialty Coffee","Malteadas","Pancakes","Tacos"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–20"} },
-      { name:"PALOMINA COFFEE SHOP", address:"Los Pinitos, Sonora", coords:[29.235063,-110.887409], menu:["Café de Rancho","Atole","Pan Sonorense","Burritos"], hours:{lun:"7–19",mar:"7–19",mie:"7–19",jue:"7–19",vie:"7–20",sab:"8–20",dom:"8–17"} }
+      { tags:["Pasaporte del café"], name:"211 Barra Café", address:"C. Benito Juárez 211, Issste Federal", coords:[29.105567,-110.952852], menu:["Espresso","Cappuccino","Té","Pasteles"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"10–18"} },
+      { tags:["Pasaporte del café"], name:"Ágape Café", ownerEmail:"kelitzkeliton@gmail.com", address:"Av. Saturnino Campoy 869-GG, Álvaro Obregón", coords:[29.103832,-111.006329], branches:[], menu:["Cold Brew","Latte","Sándwiches","Waffles"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { tags:["Pasaporte del café"], name:"Aletto Café", address:"Av. Dr. Ignacio Pesqueira 608-A, Las Quintas", coords:[29.084816,-110.991711], menu:["V60","Aeropress","Croissants","Matcha"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–20",dom:"10–17"} },
+      { tags:["Pasaporte del café"], name:"Café Central", address:"Blvd. Miguel Hidalgo 63, El Centenario", coords:[29.076014,-110.961434], menu:["Americano","Café de Olla","Pan de Dulce"], hours:{lun:"7–21",mar:"7–21",mie:"7–21",jue:"7–21",vie:"7–22",sab:"8–22",dom:"9–18"} },
+      { tags:["Pasaporte del café"], name:"Cafelita", address:"Av. Tehuantepec 53, El Centenario", coords:[29.073757,-110.959006], menu:["Espresso","Muffins","Licuados","Tés"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"9–17"} },
+      { tags:["Pasaporte del café"], name:"ROOCÖ Café", address:"Plaza Navarrete Local 22, Montebello", coords:[29.089559,-110.990957], menu:["Specialty Coffee","Tapioca","Matcha Latte"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
+      { tags:["Pasaporte del café"], name:"Flor del Desierto Café", address:"Banús 4D, Insurgentes", coords:[29.144872,-110.961260], menu:["Cold Brew","Frappé","Tamales","Pan"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–20",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Clarity - Brew Bar", address:"Av. San Luis Potosí 211-B, San Benito", coords:[29.089694,-110.965569], menu:["Pour Over","Chemex","Filtrado","Pasteles"], hours:{lun:"8–19",mar:"8–19",mie:"8–19",jue:"8–19",vie:"8–20",sab:"9–20",dom:"10–15"} },
+      { tags:["Pasaporte del café"], name:"Colibrí Café", address:"Segunda de Obregón 140, El Centenario", coords:[29.077396,-110.958316], menu:["Café Mexicano","Horchata","Burritos","Pan"], hours:{lun:"7–21",mar:"7–21",mie:"7–21",jue:"7–21",vie:"7–22",sab:"8–22",dom:"9–19"} },
+   { tags:["Pasaporte del café"], name:"Culto al Perro Café – Tostador de Café en Hermosillo", address:"General Piña y Cuernavaca 151, Av. Zacatecas, San Benito, 83190 Hermosillo, Son.", coords:[29.0895,-110.9645], menu:["Espresso","Dog-Friendly","Galletas","Tés"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
+      { tags:["Pasaporte del café"], name:"Dante y Nova Café", address:"Pbro. Pedro Villegas Ramírez 2, Col del Razo", coords:[29.076618,-110.947631], menu:["Latte Art","Filtrados","Scones","Quiche"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"10–18"} },
+      { tags:["Pasaporte del café"], name:"Dos Raíces Casa Tostadora", address:"Benito Quintana 20, Constitución", coords:[29.100452,-110.950297], menu:["Single Origin","Café Verde","Tostados","Granos"], hours:{lun:"9–19",mar:"9–19",mie:"9–19",jue:"9–19",vie:"9–20",sab:"10–18",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"El Chapucero | Café", address:"Blvd. Miguel Hidalgo 60, El Centenario", coords:[29.075265,-110.961415], menu:["Americano","Brownies","Sandwich","Granola"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { tags:["Pasaporte del café"], name:"El Idilio Café", address:"Av. Gastón Madrid 157-2, San Benito", coords:[29.088434,-110.963335], menu:["Latte","Avocado Toast","Smoothies","Matcha"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { tags:["Pasaporte del café"], name:"Enclave Libros y Café", address:"Calle José María Yáñez 136A, Centro", coords:[29.080131,-110.956635], menu:["Café","Libros","Charlas","Tés"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
+      { tags:["Pasaporte del café"], name:"Griegos Cafe Grand Kino", address:"Blvd. Fco. Eusebio Kino 315, Country Club", coords:[29.097279,-110.938294], menu:["Gyros","Espresso","Tzatziki","Croissants"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–18"} },
+      { tags:["Pasaporte del café"], name:"HORIZON COFFEE HOUSE", address:"Plaza Universidad, Blvd. Luis D. Colosio 158", coords:[29.079920,-110.963149], menu:["Pour Over","Batch Brew","Waffles","Granola"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–20"} },
+      { tags:["Pasaporte del café"], name:"Josefina Cafe", address:"Av. Guillermo Prieto 22, Constitución", coords:[29.100127,-110.950148], menu:["Café de la Abuela","Pan Casero","Atole","Tamales"], hours:{lun:"7–20",mar:"7–20",mie:"7–20",jue:"7–20",vie:"7–21",sab:"8–21",dom:"9–17"} },
+  { tags:["Pasaporte del café"], name:"Maleducados", address:"Felicitas Zermeño 41, Centro, 83010 Hermosillo, Son.", coords:[29.093120186930836,-110.94834301525984], menu:["Espresso","Cocteles Café","Pan Artesanal"], hours:{lun:"9–22",mar:"9–22",mie:"9–22",jue:"9–22",vie:"9–24",sab:"10–24",dom:"11–20"} },
+      { tags:["Pasaporte del café"], name:"MASALA CAFÉ", address:"Blvd. José María Morelos 389, Sacramento", coords:[29.129456,-110.951330], menu:["Chai Latte","Curry","Especias","Pan Pita"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
+      { tags:["Pasaporte del café"], name:"Café Modular", address:"La Jolla Ote. 90, Lomas Altas", coords:[29.107736,-110.936426], menu:["Cold Brew","Kombucha","Avocado Toast","Bowl"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { tags:["Pasaporte del café"], name:"Órbita Anticafé", address:"C. Mina 37, Cerro de la Campana", coords:[29.074456,-110.955275], menu:["Tiempo Libre","Juegos","Café Incluido","Snacks"], hours:{lun:"10–22",mar:"10–22",mie:"10–22",jue:"10–22",vie:"10–24",sab:"11–24",dom:"11–21"} },
+      { tags:["Pasaporte del café"], name:"Perséfone Café", address:"Blvd. Valentín Gómez Farías 57-J, Periodista", coords:[29.104687,-110.949439], menu:["Filtrado","Espresso","Banana Bread","Brownies"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
+      { tags:["Pasaporte del café"], name:"Pura Vida - Cafeteria & Brunch", address:"Dr. Hoeffer 19, El Centenario", coords:[29.076335,-110.960077], menu:["Brunch","Smoothie Bowl","Tostadas","Jugos"], hours:{lun:"8–16",mar:"8–16",mie:"8–16",jue:"8–16",vie:"8–17",sab:"9–17",dom:"9–15"} },
+      { tags:["Pasaporte del café"], name:"Renacer Café", address:"Av. Tehuantepec 61, El Centenario", coords:[29.073682,-110.959915], menu:["Americano","Frappés","Repostería","Atole"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"9–19"} },
+      { tags:["Pasaporte del café"], name:"Social Café", address:"Blvd. Luis Donaldo Colosio 914-L5, La Manga", coords:[29.081208,-111.030319], menu:["Cold Brew","Açaí Bowl","Tostadas","Matcha"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
+      { tags:["Pasaporte del café"], name:"Sonora Classic Rock Café", address:"C. Benito Juárez 431, Sacramento", coords:[29.119342,-110.952766], menu:["Americano","Hot Dog","Nachos","Cocteles"], hours:{lun:"Cerrado",mar:"14–23",mie:"14–23",jue:"14–23",vie:"14–01",sab:"14–01",dom:"14–21"} },
+      { tags:["Pasaporte del café"], name:"Tertulia Café", address:"Blvd. Valentín Gómez Farías 102, Periodista", coords:[29.108751,-110.949949], menu:["Filtrado","Charlas","Libros","Pan Artesanal"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
+      { tags:["Pasaporte del café"], name:"Tomomi Café", address:"C. Juan Aldama 13, San Benito", coords:[29.090454,-110.963957], menu:["Matcha","Mochi","Café Japonés","Onigiri"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
+      { tags:["Pasaporte del café"], name:"zanati coffee and tea house", address:"Oposura 153, Centro", coords:[29.073770,-110.955393], menu:["Té de Especialidad","Single Origin","Oolong","Pan"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
+      { tags:["Pasaporte del café"], name:"Casazul coffee and bakery", address:"Av. Campeche 1875, Bahía de Kino", coords:[28.861529,-112.008140], menu:["Pan Artesanal","Espresso","Pasteles","Jugos"], hours:{lun:"8–18",mar:"8–18",mie:"8–18",jue:"8–18",vie:"8–19",sab:"9–19",dom:"9–16"} },
+      { tags:["Pasaporte del café"], name:"Meri Meri Coffee Community", address:"Blvd. Manlio Fabio Beltrones 717, San Carlos", coords:[27.962812,-111.026543], menu:["Specialty Coffee","Malteadas","Pancakes","Tacos"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–20"} },
+      { tags:["Pasaporte del café"], name:"PALOMINA COFFEE SHOP", address:"Los Pinitos, Sonora", coords:[29.235063,-110.887409], menu:["Café de Rancho","Atole","Pan Sonorense","Burritos"], hours:{lun:"7–19",mar:"7–19",mie:"7–19",jue:"7–19",vie:"7–20",sab:"8–20",dom:"8–17"} }
     ];
 
     const MEDALS = [];
@@ -4103,6 +4176,7 @@
       { id:'heart_head_friend', category:'pets', name:'Amigo Corazón', desc:'Mascota de cabeza roja en forma de corazón, cuerpo azul y estilo garabato.', price:45 },
       { id:'nova_dog', category:'pets', name:'NOVA', desc:'Perrito tipo husky, de estilo ilustrado y expresión amigable.', price:52 }
     ];
+    const storePoints = item => Math.ceil(item.price / 5) * 5;
     const STORE_CATEGORIES = [
       { id:'cosmetics', name:'Cosméticos' }, { id:'backgrounds', name:'Fondos' },
       { id:'stamps', name:'Sellos' }, { id:'pets', name:'Mascotas' }
@@ -4132,6 +4206,26 @@
     let selectedPet = '';
     let selectedStampStyle = 'coffee';
     let nearestCafeEnabled = true;
+    let passportModeEnabled = false;
+    // CoffeePoints: 5 por postal, 1 postal diaria (la suscripción daría 3; aún no está activa).
+    const PASSPORT_TAG = 'Pasaporte del café';
+    const POSTCARD_POINTS = 5;
+    const DAILY_POSTCARDS = 1;
+    let coffeePoints = 0;
+    let postcardDay = '';
+    let postcardsToday = 0;
+    function isPassportCafe(c) { return !!(c && Array.isArray(c.tags) && c.tags.includes(PASSPORT_TAG)); }
+    function visibleCafes() { return passportModeEnabled ? cafes.filter(isPassportCafe) : cafes; }
+    function todayKey() { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+    function postcardsUsedToday() { return postcardDay === todayKey() ? postcardsToday : 0; }
+    function postcardsLeftToday() { return Math.max(0, DAILY_POSTCARDS - postcardsUsedToday()); }
+    function applyCoffeeData(d) {
+      coffeePoints = Math.max(0, Number(d.coffeePoints) || 0);
+      postcardDay = d.postcardDay || '';
+      postcardsToday = Number(d.postcardsToday) || 0;
+      passportModeEnabled = d.passportModeEnabled === true;
+    }
+    window.isPassportCafe = isPassportCafe;
     // En cada carga nueva de la página puede mostrarse una sola vez,
     // siempre que el usuario lo tenga activado y no sea una cuenta owner.
     let nearestCafeOfferAttempted = false;
@@ -4393,6 +4487,10 @@
       const owner = isOwnerAccount();
       const toggle = document.getElementById('nearest-cafe-toggle');
       if (toggle) toggle.checked = nearestCafeEnabled;
+      const passportToggle = document.getElementById('passport-mode-toggle');
+      if (passportToggle) passportToggle.checked = passportModeEnabled;
+      const passportCard = document.getElementById('settings-passport-card');
+      if (passportCard) passportCard.style.display = owner ? 'none' : 'flex';
       const nearestCard = document.getElementById('settings-nearest-card');
       const settingsEmpty = document.getElementById('settings-owner-empty');
       if (nearestCard) nearestCard.style.display = owner ? 'none' : 'flex';
@@ -4414,6 +4512,22 @@
         showToast('No se pudo guardar la configuración');
       }
     }
+    async function togglePassportMode(enabled) {
+      passportModeEnabled = !!enabled;
+      applyPassportMode();
+      try {
+        if (window.saveUserPrefs) await window.saveUserPrefs({ passportModeEnabled });
+        showToast(passportModeEnabled ? 'Modo Pasaporte activado 🛂' : 'Modo Pasaporte desactivado');
+      } catch (e) { console.error(e); showToast('No se pudo guardar la configuración'); }
+    }
+    function applyPassportMode() {
+      if (window.renderMapCafeMarkers) window.renderMapCafeMarkers();
+      if (window.refreshLocationSearchCache) window.refreshLocationSearchCache();
+      const page = document.getElementById('page-passport');
+      if (page && page.classList.contains('active')) renderPassport();
+    }
+    window.togglePassportMode = togglePassportMode;
+    window.applyPassportMode = applyPassportMode;
     window.openSettings = openSettings;
     window.closeSettings = closeSettings;
     window.toggleNearestCafeSetting = toggleNearestCafeSetting;
@@ -4498,20 +4612,60 @@
         const items=STORE_ITEMS.filter(i=>i.category===category.id);
         return `<section class="store-section" id="store-section-${category.id}"><h3 class="store-section-title">${category.id==='cosmetics'?'🧢':category.id==='backgrounds'?'🌵':category.id==='stamps'?'☕':'🐾'} ${category.name}</h3><div class="store-grid">${items.map(item=>{
           const owned=!!ownedStoreItems[item.id], equipped=isStoreItemEquipped(item.id);
-          const label=equipped?'Equipado':owned?'Equipar':`Comprar · $${item.price} MXN`;
-          return `<div class="store-card" id="store-item-${item.id}"><div class="store-preview">${storePreview(item)}</div><div class="store-title">${item.name}</div><div class="store-desc">${item.desc}</div><button class="store-buy ${equipped?'equipped':owned?'owned':''}" onclick="buyOrEquipStoreItem('${item.id}')">${label}</button></div>`;
+          const pts=storePoints(item), short=!owned&&coffeePoints<pts;
+          const label=equipped?'Equipado':owned?'Equipar':`<span class="store-price-pts">Canjear · ${pts} ☕</span>`;
+          return `<div class="store-card" id="store-item-${item.id}"><div class="store-preview">${storePreview(item)}</div><div class="store-title">${item.name}</div><div class="store-desc">${item.desc}</div><button class="store-buy ${equipped?'equipped':owned?'owned':short?'points-short':''}" onclick="buyOrEquipStoreItem('${item.id}')">${label}</button></div>`;
         }).join('')}</div></section>`;
-      }).join('');
+      }).join('') + storePacksHtml();
+      const bal=document.getElementById('store-balance'); if(bal) bal.innerHTML=`☕ ${coffeePoints} CoffeePoints`;
     }
+    function storePacksHtml() {
+      return `<section class="store-section" id="store-section-postcards"><h3 class="store-section-title">✉️ Postales y suscripción</h3>
+        <div class="pack-grid">
+          <div class="pack-card">
+            <span class="pack-tag">Paquete</span>
+            <div class="pack-title">5 postales extra</div>
+            <div class="pack-price">$20 MXN</div>
+            <div class="pack-art"><span class="mini-pc"></span><span class="mini-pc"></span><span class="mini-pc"></span><span class="mini-pc"></span><span class="mini-pc"></span></div>
+            <div class="store-desc">Manda más recomendaciones a tus amigos cuando ya usaste tu postal del día. Cada postal sigue dando ${POSTCARD_POINTS} CoffeePoints.</div>
+            <button class="pack-btn" onclick="comingSoonPurchase(this,'El paquete de postales')">Comprar · $20 MXN</button>
+          </div>
+          <div class="pack-card premium">
+            <span class="pack-tag">Suscripción mensual</span>
+            <div class="pack-title">Cafetero+</div>
+            <div class="pack-price">Precio por anunciar</div>
+            <ul class="pack-benefits">
+              <li><span>✉️</span><span><strong>El triple de postales diarias:</strong> 3 al día en lugar de 1.</span></li>
+              <li><span>🎟️</span><span>Participación en una <strong>dinámica mensual</strong>.</span></li>
+              <li><span>🧢</span><span>Un <strong>set de cosméticos de temporada</strong>.</span></li>
+              <li><span>🍫</span><span>Si completas la ruta, puedes ganar una <strong>caja de 12 brownies completamente gratis</strong>.</span></li>
+              <li><span>🎁</span><span><strong>Premios para participantes</strong>.</span></li>
+            </ul>
+            <div class="pack-fine">La caja de brownies y los premios para participantes son exclusivos de la suscripción.</div>
+            <button class="pack-btn" onclick="comingSoonPurchase(this,'La suscripción Cafetero+')">Suscribirme</button>
+          </div>
+        </div></section>`;
+    }
+    function comingSoonPurchase(btn, what) {
+      btn.classList.remove('nope'); void btn.offsetWidth; btn.classList.add('nope');
+      showToast(`${what} estará disponible muy pronto`);
+    }
+    window.comingSoonPurchase = comingSoonPurchase;
     async function buyOrEquipStoreItem(id) {
       const item=STORE_ITEMS.find(i=>i.id===id); if(!item) return;
-      if (!ownedStoreItems[id]) { ownedStoreItems[id]={ purchasedAt:new Date().toISOString(), price:item.price }; showToast('Artículo desbloqueado ✓'); }
+      if (!ownedStoreItems[id]) {
+        const pts=storePoints(item);
+        if (coffeePoints < pts) { showToast(`Te faltan ${pts-coffeePoints} CoffeePoints · manda postales para ganar más`); return; }
+        coffeePoints -= pts;
+        ownedStoreItems[id]={ purchasedAt:new Date().toISOString(), points:pts };
+        showToast(`Canjeado por ${pts} CoffeePoints ✓`);
+      }
       if (item.category==='cosmetics') equippedCosmetic=id;
       if (item.category==='pets') selectedPet=id;
       if (item.category==='backgrounds') selectedPassportBackground=id;
       if (item.category==='stamps') selectedStampStyle=id;
       try { if(window.saveStoreCustomization) await window.saveStoreCustomization(); } catch(e){ showToast('No se pudo guardar la compra'); return; }
-      renderStore(); renderPassportCharacter(); renderPassportBackground(); renderPassport(); renderAccountCharacter(); renderPetGrid(); renderStampStyleOptions();
+      renderStore(); renderCoffeePointsCard(); renderPassportCharacter(); renderPassportBackground(); renderPassport(); renderAccountCharacter(); renderPetGrid(); renderStampStyleOptions();
     }
     window.openStore=openStore; window.closeStore=closeStore; window.setStoreCategory=setStoreCategory; window.buyOrEquipStoreItem=buyOrEquipStoreItem;
 
@@ -5465,7 +5619,7 @@
       function renderMapCafeMarkers() {
         markersByName.clear();
         const seenKeys = new Set();
-        cafes.forEach(c => {
+        visibleCafes().forEach(c => {
           getCafeLocations(c).forEach((location, idx) => {
             const key = normalize(c.name) + '__' + location.id;
             const popupContent =
@@ -5516,7 +5670,7 @@
       const suggestions = document.getElementById('suggestions');
 
       function buildLocationSearchEntries() {
-        return cafes.flatMap(cafe => getCafeLocations(cafe).map((location, index) => ({
+        return visibleCafes().flatMap(cafe => getCafeLocations(cafe).map((location, index) => ({
           cafe,
           location,
           searchLabel: `${cafe.name} · ${location.label}`,
@@ -5788,6 +5942,7 @@
         : '';
 
       document.getElementById('sheet-name').textContent = cafe.name;
+      document.getElementById('sheet-passport-badge')?.classList.toggle('show', isPassportCafe(cafe));
       document.getElementById('sheet-address').textContent = '📍 ' + selectedLocation.address;
 
       const writtenAddress=String(selectedLocation.address || '').trim();
@@ -5883,12 +6038,20 @@ window.doCheckin = async function() {
     // ──────────────────────────────────────────────
     // PASSPORT
     // ──────────────────────────────────────────────
+    const PASSPORT_MINI = '<svg viewBox="0 0 34 42" aria-hidden="true"><rect x="2" y="2" width="30" height="38" rx="4" fill="#6b2a1a" stroke="#3e1308" stroke-width="1.5"/><rect x="5" y="2" width="2" height="38" fill="#4d1c10"/><circle cx="18.5" cy="17" r="8.5" fill="none" stroke="#e0b23a" stroke-width="1.3"/><path d="M14 14.5h8v3.6a4 4 0 0 1-4 4a4 4 0 0 1-4-4z" fill="#e0b23a"/><path d="M22 15.6h1.3a1.6 1.6 0 0 1 0 3.2H22" fill="none" stroke="#e0b23a" stroke-width="1.1"/><path d="M16.4 12.6c-.6-1 .6-1.6 0-2.6M19.4 12.6c-.6-1 .6-1.6 0-2.6" stroke="#e0b23a" stroke-width=".9" fill="none" stroke-linecap="round"/><path d="M11 31h15M13 34.5h11" stroke="#e0b23a" stroke-width="1.1" stroke-linecap="round" opacity=".8"/></svg>';
+    function renderCoffeePointsCard() {
+      const el = document.getElementById('coffeepoints-card'); if (!el) return;
+      const left = postcardsLeftToday();
+      el.innerHTML = `<div class="cp-coin">☕</div><div class="cp-main"><div class="cp-value">${coffeePoints}</div><div class="cp-label">CoffeePoints</div><div class="cp-sub">+${POSTCARD_POINTS} por postal · ${left ? `Te queda ${left} postal hoy` : 'Ya mandaste tu postal de hoy'}</div></div><button class="cp-btn" onclick="openStore()">Canjear</button>`;
+    }
+    window.renderCoffeePointsCard = renderCoffeePointsCard;
     function renderPassport() {
       updatePassportIdCard();
       updateStampAnimationSummary();
 
-      const count = visitedCount();
-      const total = cafes.length;
+      const routeCafes = visibleCafes();
+      const count = routeCafes.filter(c => visited[c.name]).length;
+      const total = routeCafes.length || 1;
       const pct   = Math.round(count / total * 100);
 
       document.getElementById('stat-visited').textContent = count;
@@ -5899,11 +6062,12 @@ window.doCheckin = async function() {
 
       evaluateMedals();
 
-      document.getElementById('stamps-grid').innerHTML = cafes.map(c => {
+      renderCoffeePointsCard();
+      document.getElementById('stamps-grid').innerHTML = routeCafes.map(c => {
         const v = visited[c.name];
         return `
           <div class="stamp-item ${v ? 'stamped' : ''}" onclick="openCafeSheet('${encodeURIComponent(c.name)}')">
-            <span class="stamp-emoji">${v ? (selectedStampStyle === 'gold_star_stamp' ? '★' : selectedStampStyle === 'coffee_bean_stamp' ? '◒' : selectedStampStyle === 'lightning_stamp' ? '⚡' : '☕') : '○'}</span>
+            ${isPassportCafe(c) && !passportModeEnabled ? '<span style="position:absolute;top:4px;right:5px;width:13px;height:16px;">'+PASSPORT_MINI+'</span>' : ''}<span class="stamp-emoji">${v ? (selectedStampStyle === 'gold_star_stamp' ? '★' : selectedStampStyle === 'coffee_bean_stamp' ? '◒' : selectedStampStyle === 'lightning_stamp' ? '⚡' : '☕') : '○'}</span>
             <div class="stamp-name">${c.name}</div>
             ${v ? `<div class="stamp-date">${getVisitLabel(v)}</div>` : ''}
           </div>`;
@@ -5952,6 +6116,11 @@ window.doCheckin = async function() {
       if(isOwnerAccount()) return;
       if(!window.postcardApi || !window.currentUserEmail){ showToast('Inicia sesión para mandar postales'); return; }
       postcardDraft={ cafe:currentCafe, flavor:0, ambience:0, price:0, level:'', toUid:'' };
+      if (!postcardsLeftToday()) {
+        document.getElementById('postcard-composer').innerHTML=`<div class="pc-limit"><div class="big">📮</div><h3>Ya mandaste tu postal de hoy</h3><p>Tienes ${DAILY_POSTCARDS} postal al día. Vuelve mañana para ganar otros ${POSTCARD_POINTS} CoffeePoints, o mira los paquetes de postales y la suscripción en la tienda.</p></div><button class="pc-send" onclick="closePostcardComposer();openStore();setTimeout(()=>document.getElementById('store-section-postcards')?.scrollIntoView({behavior:'smooth'}),250)">Ver en la tienda</button>`;
+        document.getElementById('postcard-overlay').classList.add('open');
+        return;
+      }
       renderPostcardComposer();
       document.getElementById('postcard-overlay').classList.add('open');
     }
@@ -5964,6 +6133,7 @@ window.doCheckin = async function() {
       const levels=PC_LEVELS.map(l=>`<button class="pc-level ${d.level===l?'selected':''}" onclick="setPostcardLevel('${l.replace(/'/g,"\\'")}')">${l}</button>`).join('');
       const friendList=friends.length?friends.map(f=>`<button class="pc-friend ${d.toUid===f.uid?'selected':''}" onclick="setPostcardFriend('${f.uid}')"><span class="pc-friend-avatar">${avatarSvg(f.selectedAvatar||'classic',true,false,{cosmetic:f.equippedCosmetic||'',pet:''})}</span>${escHtml(f.displayName||'Usuario')}</button>`).join(''):'<div class="owner-empty" style="padding:14px;">Aún no tienes amigos. Agrega uno desde el botón 👥.</div>';
       document.getElementById('postcard-composer').innerHTML=`
+        <div class="pc-quota"><span>Postales hoy: <strong>${postcardsLeftToday()} de ${DAILY_POSTCARDS}</strong></span><span>+${POSTCARD_POINTS} ☕ CoffeePoints</span></div>
         <div class="postcard" id="postcard-draft-card">
           <div class="postcard-top"><div><div class="postcard-brand">FIND MY COFFEE · POSTAL</div><div class="postcard-cafe">${escHtml(d.cafe.name)}</div></div><div class="postcard-stamp">${pcStampFor(d.cafe.name)}</div></div>
           ${rows}
@@ -5986,8 +6156,11 @@ window.doCheckin = async function() {
       try{
         await window.postcardApi.send({toUid:d.toUid,cafe:d.cafe,flavor:d.flavor,ambience:d.ambience,price:d.price,level:d.level});
         const friend=(window.friendsState||[]).find(f=>f.uid===d.toUid);
+        const tk=todayKey(); postcardsToday=(postcardDay===tk?postcardsToday:0)+1; postcardDay=tk; coffeePoints+=POSTCARD_POINTS;
+        try{ if(window.saveUserPrefs) await window.saveUserPrefs({coffeePoints,postcardDay,postcardsToday}); }catch(e){console.error(e);}
+        renderCoffeePointsCard();
         document.getElementById('postcard-draft-card')?.classList.add('flying');
-        setTimeout(()=>{ closePostcardComposer(); showToast(`Postal enviada a ${friend?.displayName||'tu amigo'} ✈️`); },850);
+        setTimeout(()=>{ closePostcardComposer(); showToast(`Postal enviada a ${friend?.displayName||'tu amigo'} ✈️ · +${POSTCARD_POINTS} CoffeePoints`); },850);
       }catch(e){ console.error(e); btn.disabled=false; btn.textContent='Enviar postal ✈️'; showToast(e.code==='permission-denied'?'Faltan permisos en Firestore para postales':'No se pudo enviar la postal'); }
     }
 

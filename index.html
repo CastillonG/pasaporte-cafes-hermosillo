@@ -2709,7 +2709,7 @@
           <div class="stat-label">Visitados</div>
         </div>
         <div class="stat-box">
-          <div class="stat-num" id="stat-total">33</div>
+          <div class="stat-num" id="stat-total">32</div>
           <div class="stat-label">Total</div>
         </div>
         <div class="stat-box">
@@ -2721,7 +2721,7 @@
         <div class="progress-bar-bg">
           <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
         </div>
-        <div class="progress-label" id="progress-label">0 de 33 sellos</div>
+        <div class="progress-label" id="progress-label">0 de 32 sellos</div>
       </div>
     </div>
     <div class="passport-actions">
@@ -4115,36 +4115,35 @@
     // DATA
     // ──────────────────────────────────────────────
     const cafes = [
-      { tags:["Pasaporte del café"], name:"211 Barra Café", address:"C. Benito Juárez 211, Issste Federal", coords:[29.105567,-110.952852], menu:["Espresso","Cappuccino","Té","Pasteles"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"10–18"} },
-      { tags:["Pasaporte del café"], name:"Ágape Café", ownerEmail:"kelitzkeliton@gmail.com", address:"Av. Saturnino Campoy 869-GG, Álvaro Obregón", coords:[29.103832,-111.006329], branches:[], menu:["Cold Brew","Latte","Sándwiches","Waffles"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
-      { tags:["Pasaporte del café"], name:"Aletto Café", address:"Av. Dr. Ignacio Pesqueira 608-A, Las Quintas", coords:[29.084816,-110.991711], menu:["V60","Aeropress","Croissants","Matcha"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–20",dom:"10–17"} },
-      { tags:["Pasaporte del café"], name:"Café Central", address:"Blvd. Miguel Hidalgo 63, El Centenario", coords:[29.076014,-110.961434], menu:["Americano","Café de Olla","Pan de Dulce"], hours:{lun:"7–21",mar:"7–21",mie:"7–21",jue:"7–21",vie:"7–22",sab:"8–22",dom:"9–18"} },
-      { tags:["Pasaporte del café"], name:"Cafelita", address:"Av. Tehuantepec 53, El Centenario", coords:[29.073757,-110.959006], menu:["Espresso","Muffins","Licuados","Tés"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"9–17"} },
-      { tags:["Pasaporte del café"], name:"ROOCÖ Café", address:"Plaza Navarrete Local 22, Montebello", coords:[29.089559,-110.990957], menu:["Specialty Coffee","Tapioca","Matcha Latte"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
-      { tags:["Pasaporte del café"], name:"Flor del Desierto Café", address:"Banús 4D, Insurgentes", coords:[29.144872,-110.961260], menu:["Cold Brew","Frappé","Tamales","Pan"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–20",dom:"Cerrado"} },
-      { tags:["Pasaporte del café"], name:"Clarity - Brew Bar", address:"Av. San Luis Potosí 211-B, San Benito", coords:[29.089694,-110.965569], menu:["Pour Over","Chemex","Filtrado","Pasteles"], hours:{lun:"8–19",mar:"8–19",mie:"8–19",jue:"8–19",vie:"8–20",sab:"9–20",dom:"10–15"} },
-      { tags:["Pasaporte del café"], name:"Colibrí Café", address:"Segunda de Obregón 140, El Centenario", coords:[29.077396,-110.958316], menu:["Café Mexicano","Horchata","Burritos","Pan"], hours:{lun:"7–21",mar:"7–21",mie:"7–21",jue:"7–21",vie:"7–22",sab:"8–22",dom:"9–19"} },
-   { tags:["Pasaporte del café"], name:"Culto al Perro Café – Tostador de Café en Hermosillo", address:"General Piña y Cuernavaca 151, Av. Zacatecas, San Benito, 83190 Hermosillo, Son.", coords:[29.0895,-110.9645], menu:["Espresso","Dog-Friendly","Galletas","Tés"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
-      { tags:["Pasaporte del café"], name:"Dante y Nova Café", address:"Pbro. Pedro Villegas Ramírez 2, Col del Razo", coords:[29.076618,-110.947631], menu:["Latte Art","Filtrados","Scones","Quiche"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–21",sab:"9–21",dom:"10–18"} },
-      { tags:["Pasaporte del café"], name:"Dos Raíces Casa Tostadora", address:"Benito Quintana 20, Constitución", coords:[29.100452,-110.950297], menu:["Single Origin","Café Verde","Tostados","Granos"], hours:{lun:"9–19",mar:"9–19",mie:"9–19",jue:"9–19",vie:"9–20",sab:"10–18",dom:"Cerrado"} },
-      { tags:["Pasaporte del café"], name:"El Chapucero | Café", address:"Blvd. Miguel Hidalgo 60, El Centenario", coords:[29.075265,-110.961415], menu:["Americano","Brownies","Sandwich","Granola"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
-      { tags:["Pasaporte del café"], name:"El Idilio Café", address:"Av. Gastón Madrid 157-2, San Benito", coords:[29.088434,-110.963335], menu:["Latte","Avocado Toast","Smoothies","Matcha"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
-      { tags:["Pasaporte del café"], name:"Enclave Libros y Café", address:"Calle José María Yáñez 136A, Centro", coords:[29.080131,-110.956635], menu:["Café","Libros","Charlas","Tés"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
-      { tags:["Pasaporte del café"], name:"Griegos Cafe Grand Kino", address:"Blvd. Fco. Eusebio Kino 315, Country Club", coords:[29.097279,-110.938294], menu:["Gyros","Espresso","Tzatziki","Croissants"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–18"} },
-      { tags:["Pasaporte del café"], name:"HORIZON COFFEE HOUSE", address:"Plaza Universidad, Blvd. Luis D. Colosio 158", coords:[29.079920,-110.963149], menu:["Pour Over","Batch Brew","Waffles","Granola"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–20"} },
-      { tags:["Pasaporte del café"], name:"Josefina Cafe", address:"Av. Guillermo Prieto 22, Constitución", coords:[29.100127,-110.950148], menu:["Café de la Abuela","Pan Casero","Atole","Tamales"], hours:{lun:"7–20",mar:"7–20",mie:"7–20",jue:"7–20",vie:"7–21",sab:"8–21",dom:"9–17"} },
-  { tags:["Pasaporte del café"], name:"Maleducados", address:"Felicitas Zermeño 41, Centro, 83010 Hermosillo, Son.", coords:[29.093120186930836,-110.94834301525984], menu:["Espresso","Cocteles Café","Pan Artesanal"], hours:{lun:"9–22",mar:"9–22",mie:"9–22",jue:"9–22",vie:"9–24",sab:"10–24",dom:"11–20"} },
-      { tags:["Pasaporte del café"], name:"MASALA CAFÉ", address:"Blvd. José María Morelos 389, Sacramento", coords:[29.129456,-110.951330], menu:["Chai Latte","Curry","Especias","Pan Pita"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
-      { tags:["Pasaporte del café"], name:"Café Modular", address:"La Jolla Ote. 90, Lomas Altas", coords:[29.107736,-110.936426], menu:["Cold Brew","Kombucha","Avocado Toast","Bowl"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
-      { tags:["Pasaporte del café"], name:"Órbita Anticafé", address:"C. Mina 37, Cerro de la Campana", coords:[29.074456,-110.955275], menu:["Tiempo Libre","Juegos","Café Incluido","Snacks"], hours:{lun:"10–22",mar:"10–22",mie:"10–22",jue:"10–22",vie:"10–24",sab:"11–24",dom:"11–21"} },
-      { tags:["Pasaporte del café"], name:"Perséfone Café", address:"Blvd. Valentín Gómez Farías 57-J, Periodista", coords:[29.104687,-110.949439], menu:["Filtrado","Espresso","Banana Bread","Brownies"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–19"} },
-      { tags:["Pasaporte del café"], name:"Pura Vida - Cafeteria & Brunch", address:"Dr. Hoeffer 19, El Centenario", coords:[29.076335,-110.960077], menu:["Brunch","Smoothie Bowl","Tostadas","Jugos"], hours:{lun:"8–16",mar:"8–16",mie:"8–16",jue:"8–16",vie:"8–17",sab:"9–17",dom:"9–15"} },
-      { tags:["Pasaporte del café"], name:"Renacer Café", address:"Av. Tehuantepec 61, El Centenario", coords:[29.073682,-110.959915], menu:["Americano","Frappés","Repostería","Atole"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"9–19"} },
-      { tags:["Pasaporte del café"], name:"Social Café", address:"Blvd. Luis Donaldo Colosio 914-L5, La Manga", coords:[29.081208,-111.030319], menu:["Cold Brew","Açaí Bowl","Tostadas","Matcha"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
-      { tags:["Pasaporte del café"], name:"Sonora Classic Rock Café", address:"C. Benito Juárez 431, Sacramento", coords:[29.119342,-110.952766], menu:["Americano","Hot Dog","Nachos","Cocteles"], hours:{lun:"Cerrado",mar:"14–23",mie:"14–23",jue:"14–23",vie:"14–01",sab:"14–01",dom:"14–21"} },
-      { tags:["Pasaporte del café"], name:"Tertulia Café", address:"Blvd. Valentín Gómez Farías 102, Periodista", coords:[29.108751,-110.949949], menu:["Filtrado","Charlas","Libros","Pan Artesanal"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
-      { tags:["Pasaporte del café"], name:"Tomomi Café", address:"C. Juan Aldama 13, San Benito", coords:[29.090454,-110.963957], menu:["Matcha","Mochi","Café Japonés","Onigiri"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–19"} },
-      { tags:["Pasaporte del café"], name:"zanati coffee and tea house", address:"Oposura 153, Centro", coords:[29.073770,-110.955393], menu:["Té de Especialidad","Single Origin","Oolong","Pan"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–22",sab:"10–22",dom:"10–20"} },
+      { tags:["Pasaporte del café"], name:"Ágape Café", ownerEmail:"kelitzkeliton@gmail.com", address:"Av. Saturnino Campoy 869-GG, Álvaro Obregón", coords:[29.103832,-111.006329], branches:[], menu:["Cold Brew","Latte","Sándwiches","Waffles"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–21",sab:"10–20",dom:"14–20"} },
+      { tags:["Pasaporte del café"], name:"Aletto Café", address:"Av. Dr. Ignacio Pesqueira 608-A, Las Quintas", coords:[29.084816,-110.991711], menu:["V60","Aeropress","Croissants","Matcha"], hours:{lun:"10–20",mar:"10–20",mie:"10–20",jue:"10–20",vie:"10–20",sab:"10–20",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Café Central", address:"Blvd. Miguel Hidalgo 63, El Centenario", coords:[29.076014,-110.961434], menu:["Americano","Café de Olla","Pan de Dulce"], hours:{lun:"8–22",mar:"8–22",mie:"8–22",jue:"8–22",vie:"8–22",sab:"8–22",dom:"8–22"} },
+      { tags:["Pasaporte del café"], name:"Cafelita", address:"Av. Tehuantepec 53, El Centenario", coords:[29.073757,-110.959006], menu:["Espresso","Muffins","Licuados","Tés"], hours:{lun:"9–14, 16–20",mar:"9–14, 16–20",mie:"9–14, 16–20",jue:"9–14, 16–20",vie:"9–14, 16–20",sab:"9–14, 16–20",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"ROOCÖ Café", address:"Plaza Navarrete Local 22, Montebello", coords:[29.089559,-110.990957], menu:["Specialty Coffee","Tapioca","Matcha Latte"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–21",sab:"9–21",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Flor del Desierto Café", address:"Banús 4D, Insurgentes", coords:[29.144872,-110.961260], menu:["Cold Brew","Frappé","Tamales","Pan"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–21",sab:"9–21",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Clarity - Brew Bar", address:"Av. San Luis Potosí 211-B, San Benito", coords:[29.089694,-110.965569], menu:["Pour Over","Chemex","Filtrado","Pasteles"], hours:{lun:"9:30–13",mar:"9:30–13, 17–20:30",mie:"9:30–13, 17–20:30",jue:"9:30–13, 17–20:30",vie:"9:30–13, 17–20:30",sab:"9:30–13, 17–20:30",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Colibrí Café", address:"Segunda de Obregón 140, El Centenario", coords:[29.077396,-110.958316], menu:["Café Mexicano","Horchata","Burritos","Pan"], hours:{lun:"14–22",mar:"8–23",mie:"9–23",jue:"9–23",vie:"9–23",sab:"9–23",dom:"9–22"} },
+   { tags:["Pasaporte del café"], name:"Culto al Perro Café – Tostador de Café en Hermosillo", address:"General Piña y Cuernavaca 151, Av. Zacatecas, San Benito, 83190 Hermosillo, Son.", coords:[29.0895,-110.9645], menu:["Espresso","Dog-Friendly","Galletas","Tés"], hours:{lun:"8:30–14",mar:"8:30–14",mie:"8:30–14",jue:"8:30–14",vie:"8:30–14",sab:"8:30–13",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Dante y Nova Café", address:"Pbro. Pedro Villegas Ramírez 2, Col del Razo", coords:[29.076618,-110.947631], menu:["Latte Art","Filtrados","Scones","Quiche"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–21",sab:"9–21",dom:"9–21"} },
+      { tags:["Pasaporte del café"], name:"Dos Raíces Casa Tostadora", address:"Benito Quintana 20, Constitución", coords:[29.100452,-110.950297], menu:["Single Origin","Café Verde","Tostados","Granos"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–21",sab:"8–21",dom:"13–20"} },
+      { tags:["Pasaporte del café"], name:"El Chapucero | Café", address:"Blvd. Miguel Hidalgo 60, El Centenario", coords:[29.075265,-110.961415], menu:["Americano","Brownies","Sandwich","Granola"], hours:{lun:"10–21",mar:"10–21",mie:"10–21",jue:"10–21",vie:"10–21",sab:"10–21",dom:"10–21"} },
+      { tags:["Pasaporte del café"], name:"El Idilio Café", address:"Av. Gastón Madrid 157-2, San Benito", coords:[29.088434,-110.963335], menu:["Latte","Avocado Toast","Smoothies","Matcha"], hours:{lun:"12–20:30",mar:"12–20:30",mie:"12–20:30",jue:"12–20:30",vie:"12–20:30",sab:"12–20:30",dom:"12–20:30"} },
+      { tags:["Pasaporte del café"], name:"Enclave Libros y Café", address:"Calle José María Yáñez 136A, Centro", coords:[29.080131,-110.956635], menu:["Café","Libros","Charlas","Tés"], hours:{lun:"11:30–21",mar:"11:30–21",mie:"11:30–21",jue:"11:30–21",vie:"11–21",sab:"11:30–21",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Griegos Cafe Grand Kino", address:"Blvd. Fco. Eusebio Kino 315, Country Club", coords:[29.097279,-110.938294], menu:["Gyros","Espresso","Tzatziki","Croissants"], hours:{lun:"8–20:30",mar:"8–20:30",mie:"8–20:30",jue:"8–20:30",vie:"8–20:30",sab:"9–15",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"HORIZON COFFEE HOUSE", address:"Plaza Universidad, Blvd. Luis D. Colosio 158", coords:[29.079920,-110.963149], menu:["Pour Over","Batch Brew","Waffles","Granola"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–21",sab:"11–21",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Josefina Cafe", address:"Av. Guillermo Prieto 22, Constitución", coords:[29.100127,-110.950148], menu:["Café de la Abuela","Pan Casero","Atole","Tamales"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–21",sab:"8–20",dom:"10–20"} },
+  { tags:["Pasaporte del café"], name:"Maleducados", address:"Felicitas Zermeño 41, Centro, 83010 Hermosillo, Son.", coords:[29.093120186930836,-110.94834301525984], menu:["Espresso","Cocteles Café","Pan Artesanal"], hours:{lun:"Cerrado",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–21",sab:"8–21",dom:"8–21"} },
+      { tags:["Pasaporte del café"], name:"MASALA CAFÉ", address:"Blvd. José María Morelos 389, Sacramento", coords:[29.129456,-110.951330], menu:["Chai Latte","Curry","Especias","Pan Pita"], hours:{lun:"Cerrado",mar:"Cerrado",mie:"16–24",jue:"16–20:30",vie:"16–20:30",sab:"16–20:30",dom:"16–20:30"} },
+      { tags:["Pasaporte del café"], name:"Café Modular", address:"La Jolla Ote. 90, Lomas Altas", coords:[29.107736,-110.936426], menu:["Cold Brew","Kombucha","Avocado Toast","Bowl"], hours:{lun:"10–15, 16–20",mar:"10–15, 16–20",mie:"10–20",jue:"10–20",vie:"10–20",sab:"11–17",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Órbita Anticafé", address:"C. Mina 37, Cerro de la Campana", coords:[29.074456,-110.955275], menu:["Tiempo Libre","Juegos","Café Incluido","Snacks"], hours:{lun:"8:30–21:30",mar:"8:30–21:30",mie:"8:30–21:30",jue:"8:30–21:30",vie:"8:30–21:30",sab:"10–21",dom:"12–21"} },
+      { tags:["Pasaporte del café"], name:"Perséfone Café", address:"Blvd. Valentín Gómez Farías 57-J, Periodista", coords:[29.104687,-110.949439], menu:["Filtrado","Espresso","Banana Bread","Brownies"], hours:{lun:"11–21",mar:"11–21",mie:"11–21",jue:"11–21",vie:"11–21",sab:"14–21",dom:"14–21"} },
+      { tags:["Pasaporte del café"], name:"Pura Vida - Cafeteria & Brunch", address:"Dr. Hoeffer 19, El Centenario", coords:[29.076335,-110.960077], menu:["Brunch","Smoothie Bowl","Tostadas","Jugos"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–21",sab:"7:30–21",dom:"14–20"} },
+      { tags:["Pasaporte del café"], name:"Renacer Café", address:"Av. Tehuantepec 61, El Centenario", coords:[29.073682,-110.959915], menu:["Americano","Frappés","Repostería","Atole"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–21",sab:"9–21",dom:"9–21"} },
+      { tags:["Pasaporte del café"], name:"Social Café", address:"Blvd. Luis Donaldo Colosio 914-L5, La Manga", coords:[29.081208,-111.030319], menu:["Cold Brew","Açaí Bowl","Tostadas","Matcha"], hours:{lun:"8–20",mar:"8–20",mie:"8–20",jue:"8–20",vie:"8–20",sab:"8–20",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Sonora Classic Rock Café", address:"C. Benito Juárez 431, Sacramento", coords:[29.119342,-110.952766], menu:["Americano","Hot Dog","Nachos","Cocteles"], hours:{lun:"9–21",mar:"9–21",mie:"9–21",jue:"9–21",vie:"9–21",sab:"9–21",dom:"11–21"} },
+      { tags:["Pasaporte del café"], name:"Tertulia Café", address:"Blvd. Valentín Gómez Farías 102, Periodista", coords:[29.108751,-110.949949], menu:["Filtrado","Charlas","Libros","Pan Artesanal"], hours:{lun:"10–20:30",mar:"10–20:30",mie:"10–20:30",jue:"10–20:30",vie:"10–20:30",sab:"10–20:30",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"Tomomi Café", address:"C. Juan Aldama 13, San Benito", coords:[29.090454,-110.963957], menu:["Matcha","Mochi","Café Japonés","Onigiri"], hours:{lun:"10–19:30",mar:"10–19:30",mie:"10–19:30",jue:"10–19:30",vie:"10–19:30",sab:"10–17",dom:"Cerrado"} },
+      { tags:["Pasaporte del café"], name:"zanati coffee and tea house", address:"Oposura 153, Centro", coords:[29.073770,-110.955393], menu:["Té de Especialidad","Single Origin","Oolong","Pan"], hours:{lun:"15–21",mar:"15–21",mie:"15–21",jue:"15–21",vie:"15–21",sab:"13–21",dom:"Cerrado"} },
       { tags:["Pasaporte del café"], name:"Casazul coffee and bakery", address:"Av. Campeche 1875, Bahía de Kino", coords:[28.861529,-112.008140], menu:["Pan Artesanal","Espresso","Pasteles","Jugos"], hours:{lun:"8–18",mar:"8–18",mie:"8–18",jue:"8–18",vie:"8–19",sab:"9–19",dom:"9–16"} },
       { tags:["Pasaporte del café"], name:"Meri Meri Coffee Community", address:"Blvd. Manlio Fabio Beltrones 717, San Carlos", coords:[27.962812,-111.026543], menu:["Specialty Coffee","Malteadas","Pancakes","Tacos"], hours:{lun:"8–21",mar:"8–21",mie:"8–21",jue:"8–21",vie:"8–22",sab:"9–22",dom:"10–20"} },
       { tags:["Pasaporte del café"], name:"PALOMINA COFFEE SHOP", address:"Los Pinitos, Sonora", coords:[29.235063,-110.887409], menu:["Café de Rancho","Atole","Pan Sonorense","Burritos"], hours:{lun:"7–19",mar:"7–19",mie:"7–19",jue:"7–19",vie:"7–20",sab:"8–20",dom:"8–17"} }
@@ -6706,6 +6705,307 @@ function fmcMejoras(){
 }
 if (document.readyState === 'complete') fmcMejoras();
 else window.addEventListener('load', fmcMejoras);
+</script>
+
+<!-- ════════════════════════════════════════════════════════════
+     MEJORAS "PREMIUM" 2 — Find My Coffee
+     Misma línea del video: qué pasó / deshacer / qué sigue,
+     patrones consistentes y estados vacíos o de error cuidados.
+     ════════════════════════════════════════════════════════════ -->
+<style>
+  /* Estado de horario en la ficha del café */
+  .open-status{display:inline-flex;align-items:center;gap:7px;margin:-10px 0 16px;padding:6px 11px;border-radius:999px;
+    font:800 12px 'DM Sans',sans-serif;background:rgba(122,63,37,.08);color:var(--espresso);}
+  .open-status::before{content:'';width:8px;height:8px;border-radius:50%;background:#9b8f86;}
+  .open-status.open{background:#e7f5eb;color:#28643a;} .open-status.open::before{background:#2f8a4a;}
+  .open-status.soon{background:#fff3cd;color:#7a5a07;} .open-status.soon::before{background:#d4a017;}
+  .open-status.closed{background:#fdecea;color:#a93226;} .open-status.closed::before{background:#c0392b;}
+  .hours-row.today{font-weight:800;background:rgba(201,162,39,.12);border-radius:8px;padding-left:8px;padding-right:8px;}
+
+  /* Errores del formulario de perfil junto al campo */
+  .field-error select,.field-error input{border-color:#c0392b!important;background:#fffafa!important;}
+  .field-error-msg{display:none;margin-top:5px;color:#a93226;font-size:12px;font-weight:700;}
+  .field-error .field-error-msg{display:block;}
+
+  /* Botón "mi ubicación" en el mapa */
+  #map{position:relative;}
+  .locate-btn{position:absolute;right:12px;bottom:12px;z-index:800;width:44px;height:44px;border-radius:50%;border:0;
+    background:var(--foam);color:var(--espresso);font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(62,31,14,.25);}
+  .locate-btn.busy{animation:pulse 1s ease infinite;}
+
+  /* Primer sello: siguiente paso */
+  .first-stamp-hint{margin:0 0 14px;padding:14px 16px;border-radius:16px;border:1.5px dashed rgba(122,63,37,.3);
+    background:var(--foam);color:var(--espresso);font-size:13px;line-height:1.5;display:flex;gap:12px;align-items:center;}
+  .first-stamp-hint button{margin-left:auto;flex-shrink:0;border:0;border-radius:11px;padding:10px 13px;background:var(--espresso);
+    color:var(--cream);font:800 12px 'DM Sans',sans-serif;cursor:pointer;}
+
+  /* Confirmación en "Cerrar sesión" */
+  .dropdown-item.confirming{background:#fdecea!important;font-weight:800;}
+
+  /* Progreso hacia recompensas bloqueadas */
+  .reward-progress{display:block;height:6px;margin:7px auto 0;max-width:120px;border-radius:999px;background:rgba(122,63,37,.12);overflow:hidden;}
+  .reward-progress span{display:block;height:100%;background:linear-gradient(90deg,#4a7c59,#c9a227);}
+</style>
+
+<script>
+function fmcMejoras2(){
+  if (!window.__fmcMejorasListas || typeof submitProfile !== 'function' || typeof window.openCafeSheet !== 'function') {
+    return setTimeout(fmcMejoras2, 120);
+  }
+  if (window.__fmcMejoras2Listas) return;
+  window.__fmcMejoras2Listas = true;
+
+  // ─────────────────────────────────────────
+  // 1. HORARIO: "Abierto · cierra a las 21:00" en vez de solo la tabla
+  // ─────────────────────────────────────────
+  const DAY_KEYS = ['dom','lun','mar','mie','jue','vie','sab'];
+  const DAY_LABEL = { lun:'lunes', mar:'martes', mie:'miércoles', jue:'jueves', vie:'viernes', sab:'sábado', dom:'domingo' };
+  // Acepta uno o varios turnos: "9–21" o "9–14, 16–20" (y horarios que pasan la medianoche)
+  function parseRanges(txt){
+    const out = [], re = /(\d{1,2})(?::(\d{2}))?\s*[–\-]\s*(\d{1,2})(?::(\d{2}))?/g; let m;
+    while ((m = re.exec(String(txt||'')))) {
+      const open = (+m[1])*60 + (+(m[2]||0)); let close = (+m[3])*60 + (+(m[4]||0));
+      if (close <= open) close += 24*60;
+      out.push({ open, close });
+    }
+    return out;
+  }
+  const hhmm = mins => { mins = ((mins % 1440) + 1440) % 1440; return `${Math.floor(mins/60)}:${String(mins%60).padStart(2,'0')}`; };
+  function openStatus(hours){
+    if (!hours) return null;
+    const now = new Date(), today = now.getDay(), t = now.getHours()*60 + now.getMinutes();
+    const openMsg = close => { const left = close - t; return { cls:left <= 45 ? 'soon' : 'open', text:`${left <= 45 ? 'Cierra pronto' : 'Abierto'} · cierra a las ${hhmm(close)}` }; };
+    // ¿Sigue abierto desde ayer (turno que pasa la medianoche)?
+    for (const r of parseRanges(hours[DAY_KEYS[(today+6)%7]])) if (r.close > 1440 && t < r.close - 1440) return openMsg(r.close - 1440);
+    const todays = parseRanges(hours[DAY_KEYS[today]]);
+    for (const r of todays) if (t >= r.open && t < r.close) return openMsg(r.close);
+    const later = todays.find(r => t < r.open);
+    if (later) return { cls:'closed', text:`Cerrado · abre ${todays.some(r => r.open < t) ? 'de nuevo' : 'hoy'} a las ${hhmm(later.open)}` };
+    for (let i = 1; i <= 7; i++) {
+      const key = DAY_KEYS[(today+i)%7], n = parseRanges(hours[key])[0];
+      if (n) return { cls:'closed', text:`Cerrado · abre ${i === 1 ? 'mañana' : 'el ' + DAY_LABEL[key]} a las ${hhmm(n.open)}` };
+    }
+    return { cls:'closed', text:'Cerrado' };
+  }
+  const origOpenSheet = window.openCafeSheet;
+  window.openCafeSheet = function(encodedName, options){
+    origOpenSheet(encodedName, options);
+    const cafe = cafes.find(c => c.name === decodeURIComponent(encodedName)); if (!cafe) return;
+    // Enlace de Google: busca el NEGOCIO (nombre + dirección), así abre su ficha con fotos, reseñas y horario
+    const gm = document.getElementById('sheet-gmaps-link');
+    if (gm) {
+      const loc = (typeof getCafeLocations === 'function' ? getCafeLocations(cafe) : []).find(l => l.id === options?.locationId);
+      const addr = String((loc && loc.address) || cafe.address || '');
+      const city = /kino/i.test(addr) ? 'Bahía de Kino, Sonora' : /san carlos/i.test(addr) ? 'San Carlos, Sonora' : /pinitos/i.test(addr) ? '' : 'Hermosillo, Sonora';
+      const q = [cafe.name, addr, /hermosillo|sonora/i.test(addr) ? '' : city].filter(Boolean).join(', ');
+      gm.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+      gm.textContent = '📍 Ver en Google Maps';
+    }
+    document.getElementById('sheet-open-status')?.remove();
+    const st = openStatus(cafe.hours);
+    if (st) {
+      const el = document.createElement('div');
+      el.id = 'sheet-open-status'; el.className = 'open-status ' + st.cls; el.textContent = st.text;
+      document.getElementById('sheet-address').after(el);
+    }
+    const todayLabel = { lun:'Lun', mar:'Mar', mie:'Mié', jue:'Jue', vie:'Vie', sab:'Sáb', dom:'Dom' }[DAY_KEYS[new Date().getDay()]];
+    document.querySelectorAll('#sheet-hours .hours-row').forEach(row => {
+      if (row.querySelector('.day')?.textContent === todayLabel) row.classList.add('today');
+    });
+  };
+
+  // ─────────────────────────────────────────
+  // 2. PERFIL: el error aparece junto al campo, no en un aviso genérico
+  // ─────────────────────────────────────────
+  function fieldError(id, msg){
+    const field = document.getElementById(id)?.closest('.profile-field'); if (!field) return;
+    let m = field.querySelector('.field-error-msg');
+    if (!m) { m = document.createElement('div'); m.className = 'field-error-msg'; field.appendChild(m); }
+    m.textContent = msg || '';
+    field.classList.toggle('field-error', !!msg);
+  }
+  ['profile-gender','profile-birth-year','profile-funfact'].forEach(id =>
+    document.getElementById(id)?.addEventListener('input', () => fieldError(id, '')));
+  const origSubmitProfile = window.submitProfile;
+  window.submitProfile = function(){
+    const year = Number(document.getElementById('profile-birth-year').value), max = new Date().getFullYear();
+    const errs = {
+      'profile-gender': document.getElementById('profile-gender').value ? '' : 'Elige una opción.',
+      'profile-birth-year': !year ? 'Escribe tu año de nacimiento.' : (year < 1900 || year > max) ? `Usa un año entre 1900 y ${max}.` : '',
+      'profile-funfact': document.getElementById('profile-funfact').value.trim() ? '' : 'Cuéntanos algo de ti, aunque sea corto.'
+    };
+    Object.entries(errs).forEach(([id, msg]) => fieldError(id, msg));
+    const first = Object.keys(errs).find(id => errs[id]);
+    if (first) { document.getElementById(first).focus(); return; }
+    origSubmitProfile();
+  };
+
+  // ─────────────────────────────────────────
+  // 3. PERSONALIZACIÓN: cada cambio se puede deshacer
+  // ─────────────────────────────────────────
+  function withUndo(fnName, getCurrent, label){
+    const orig = window[fnName]; if (typeof orig !== 'function') return;
+    window[fnName] = async function(id){
+      const prev = getCurrent();
+      await orig(id);
+      if (prev === getCurrent()) return;
+      showToast(label(getCurrent()), { action:'Deshacer', onAction: async () => {
+        await orig(prev); showToast('Cambio deshecho ✓');
+      }});
+    };
+  }
+  withUndo('selectAvatar', () => selectedAvatar, () => 'Personaje actualizado ✓');
+  withUndo('selectPassportBackground', () => selectedPassportBackground, () => 'Fondo del perfil actualizado ✓');
+  withUndo('selectCosmetic', () => equippedCosmetic, v => v ? 'Cosmético equipado ✓' : 'Cosmético retirado');
+  withUndo('selectPet', () => selectedPet, v => v ? 'Mascota equipada 🐾' : 'Mascota retirada');
+  withUndo('selectStampStyle', () => selectedStampStyle, () => 'Sello actualizado ✓');
+  withUndo('selectStampAnimation', () => selectedStampAnimation, () => 'Animación actualizada ✨');
+
+  // ─────────────────────────────────────────
+  // 4. RECOMPENSAS BLOQUEADAS: cuánto te falta, no solo "bloqueada"
+  // ─────────────────────────────────────────
+  function progressBar(n, goal){ return `<span class="reward-progress"><span style="width:${Math.min(100, n/goal*100)}%"></span></span>`; }
+  const origCosmetics = window.renderCosmeticGrid;
+  window.renderCosmeticGrid = function(){
+    origCosmetics();
+    const n = agapeRewardState().lifetimeVisits;
+    document.querySelectorAll('#cosmetic-grid small').forEach(s => {
+      if (s.textContent.includes('Bloqueada')) s.innerHTML = `Vas en ${Math.min(n,3)} de 3 visitas en Ágape${progressBar(n,3)}`;
+    });
+  };
+  const origAnims = window.renderStampAnimationOptions;
+  window.renderStampAnimationOptions = function(){
+    origAnims();
+    const n = agapeRewardState().lifetimeVisits;
+    document.querySelectorAll('#stamp-animation-options .animation-option-badge').forEach(b => {
+      if (b.textContent.includes('Bloqueada')) b.outerHTML = `<span class="animation-option-badge">Vas en ${Math.min(n,6)} de 6 visitas en Ágape</span>${progressBar(n,6)}`;
+    });
+  };
+
+  // ─────────────────────────────────────────
+  // 5. PERFIL VACÍO: decir cuál es el primer paso
+  // ─────────────────────────────────────────
+  const origRenderPassport = window.renderPassport;
+  window.renderPassport = function(){
+    origRenderPassport();
+    document.getElementById('first-stamp-hint')?.remove();
+    if (isOwnerAccount() || visibleCafes().some(c => visited[c.name])) return;
+    const hint = document.createElement('div');
+    hint.id = 'first-stamp-hint'; hint.className = 'first-stamp-hint';
+    hint.innerHTML = `<span style="font-size:26px;">☕</span><span><strong>Aún no tienes sellos.</strong><br>
+      Ve a un café, ábrelo en el mapa y toca “Registrar visita”.</span><button type="button">Ir al mapa</button>`;
+    hint.querySelector('button').onclick = () => goHome();
+    document.getElementById('stamps-grid')?.before(hint);
+  };
+
+  // ─────────────────────────────────────────
+  // 6. LEALTAD: qué sigue después de pedir la visita
+  // ─────────────────────────────────────────
+  window.requestAgapeLoyaltyVisit = async function(){
+    if (!currentCafe || currentCafe.name !== 'Ágape Café') return;
+    const btn = document.querySelector('.loyalty-request-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
+    try {
+      await window.createLoyaltyRequest(currentCafe, agapeLoyaltyCount());
+      renderAgapeLoyaltyCard();
+      showToast(`Solicitud enviada ✓ Pide en caja que la acepten; la visita ${agapeLoyaltyCount()+1} de 6 aparecerá aquí.`, { duration:6000 });
+    } catch (e) {
+      console.error(e);
+      renderAgapeLoyaltyCard();
+      showToast('No se pudo enviar la solicitud de visita.', { action:'Reintentar', onAction:()=>window.requestAgapeLoyaltyVisit(), error:true });
+    }
+  };
+
+  // ─────────────────────────────────────────
+  // 7. AMIGOS: al aceptar, siguiente paso; si falla, reintentar
+  // ─────────────────────────────────────────
+  window.respondFriendRequest = async function(id, accepted, fromUid){
+    try {
+      await window.friendApi.respondRequest(id, accepted, fromUid);
+      const name = (window.friendRequestsState || []).find(r => r.id === id)?.profile?.displayName || 'tu amigo';
+      showToast(accepted ? `Ahora tú y ${name} son amigos ✓` : 'Solicitud rechazada',
+        accepted ? { action:'Ver perfil', onAction:()=>openFriendPassport(fromUid) } : {});
+    } catch (e) {
+      console.error(e);
+      showToast('No se pudo responder la solicitud.', { action:'Reintentar', onAction:()=>window.respondFriendRequest(id, accepted, fromUid), error:true });
+    }
+  };
+
+  // ─────────────────────────────────────────
+  // 8. CERRAR SESIÓN: pedir confirmación (evita salir por error)
+  // ─────────────────────────────────────────
+  const origSignOut = window.signOut;
+  let signOutTimer = null;
+  window.signOut = function(){
+    const item = document.querySelector('#user-dropdown .dropdown-item.danger');
+    if (item && !item.classList.contains('confirming')) {
+      item.dataset.label = item.dataset.label || item.innerHTML;
+      item.classList.add('confirming');
+      item.innerHTML = '<span>↩️</span> ¿Seguro? Toca otra vez para salir';
+      signOutTimer = setTimeout(() => { item.classList.remove('confirming'); item.innerHTML = item.dataset.label; }, 4000);
+      return;
+    }
+    clearTimeout(signOutTimer);
+    if (item) { item.classList.remove('confirming'); item.innerHTML = item.dataset.label || item.innerHTML; }
+    return origSignOut();
+  };
+
+  // ─────────────────────────────────────────
+  // 9. MAPA: botón "mi ubicación" que explica por qué falla
+  // ─────────────────────────────────────────
+  const mapEl = document.getElementById('map');
+  if (mapEl && !document.getElementById('locate-btn')) {
+    const b = document.createElement('button');
+    b.id = 'locate-btn'; b.className = 'locate-btn'; b.type = 'button';
+    b.title = 'Ir a mi ubicación'; b.setAttribute('aria-label', 'Ir a mi ubicación'); b.textContent = '📍';
+    let userDot = null;
+    b.onclick = e => {
+      e.stopPropagation();
+      if (!navigator.geolocation) { showToast('Tu navegador no permite obtener la ubicación. Busca un café arriba.', { error:true }); return; }
+      b.classList.add('busy');
+      navigator.geolocation.getCurrentPosition(pos => {
+        b.classList.remove('busy');
+        const c = [pos.coords.latitude, pos.coords.longitude];
+        const m = typeof mapInstance !== 'undefined' ? mapInstance : null;
+        if (!m) { showToast('El mapa aún está cargando. Intenta de nuevo en unos segundos.'); return; }
+        if (userDot) userDot.setLatLng(c);
+        else userDot = L.circleMarker(c, { radius:7, color:'#2b7cff', fillColor:'#2b7cff', fillOpacity:.9 }).addTo(m).bindPopup('Tu ubicación 📍');
+        m.setView(c, 15);
+        showToast('Estás aquí 📍');
+      }, err => {
+        b.classList.remove('busy');
+        const msg = err.code === 1
+          ? 'No diste permiso de ubicación. Actívalo en el candado de la barra del navegador y vuelve a tocar 📍.'
+          : err.code === 3 ? 'La ubicación tardó demasiado. Intenta de nuevo cerca de una ventana o con mejor señal.'
+          : 'No pudimos obtener tu ubicación. Intenta de nuevo en un momento.';
+        showToast(msg, { action:'Reintentar', onAction:()=>b.click(), error:true, duration:7000 });
+      }, { enableHighAccuracy:true, timeout:12000, maximumAge:60000 });
+    };
+    mapEl.appendChild(b);
+    if (window.L) { L.DomEvent.disableClickPropagation(b); }
+  }
+
+  // ─────────────────────────────────────────
+  // 10. BOTÓN "ATRÁS" del celular: cierra la ventana abierta en vez de salir de la app
+  // ─────────────────────────────────────────
+  const watched = () => [...document.querySelectorAll('.overlay.open, .friends-drawer-backdrop.open, .main-menu.open')];
+  let pushed = 0, ignorePop = 0;
+  new MutationObserver(() => {
+    const n = watched().length;
+    if (n > pushed) { for (; pushed < n; pushed++) history.pushState({ fmcLayer:true }, ''); }
+    else if (n < pushed && n === 0) { ignorePop = pushed; history.go(-pushed); pushed = 0; }
+  }).observe(document.body, { subtree:true, attributes:true, attributeFilter:['class'] });
+  addEventListener('popstate', () => {
+    if (ignorePop) { ignorePop = 0; return; }
+    const open = watched(); if (!open.length) return;
+    pushed = Math.max(0, pushed - 1);
+    const top = open[open.length - 1];
+    if (top.id === 'map-ad-popup-overlay') closeMapAdPopup();
+    else top.classList.remove('open');
+  });
+}
+if (document.readyState === 'complete') fmcMejoras2();
+else window.addEventListener('load', fmcMejoras2);
 </script>
 
 </body>
